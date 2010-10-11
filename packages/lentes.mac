@@ -1,0 +1,207 @@
+/*
+Copyright (C) 2009 Mario Rodriguez Riotorto
+This library is released under the terms of the GNU General Public License.
+
+Simulador de lentes converxentes e diverxentes.
+
+s: distancia do obxecto a lente (sempre negativa)
+f: distancia focal (negativa no caso de lente converxente
+   e positiva se e diverxente)
+y: altura do obxecto (positiva se esta orientado cara arriba,
+   negativa cara abaixo)
+
+As formulas que se utilizan para calcular s' e y' son:
+1/s - 1/s' = 1/f    e     y'/y = s'/s
+
+mario ARROBA edu PUNTO xunta PUNTO es
+*/
+
+
+
+lentes(s, f, y):=
+  block([ss,ff,yy,sp,yp,texto,xm,ym,out],
+
+    [ss,ff,yy]: float([s, f, y]),
+
+    if not numberp(ss) or ss >= 0.0
+      then "A posici&oacute;n do obxecto debe ser num&eacute;rica e negativa"
+    elseif not numberp(ff) or ff = 0.0
+      then "A distancia focal debe ser num&eacute;rica non nula"
+    elseif not numberp(yy)
+      then "A altura do obxecto debe ser num&eacute;rica"
+    else (/* Imos coas contas */
+          
+          /* Almacena resultados numericos */
+          if s#f
+            then (sp : s * f / (f-s),
+                  yp : sp * y / s,
+                  if ff < 0.0 /* lente converxente */
+                    then if f<s
+                           then texto:"Lente converxente, |s| &lt; |f|, imaxe virtual, dereita, maior"
+                         elseif s=2*f
+                           then texto:"Lente converxente, s = 2f, imaxe real, invertida, igual tama&ntilde;o"
+                         elseif f>s and s>2*f
+                           then texto:"Lente converxente, |f| &lt; |s| &lt; 2|f|, imaxe real, invertida, maior"
+                           else /* s>2*f */
+                                texto:"Lente converxente, |s| &gt; 2|f|, imaxe real, invertida, menor"
+                    else texto:"Lente diverxente, imaxe virtual, dereita, menor",
+                 print(1/s, " - ", 1/"s\'", " = ", 1/f, "=> s\' = ", sp, " = ", float(sp)),
+                 print("y\'"/y, "=", sp / s, "=> y\' = ", yp, " = ", float(yp)),
+                 print("--------------"),
+                 print(texto)  )
+            else if ff < 0.0
+                   then (print("Lente converxente, s = f, raios non converxen."),
+                         print("Non se produce imaxe."))
+                   else print("Lente diverxente, imaxe virtual, dereita"),
+
+          /* Crea el grafico */
+          if f<0 and (s=2*f or s<2*f or f>s and s>2*f)
+            then(
+              xm : (abs(s)+abs(sp)) * 0.1,
+              ym : (abs(y)+abs(yp)) * 0.1,
+              Draw2d(
+                grid = true,
+                xaxis = true,
+                xaxis_type=solid,
+                xaxis_width = 2,
+                yaxis = true,
+                yaxis_type=solid,
+                yaxis_width = 2,
+
+                xtics_axis = true,
+                xtics = {["s",s],["F",f],["F\'",-f],["s\'",sp]},
+
+                points_joined = true,
+                line_width =5,
+                color = red,
+                point_type = dot,
+                points([[s,0], [s,y]]),
+                points([[sp,0], [sp,yp]]),
+
+                line_width = 1,
+                color = blue,
+                explicit(y,x,s-xm,0),
+                explicit((yp-y)/sp*x+y,x,0,sp+xm),
+                explicit(y+(yp-y)/(sp-s)*(x-s), x, s-xm, sp+xm),
+
+                line_width = 5,
+                color = navy,
+                head_both = true,
+                head_length = (sp-s+2*xm)*0.1,
+                head_type = nofilled,
+                vector([0,max(y,yp)+ym],[0,-max(y,yp)-2*ym+min(y,yp)])))
+          elseif f<0 and f<s
+            then(
+              xm: (-sp-f)*0.1,
+              ym: abs(yp)*0.1,
+              Draw2d(
+                grid = true,
+                xaxis = true,
+                xaxis_type=solid,
+                xaxis_width = 2,
+                yaxis = true,
+                yaxis_type=solid,
+                yaxis_width = 2,
+
+                xtics_axis = true,
+                xtics = {["s",s],["F",f],["F\'",-f],["s\'",sp]},
+
+                points_joined = true,
+                line_width =5,
+                color = red,
+                point_type = dot,
+                points([[s,0], [s,y]]),
+                points([[sp,0], [sp,yp]]),
+
+                line_width = 1,
+                color = blue,
+                explicit(y,x,sp-xm,0),
+                explicit(y*(x+f)/f,x,0,-f+xm),
+                explicit(y/(s-f)*(x-f),x,f-xm,0),
+                explicit(yp,x,0,-f+xm),
+                line_type = dots,
+                explicit(yp,x,sp-xm,0),
+                explicit(y*(x+f)/f,x,sp-xm,0),
+                line_type = solid,
+
+                line_width = 5,
+                color = navy,
+                head_both = true,
+                head_length = (2*xm-sp-f)*0.1,
+                head_type = nofilled,
+                vector([0,abs(yp)+ym],[0,-2*(abs(yp)+ym)])))
+          elseif f<0 and f=s
+            then(
+              xm: -2*f*0.1,
+              ym: abs(y)*0.1,
+              Draw2d(
+                grid = true,
+                xaxis = true,
+                xaxis_type=solid,
+                xaxis_width = 2,
+                yaxis = true,
+                yaxis_type=solid,
+                yaxis_width = 2,
+
+                xtics_axis = true,
+                xtics = {["F",f],["F\'",-f]},
+
+                points_joined = true,
+                line_width =5,
+                color = red,
+                point_type = dot,
+                points([[s,0], [s,y]]),
+
+                line_width = 1,
+                color = blue,
+                explicit(y,x,s-xm,0),
+                explicit(y*(x+f)/f,x,0,-f+xm),
+                explicit(y*x/s,x,f-xm,-f+xm),
+
+                line_width = 5,
+                color = navy,
+                head_both = true,
+                head_length = 2*(xm-f)*0.1,
+                head_type = nofilled,
+                vector([0,abs(y)+ym],[0,-2*(abs(y)+ym)])))
+            else(
+              xm: max(f,-s)*0.1,
+              ym: abs(y)*0.1,
+              Draw2d(
+                grid = true,
+                xaxis = true,
+                xaxis_type=solid,
+                xaxis_width = 2,
+                yaxis = true,
+                yaxis_type=solid,
+                yaxis_width = 2,
+
+                xtics_axis = true,
+                xtics = {["s",s],["F",f],["F\'",-f],["s\'",sp]},
+
+                points_joined = true,
+                line_width =5,
+                color = red,
+                point_type = dot,
+                points([[s,0], [s,y]]),
+                points([[sp,0], [sp,yp]]),
+
+                line_width = 1,
+                color = blue,
+                explicit(y,x,s-xm,0),
+                explicit(y*(x+f)/f,x,0,xm),
+                explicit(y*x/s,x,s-xm,xm),
+                line_type = dots,
+                explicit(y*(x+f)/f,x,-f-xm,0),
+                line_type = solid,
+
+                line_width = 5,
+                color = navy,
+                head_both = true,
+                head_length = (max(f,-s)+xm)*0.1,
+                head_type = nofilled,
+                head_angle = 135,
+                vector([0,abs(y)+ym],[0,-2*(abs(y)+ym)])))),
+
+     "")$
+

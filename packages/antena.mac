@@ -1,0 +1,104 @@
+/*
+Copyright (C) 2008-2009 Mario Rodriguez Riotorto
+This library is released under the terms of the GNU General Public License.
+
+Orientacion antena parabolica. 
+
+lat: latitude da estacion terrestre
+lon: lonxitude da estacion terrestre
+sat: satelite ao que se orienta
+   (H, Hispasat; A, Astra; P, Panamsat 3R; I, Intelsat 907;
+    E, Eutelsat W2; T, Telecom 2C).
+
+mario ARROBA edu PUNTO xunta PUNTO es
+*/
+
+
+
+/* Calcula angulos de orientacion de antena parabolica: */
+antena(lat, lon, sat):= 
+ block([llat, llon, lonsat,
+        acimut, el, elevacion,
+        rayon: 6378000, sat_alt: 35786000],
+
+   [llat, llon]: float([lat, lon]),
+
+   if not numberp(llat) or not numberp(llon)
+        then out("As coordenadas deben ser num&eacute;ricas")
+     elseif abs(llon) > 180
+        then out("A lonxitude debe estar entre -180 e 180")
+     elseif abs(llat) > 90
+        then out("A latitude debe estar entre -90 e 90")
+     else (
+           /* Lonxitude do satelite */
+           if     sat = 'H then lonsat : -30.0   /* Hispasat */
+           elseif sat = 'A then lonsat : -19.2   /* Astra */
+           elseif sat = 'P then lonsat : -43.1   /* Panamsat 3R */
+           elseif sat = 'I then lonsat : -27.5   /* Intelsat 907 */
+           elseif sat = 'E then lonsat : 2       /* Eutelsat W2 */
+           elseif sat = 'T then lonsat : -5      /* Telecom 2C */
+           else error("Sat&eacute;lite desco&ntilde;ecido"),
+
+           /* Calculo do acimut */
+           acimut : float(180+180*atan(tan(%pi*(llon -lonsat)/180)/sin(%pi*llat/180))/%pi),
+           if llat < 0 then acimut: acimut - 180.0,
+           if acimut < 0 then acimut: acimut + 360.0,
+
+           /* Calculo da elevacion */
+           el : float(acos(cos(%pi/180*(llon -lonsat))*cos(%pi/180*abs(llat)))),
+           elevacion : float(180*atan((cos(el)-(rayon/(rayon+sat_alt)))/sin(el))/%pi),
+
+           /* Almacena resultado grafico */
+           Draw(
+             columns =2,
+             pic_width = 420,
+             pic_height = 215,
+             gr2d(title = "ACIMUT",
+                  fill_color =cyan,
+                  line_width = 2,
+                  ellipse(0,0,1,1,90,-acimut),
+                  polar(1,theta,0,2*%pi),
+                  xtics          = none,
+                  ytics          = none,
+                  axis_bottom  = false,
+                  axis_left  = false,
+                  axis_right   = false,
+                  axis_top      = false,
+                  label(["Norte",0,1.2],["Sur",0,-1.2],["Leste",1.3,0],["Oeste",-1.3,0]),
+                  color = red,
+                  label([string(round(acimut)),cos((acimut-90)*%pi/180)*1.2,sin(-(acimut-90)*%pi/180)*1.2])           ),
+             gr2d(title = "ELEVACION",
+                  fill_color =cyan,
+                  line_width = 2,
+                  ellipse(0,0,1,1,0,elevacion),
+                  polar(1,theta,0,%pi/2),
+                  point_type = dot,
+                  points_joined = true,
+                  points([[0,1],[0,0],[1,0]]),
+                  xtics          = none,
+                  ytics          = none,
+                  axis_bottom  = false,
+                  axis_left  = false,
+                  axis_right   = false,
+                  axis_top      = false,
+                  label(["Cenit",0,1.2],["Hor.",1.2,0]),
+                  color = red,
+                  label([string(round(elevacion)),cos(elevacion*%pi/180)*1.1,sin(elevacion*%pi/180)*1.1]))),
+
+           /* Devolve resultados numericos */
+           fpprintprec: 5,
+           print("----------------------------------------------"),
+           print("Orientaci&oacute;n da antena"),
+           print("----------------------------------------------"),
+           print("Acimut    : ",
+                 acimut, "=>",
+                 floor(acimut), "&deg;", floor((acimut-floor(acimut))*60),
+                 "&#8216;"),
+           print("Elevaci&oacute;n : ",
+                  elevacion, "=>",
+                  floor(elevacion),
+                  "&deg;", floor((elevacion-floor(elevacion))*60),
+                  "&#8216;"),
+           print("----------------------------------------------"),
+           "" ) )$
+
