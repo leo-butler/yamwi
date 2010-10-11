@@ -1,0 +1,21 @@
+
+# Make directories
+mkdir yamwi
+mkdir yamwi/help
+mkdir yamwi/packages
+
+# Copy files
+cp *.php yamwi
+cp README_?? yamwi
+cp INSTALL yamwi
+cp LICENSE yamwi
+cp yamwi.mac yamwi
+cp help/*.html yamwi/help
+cp packages/*.mac yamwi/packages
+cp packages/*.lisp yamwi/packages
+
+# Packaging
+tar -czvf yamwi-1.0.0.tar.gz yamwi
+
+# Remove folder
+rm -r yamwi
