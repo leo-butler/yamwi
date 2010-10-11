@@ -1,1 +1,163 @@
-First commit.
+Introduction to Yamwi
+=====================
+
+
+1. Objective
+   --------- 
+
+Yamwi (Yet Another Maxima Web Interface) is a web interface, based on 
+Linux+Apache+Php, to the computer algebra system Maxima (maxima.sourceforge.net).
+
+Maxima is the free version (GPL) of the Macsyma system developed in Lisp
+at MIT during the 70's; other similar programs (Mathematica, Maple) got
+inspired by it in the 80's. Since 2000 Maxima is part of Sourceforge and
+maintained by an international team of programers. Due to its advanced
+routines, Maxima is also used in research and technical contexts.
+
+Yamwi is of interest in educational contexts, to make interactive activities
+with the browser, or to show mathematical concepts.  All sorts of
+computations and graphics can be made through the web by Yamwi.
+
+
+
+2. Requirements
+   -------------
+
+The operating system to install Yamwi is Linux.
+
+Software requirements on the server side:
+
+* Apache (http://www.apache.org). (Ver. >= 2).
+* Php (http://www.php.net). (Ver. >= 5).
+* Gnuplot (http://www.gnuplot.info). This is the program used by 
+  Maxima for rendering graphics. (Ver. >= 4.2).
+* Maxima (http://maxima.sourceforge.net). This is the mathematical
+  engine. (Ver. >= 5.20).
+* timelimit
+* dvips (from LaTeX)
+* texi2dvi (from texinfo)
+* convert (from ImageMagick)
+
+For Yamwi to return results in ASCII Art style, set configuration 
+variable $mode to 0; in such a case, programs texi2dvi, dvips, and 
+convert are no longer necessary, and response times will be much
+shorter (useful for slow servers). See below.
+
+
+
+3. Installation
+   ------------
+
+Once installed the above mentioned programs, Yamwi's installation is
+as easy as allocating the necessary files somewhere accesible for Apache.
+
+Yamwi's sources can be downloaded from
+http://sourceforge.net/projects/yamwi/files
+
+This is the installation process:
+(maybe you need root privileges)
+
+1.- Download file yamwi-x.y.z.tar.gz and place it somewhere accesible
+    from Apache. After that, untar it, which creates new folder yamwi:
+
+    tar -xvf yamwi-x.y.z.tar.gz
+
+2.- Execute script INSTALL, it gives folders and files the neccesary
+    permissions. It also creates temporary folder tmp, where working
+    files will be allocated:
+
+    sh yamwi/INSTALL
+
+3.- Installation is now complete, in order to play with the demos just
+    type the following address in your browser:
+
+    http://localhost/path_to_folder/yamwi
+
+    where path_to_folder is not necessary if Yamwi was installed in
+    Apache's root system.
+
+Near the beginning of file 'yamwi.php', there is a configuration section:
+
+'$mode': 0 or 1. When 0, Yamwi output is rendered in ASCII Art style; when
+    1, results are rendered in binary files containing TeX output (be sure
+    programs texi2dvi, dvips and convert are installed). Defaults to 1.
+
+'$max_file_time': Yamwi creates some files which are stored in folder
+    'tmp'. Every time a user asks for a calculation, Yamwi removes those
+    files older, in minutes, than the quantitity indicated by variable 
+    '$max_inactive_time', which defaults to 1 minute.
+
+'$max_process_time': maximum execution time allowed for every Maxima
+    process. Default value is 120 sec.
+
+'$max_num_processes': maximum number of Maxima processes simultaneously
+     running on the server. Default value is 30.
+
+'$message_dangerous': message to be sent to the user when dangerous code
+    is detected.
+
+'$message_time_process': message to be sent to the user when a Maxima process
+    is killed when it exceedes maximum execution time.
+
+'$message_too_many_processes': message to be sent to the user when the requiered
+    process can't be started due to server activity.
+
+'$dangerous_words': when Yamwi detects one of the words contained in this 
+    list, the code entered by the user is not passed to Maxima. The system
+    administrator can modify this list at will.
+
+'$initial_code': contains the initial Maxima code presented to the user as
+    an example.
+
+You can place in folder 'package' all new packages you want to add to
+the interface.
+
+
+
+4. User Add-ons
+   ------------
+
+Yamwi gives access to all standard Maxima packages. If you have
+special needs, place in folder 'packages' your own packages, either with
+'mac' extension, if it is written in Maxima code, or with 'lisp' extension,
+if it is written in Common Lisp. Then visitors can invoque functions
+defined in these packages by means of the 'load' command. See the HTML
+help files.
+
+
+
+5. Security
+   --------
+
+Take care when using this program. To prevent server damages, some
+barriers have been designed:
+
+* There is a list of so called dangerous terms, which prevents user
+  code to be passed to Maxima in case some of them are detected. See
+  configuration variable '$dangerous_words' above.
+* The number of running Maxima processes can be limited at will. See
+  configuration variable '$max_num_processes'.
+* It is possible to limit the execution time of Maxima processes. See
+  configuration variable '$max_process_time'.
+
+Even with the existence of this filters, Yamwi does not guarantee 100%
+server security.
+
+
+
+6. License
+   -------
+
+This project is distributed under the terms of the GPL (General Public
+License). For more information, read file LICENSE.
+
+
+
+7. Contact
+   -------
+
+For bug reports, suggestions or collaboration, feel free to contact me.
+
+Mario Rodríguez Riotorto
+mario A-T edu D-O-T xunta D-O-T es
+
