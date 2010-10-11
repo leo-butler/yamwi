@@ -1,0 +1,12 @@
+clear
+
+echo "Installing Yamwi ..."
+cd yamwi
+chmod 755 ../yamwi
+chmod 644 *
+mkdir tmp
+chmod 777 tmp
+chmod 755 help packages
+chmod 644 help/* packages/*
+
+echo "Done"
