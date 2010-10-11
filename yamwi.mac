@@ -1,0 +1,102 @@
+
+file_search_maxima:
+   append (file_search_maxima,
+           [concat(%dir_sources%, "/packages/###.mac")])$
+
+
+
+
+
+/* general drawings */
+
+%num_sentence%: 0$
+
+%num_grafico%: 0$
+
+mwdrawxd(func, descgraf):=
+  block([haiterm: false, file_output_append: true, format],
+    load("draw"),
+    descgraf: append([gnuplot_file_name = concat(%codigo_usuario%,".gnuplot"),
+                      data_file_name = concat(%codigo_usuario%,".data"),
+                      file_name  = concat(maxima_tempdir,
+                                          "/",
+                                          %codigo_usuario%,
+                                          ".g.",
+                                          %num_proceso%,
+                                          ".",
+                                          %num_sentence%,
+                                          ".",
+                                          %num_grafico%) ],
+                     descgraf),
+
+    /* Se non se especifica terminal, forzamos a png */
+    for elem in descgraf do
+       if part(elem,1) = 'terminal and 
+          member(part(elem,2), ['png, 'gif, 'animated_gif, 'jpg])
+         then (haiterm: true,
+               if part(elem,2) = 'png
+                 then formato: "png"
+               elseif part(elem,2) = 'jpg
+                 then formato: "jpg"
+               elseif member(part(elem,2), ['gif, 'animated_gif])
+                 then formato: "gif",
+               return()),
+    if not haiterm
+       then (formato: "png",
+             descgraf: endcons(terminal = 'png,
+                              descgraf)),
+    with_stdout(
+      concat(maxima_tempdir,
+             "/",
+             %codigo_usuario%,
+             ".gr.",
+             %num_proceso%,
+             ".",
+             %num_sentence%,
+             ".txt"), 
+      print(concat("tmp/",
+                   %codigo_usuario%,
+                   ".g.",
+                   %num_proceso%,
+                   ".",
+                   %num_sentence%,
+                   ".",
+                   %num_grafico%,
+                   ".",
+                   formato))),
+    %num_grafico%: %num_grafico% + 1,
+    apply(func,descgraf) )$
+
+Draw2d([descgraf]):= mwdrawxd('draw2d, descgraf) $
+Draw3d([descgraf]):= mwdrawxd('draw3d, descgraf) $
+Draw([descgraf])  := mwdrawxd('draw, descgraf) $
+
+
+
+
+
+/* statistical graphics */
+
+redefine_descriptive(graph) := 
+  block ([draw_compound:false, scene],
+    load("descriptive"),
+    scene : apply(graph, descgraf),
+    mwdrawxd('draw2d, scene)  )$
+
+Histogram([descgraf]) := redefine_descriptive('histogram) $
+Barsplot([descgraf]) := redefine_descriptive('barsplot) $
+Piechart([descgraf]) := redefine_descriptive('piechart) $
+Boxplot([descgraf]) := redefine_descriptive('boxplot) $
+Scatterplot([descgraf]) := redefine_descriptive('scatterplot) $
+
+
+
+
+translate_into_tex(sentencias) :=
+  block(
+    print("start_maxima_output_tex_code:"),
+    map(lambda([z],
+               %num_sentence%: %num_sentence% + 1,
+               %num_grafico%: 1,
+               tex(eval_string(z))),
+        sentencias)) $
