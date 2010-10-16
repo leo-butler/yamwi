@@ -95,8 +95,8 @@ Scatterplot([descgraf]) := redefine_descriptive('scatterplot) $
 translate_into_tex(sentencias) :=
   block(
     print("start_maxima_output_tex_code:"),
-    map(lambda([z],
+    map(lambda([%%lambda_argument%%],
                %num_sentence%: %num_sentence% + 1,
                %num_grafico%: 1,
-               tex(eval_string(z))),
+               tex(eval_string(%%lambda_argument%%))),
         sentencias)) $
