@@ -39,6 +39,8 @@ $message_time_process = "Requested process aborted. It exceeded maximum executio
 
 $message_too_many_processes = "Too many users. Please, try later.";
 
+$message_prog_error = "Programming error detected. Check your input.";
+
 $dangerous_words =
    array(':lisp',':lisp-quiet','to_lisp','to-maxima','system','eval_string',
          'compfile','compile','translate','translate_file','compile_file',
@@ -135,11 +137,11 @@ function remove_old_files () {
 
 
 // check for dangeorus code
-function dangeorus () {
-  global $dangerous_words, $input;
+function dangeorus ($code) {
+  global $dangerous_words;
   $alert = false;
   foreach ($dangerous_words as $word) {
-    if (! strstr($input, $word) === false)  {
+    if (! strstr($code, $word) === false)  {
       $alert = true;
       break; }}
   return $alert;}
@@ -355,13 +357,8 @@ function prepare_tex_output($out, $sentences) {
 
 
 
-// return a warning message if dangerous code was detected
+// returns an alert message if something was wrong
 function alert ($message) {
-  global $key, $nproc, $input;
-  // cleaning old files
-  remove_old_files ();
-  // generate html code
-  write_form();
   write_results('<font size="+2" color="red">'.
                 $message.
                 '</font>');}
@@ -380,7 +377,7 @@ function error_detected ($out) {
 
 // run Maxima and output results
 function calculate () {
-  global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info, $mode;
+  global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info, $message_prog_error, $mode;
   $nproc = $nproc + 1;
   $dir = getcwd();
 
@@ -423,18 +420,20 @@ function calculate () {
     $input = str_replace("\\", "" , $input);
 
     // write results
-    if ($mode == 0)  // ASCII mode
+    if (error_detected($out)) {
+      write_form();
+      alert ($message_prog_error);}
+    elseif ($mode == 0)  // ASCII mode
       prepare_ascii_output($out);
-    elseif (error_detected($out))
-      alert ("Programming error detected. Check your input.");
-    else
+    else // TeX mode
       prepare_tex_output($out, $sentences);
 
     // cleaning old files
     remove_old_files ();}
 
-  else
-    alert($message_time_process); }
+  else {
+    write_form();
+    alert($message_time_process); }}
 
 
 
@@ -449,10 +448,12 @@ if ($key == "") {
     $input = $initial_code;
     create_key();
     write_form(); } 
-elseif (dangeorus())
-  alert($message_dangerous);
-elseif (too_many_processes())
-  alert($message_too_many_processes);
+elseif (dangeorus($input)) {
+  write_form();
+  alert($message_dangerous);}
+elseif (too_many_processes()) {
+  write_form();
+  alert($message_too_many_processes);}
 else
   calculate();
 
