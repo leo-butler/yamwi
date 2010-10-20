@@ -1,7 +1,7 @@
 
 file_search_maxima:
    append (file_search_maxima,
-           [concat(%dir_sources%, "/packages/###.mac")])$
+           [concat(%dir_sources%, "/###.mac")])$
 
 
 

@@ -385,7 +385,7 @@ function calculate () {
   $val = '(maxima_tempdir: "'.$dir.'/tmp",' .
          '%codigo_usuario%: "'.$key.'",' .
          '%num_proceso%: "'.$nproc.'",' .
-         '%dir_sources%: "'.$dir.'",' .
+         '%dir_sources%: "'.$dir.'/packages",' .
          'load("'.$dir.'/yamwi.mac"),' .
          "\"%%%\")\$\n" . 
          $input;
