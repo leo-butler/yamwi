@@ -283,7 +283,7 @@ function search_images ($sn) {
     $out = explode("\n", $theData);
     foreach ($out as $file_name) {}
       while (! file_exists($file_name)) {};
-      $result = $result . '<img src = "' . $file_name .'"><br>';}
+      $result = $result . '<center><img src = "' . $file_name .'"></center><br>';}
   return $result; }
 
 
@@ -329,6 +329,7 @@ function prepare_tex_output($out, $sentences) {
         'texi2dvi ' . $key . '.tex ;' . 
         'dvips -E ' . $key . '.dvi ;' . 
         'convert -density 150x150 '. $key .'.ps '.$key.'.'.$nproc.'.'.$i.'.png'); } }
+
   // write html code
   write_form();
   $result = "<table>";
@@ -391,11 +392,11 @@ function calculate () {
          $input;
   $val = str_replace("\\", "" , $val);
 
-  // if TeX mode, isolate sentences
+  // in TeX mode, isolate sentences.
   if ($mode == 1) {
-    // make array of input sentences
+    // 1. make array of input sentences
     $sentences = input_sentences($val);
-    // build the Maxima list with sentences as strings
+    // 2. build the Maxima list with sentences as strings
     $val = list_of_sentences($sentences); }
 
   // create batch file
