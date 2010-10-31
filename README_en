@@ -34,14 +34,14 @@ Software requirements on the server side:
 * Maxima (http://maxima.sourceforge.net). This is the mathematical
   engine. (Ver. >= 5.20).
 * timelimit
+
+In case the administrator wants to render results in binary TeX format,
+the following packages must be also installed (see configuration variable
+'$mode' below):
+
 * dvips (from LaTeX)
 * texi2dvi (from texinfo)
 * convert (from ImageMagick)
-
-For Yamwi to return results in ASCII Art style, set configuration 
-variable $mode to 0; in such a case, programs texi2dvi, dvips, and 
-convert are no longer necessary, and response times will be much
-shorter (useful for slow servers). See below.
 
 
 
@@ -78,9 +78,11 @@ This is the installation process:
 
 Near the beginning of file 'yamwi.php', there is a configuration section:
 
-'$mode': 0 or 1. When 0, Yamwi output is rendered in ASCII Art style; when
+'$mode': 0, 1 or 2. When 0, Yamwi output is rendered in ASCII Art style; when
     1, results are rendered in binary files containing TeX output (be sure
-    programs texi2dvi, dvips and convert are installed). Defaults to 1.
+    programs texi2dvi, dvips and convert are installed), and when 2,
+    output is rendered in enhanced ASCII-Art style, which is easier to read
+    than mode 0. Defaults to 2. Response times are shorter in ASCII Art modes.
 
 '$max_file_time': Yamwi creates some files which are stored in folder
     'tmp'. Every time a user asks for a calculation, Yamwi removes those

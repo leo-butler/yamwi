@@ -37,14 +37,14 @@ Software necesario na parte do servidor:
   a realización de gráficos. (Ver. >= 4.2).
 * Maxima (http://maxima.sourceforge.net). É o motor matemático. (Ver. >= 5.20).
 * timelimit
+
+Se é desexo do administrador que os resultados sexan devoltos en formato 
+TeX binario, débense ter tamén instalados os seguintes paquetes (véxase
+a variable de configuración '$mode' máis abaixo):
+
 * dvips (de LaTeX)
 * texi2dvi (de texinfo)
 * convert (de ImageMagick)
-
-Para que Yamwi devolva os resultados en estilo ASCII Art, débeselle
-asignar á variable de configuración $mode o valor 0; nese caso, non
-serán necesarios os programas texi2dvi, dvips e convert, acelerándose,
-ademáis, os tempos de resposta (útil en servidores lentos). Véxase máis abaixo.
 
 
 
@@ -84,10 +84,12 @@ Descríbese a continuación o proceso de instalación:
 No ficheiro 'yamwi.php', preto do comezo, hai unha sección adicada
 a configurar alguns aspectos da interface:
 
-'$mode': 0 ou 1. Cando sexa 0, Yamwi amosará os resultados en ASCII Art;
+'$mode': 0, 1 ou 2. Cando sexa 0, Yamwi amosará os resultados en ASCII Art;
     cando sexa 1, os resultados amosaranse como ficheiros binarios con
     formato TeX (compróbese que os programas texi2dvi, dvips e convert 
-    están instalados). Ten o valor 1 por defecto.
+    están instalados), e cando sexa 2, amosaranse os resultados en 
+    ASCII Art mellorado, máis sinxelo de ler ca no modo 0. Ten o valor
+    2 por defecto. Os tempos de resposta son menores en modo ASCII Art.
 
 '$max_file_time': Yamwi xera alguns ficheiros que vai 
     gardando no cartafol 'tmp'. Cada vez que un usuario quere facer
