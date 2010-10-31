@@ -100,3 +100,19 @@ translate_into_tex(sentencias) :=
                %num_grafico%: 1,
                tex(eval_string(%%lambda_argument%%))),
         sentencias)) $
+
+
+
+
+translate_into_print(sentencias) :=
+  block([res],
+    print("start_maxima_output_print_code:"),
+    map(lambda([%%lambda_argument%%],
+               %num_sentence%: %num_sentence% + 1,
+               %num_grafico%: 1,
+               res: eval_string(%%lambda_argument%%),
+               print("%%%"),
+               print(res),
+               print("%%%")),
+        sentencias)) $
+

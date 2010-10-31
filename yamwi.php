@@ -25,7 +25,9 @@
 
 
 
-$mode = 1; // 0 -> ASCII-art output, 1-> TeX output
+$mode = 2; // 0 -> ASCII-Art output,
+           // 1 -> Binary TeX output, 
+           // 2 -> Enhanced ASCII-Art output
 
 $max_file_time = 1;
 
@@ -192,8 +194,9 @@ function input_sentences ($val) {
 
 
 
-// Construyo la lista maxima de sentencias
+// Builds Maxima list of sentences
 function list_of_sentences ($sentences) {
+  global $mode;
   $sentence_counter = count($sentences);
   $lista = "";
   for($i = 1 ; $i < $sentence_counter ; $i++){
@@ -203,7 +206,10 @@ function list_of_sentences ($sentences) {
              "\"";
   if ($i < $sentence_counter-1)
     $lista = $lista.",\n";}
-  $lista = $sentences[0]."\ntranslate_into_tex([".$lista."])$";
+  if ($mode == 1)
+    $lista = $sentences[0]."\ntranslate_into_tex([".$lista."])$";
+  else
+    $lista = $sentences[0]."\ntranslate_into_print([".$lista."])$";
   return $lista;}
 
 
@@ -266,6 +272,53 @@ function prepare_ascii_output($out) {
   $result = $out . graphics();
   write_form();
   write_results('<pre>' . $result . '</pre>');}
+
+
+
+function prepare_enhanced_ascii_output($out, $sentences) {
+  global $key, $nproc;
+  $out_counter = 0;
+  $dir = getcwd();
+
+  // read and clean Maxima output
+  $subout = trim($out);
+  $subout = substr($subout,31+strpos($subout,"start_maxima_output_print_code:"));
+
+  // scan Maxima output
+  while (strlen($subout) > 0) {
+    $text_code_ini = strpos($subout,"%%%");
+    $print_code[$out_counter] = '<i>'. substr($subout,0,$text_code_ini) . '</i>';
+    $image_code[$out_counter] = search_images($out_counter);
+    $text_code_end = strpos(substr($subout,$text_code_ini+3),"%%%");
+    $text_code[$out_counter] = trim(substr($subout, $text_code_ini, $text_code_end+6), "%");
+    $subout = substr($subout, $text_code_ini+$text_code_end+6);
+    $out_counter = $out_counter + 1; }
+
+  // write html code
+  write_form();
+  $result = "<table>";
+  for($i = 1 ; $i <= $out_counter ; $i++) {
+    $this_result1 = '';  // the output label
+    $this_result2 = '';  // the mathematical result
+    if (substr($sentences[$i], -1) === ";") {
+      $this_result1 = '(%o' . $i . ')';
+      $this_result2 = '<pre>' . $text_code[$i-1] . '</pre>'; }
+    $result = $result .
+              '<tr>' .
+              '<td valign="top"><br>' . '(%i' . $i . ')' . '</td>' .
+              '<td align="left"><font size="+2"><b><pre>' . 
+              trim($sentences[$i]) .
+              '</pre></b></font>' .
+              '<pre>' . $print_code[$i-1] . '</pre>' .
+              $image_code[$i-1] .
+              '</td>' .
+              '</tr>' .
+              '<tr>' .
+              '<td valign="top">' . $this_result1 . '</td>' .
+              '<td valign="top">' . $this_result2 . '<br><hr></td>' .
+              '</tr>';}
+  $result = $result . "</table>";
+  write_results($result); }
 
 
 
@@ -392,8 +445,8 @@ function calculate () {
          $input;
   $val = str_replace("\\", "" , $val);
 
-  // in TeX mode, isolate sentences.
-  if ($mode == 1) {
+  // in TeX or enhanced ASCII mode, isolate sentences.
+  if ($mode == 1 || $mode == 2) {
     // 1. make array of input sentences
     $sentences = input_sentences($val);
     // 2. build the Maxima list with sentences as strings
@@ -426,8 +479,10 @@ function calculate () {
       alert ($message_prog_error);}
     elseif ($mode == 0)  // ASCII mode
       prepare_ascii_output($out);
-    else // TeX mode
+    elseif ($mode == 1) // TeX mode
       prepare_tex_output($out, $sentences);
+    else  // Enhanced ASCII mode
+      prepare_enhanced_ascii_output($out, $sentences);
 
     // cleaning old files
     remove_old_files ();}
