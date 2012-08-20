@@ -5,8 +5,6 @@ file_search_maxima:
 
 
 
-
-
 /* general drawings */
 
 %num_sentence%: 0$
@@ -16,7 +14,8 @@ file_search_maxima:
 mwdrawxd(func, descgraf):=
   block([haiterm: false, file_output_append: true, format],
     load("draw"),
-    descgraf: append([gnuplot_file_name = concat(%codigo_usuario%,".gnuplot"),
+    descgraf: append([dimensions=[400,300],
+                      gnuplot_file_name = concat(%codigo_usuario%,".gnuplot"),
                       data_file_name = concat(%codigo_usuario%,".data"),
                       file_name  = concat(maxima_tempdir,
                                           "/",
@@ -32,14 +31,16 @@ mwdrawxd(func, descgraf):=
     /* Se non se especifica terminal, forzamos a png */
     for elem in descgraf do
        if part(elem,1) = 'terminal and 
-          member(part(elem,2), ['png, 'gif, 'animated_gif, 'jpg])
+          member(part(elem,2), ['png, 'gif, 'animated_gif, 'jpg, 'svg])
          then (haiterm: true,
                if part(elem,2) = 'png
                  then formato: "png"
                elseif part(elem,2) = 'jpg
                  then formato: "jpg"
                elseif member(part(elem,2), ['gif, 'animated_gif])
-                 then formato: "gif",
+                 then formato: "gif"
+               elseif part(elem,2) = 'svg
+                 then formato: "svg",
                return()),
     if not haiterm
        then (formato: "png",
@@ -77,20 +78,16 @@ Draw([descgraf])  := mwdrawxd('draw, descgraf) $
 
 /* statistical graphics */
 
-redefine_descriptive(graph) := 
-  block ([draw_compound:false, scene],
-    load("descriptive"),
-    scene : apply(graph, descgraf),
-    mwdrawxd('draw2d, scene)  )$
-
-Histogram([descgraf]) := redefine_descriptive('histogram) $
-Barsplot([descgraf]) := redefine_descriptive('barsplot) $
-Piechart([descgraf]) := redefine_descriptive('piechart) $
-Boxplot([descgraf]) := redefine_descriptive('boxplot) $
-Scatterplot([descgraf]) := redefine_descriptive('scatterplot) $
+Scatterplot([desc]) := Draw(apply('scatterplot_description, desc)) $
+Histogram([desc]) := Draw2d(apply(histogram_description, desc)) $
+Barsplot([desc]) := Draw2d(apply(barsplot_description, desc)) $
+Piechart([desc]) := Draw2d(apply(piechart_description, desc)) $
+Boxplot([desc]) := Draw2d(apply(boxplot_description, desc)) $
+Starplot([desc]) := Draw2d(apply(starplot_description, desc)) $
 
 
 
+/* output formats */
 
 translate_into_tex(sentencias) :=
   block(

@@ -1,25 +1,47 @@
+<!doctype html>
 <html>
 
 <head>
-<title>Maxima on line</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <link rel="stylesheet" media="all" href="style.css">
+  <title>Maxima on line</title>
 </head>
+
+
+
 
 <body>
 
-<p align="right"><font size="-1">Help:
-<a href="help/help_en.html" target="blank">English</a>,
-<a href="help/help_es.html" target="blank">Espa&ntilde;ol</a>,
-<a href="help/help_gl.html" target="blank">Galego</a>
-</font></p>
+<h1><i>Maxima on line</i></h1>
 
-<center><font size="+3" color="blue"><i>Yamwi</i></font></center>
+<p class="small-right">Help: 
+<a href="help/help_es.html" target="_blank">Español</a>, 
+<a href="help/help_en.html" target="_blank">English</a>
+<a href="help/help_gl.html" target="_blank">Galego</a></p>
+
 <hr>
+
 
 <?php
 include('yamwi.php');
+
+$default = 
+   "expand((x-2)^3*(x+1/3)^2);\n\n".
+   "solve(x^2-x+2=0);\n\n".
+   "invert(matrix([2,3,1], [a,0,0], [1,4,8]));\n\n".
+   "integrate(x * sin(x), x);\n\n".
+   "Draw3d(explicit(x^2+y^2,x,-1,1,y,-1,1));";
+
+start($default);
 ?>
+
+
 <hr>
-<font size="-1"><i><a href="http://yamwi.sourceforge.net" target = "_blank">Yamwi, (Yet Another Maxima Web Interface)</a></i></font>
+
+<p class="small-left"><a href="http://yamwi.sourceforge.net" target = "_blank">Yamwi</a></p>
+
+
 </body>
 </html>
 
