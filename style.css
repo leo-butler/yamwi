@@ -1,0 +1,36 @@
+
+h1{
+  font-size:      150%;
+  font-style:     italic;
+  color:          blue;
+  font-weight:    bold;}
+p{
+  margin-left:    auto;
+  margin-right:   auto;
+  font-size:      100%;
+  text-align:     justify;
+  color:          #000000; }
+.error{
+  font-size:      130%;
+  color:          red;
+  text-align:     left; }
+.small-right{
+  text-align:     right;
+  font-size:      75%;  }
+.small-left{
+  font-size:      75%; }
+pre{
+  font-family:    Courier, monospace;}
+.input{
+  font-size:      100%;
+  font-weight:    bold;}
+.output{
+  font-size:      75%;}
+.print{
+  font-size:      75%;
+  font-style:     italic;}
+td{
+  text-align:     left;
+  vertical-align: top;}
+textarea{
+  width:          100%;}
