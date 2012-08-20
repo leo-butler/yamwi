@@ -1,41 +1,46 @@
+<!doctype html>
 <html>
 
 <head>
-<title>Sistema de ayuda de Yamwi en l&iacute;nea</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <link rel="stylesheet" media="all" href="help.css">
+  <title>Sistema de ayuda de Yamwi en línea</title>
 </head>
 
 <body>
 
-<center>
-<h1>Sistema de ayuda de Yamwi en l&iacute;nea</h1>
-</center>
+
+<h1>Sistema de ayuda de Yamwi en línea</h1>
 
 
-<h2>Introducci&oacute;n</h2>
+
+<h2>Introducción</h2>
 
 <p>
-Esta p&aacute;gina <i>web</i> permite hacer todo tipo de c&aacute;lculos matem&aacute;ticos y gr&aacute;ficos en l&iacute;nea.
+Esta página <i>web</i> permite hacer todo tipo de cálculos matemáticos y gráficos en línea.
 </p>
 
 <p>
-Para hacer un c&aacute;lculo cualquiera tan solo es necesario escribir en el cuadro el c&oacute;digo correspondiente y a continuaci&oacute;n pulsar en el bot&oacute;n que est&aacute; debajo.
+Para hacer un cálculo cualquiera tan solo es necesario escribir en el cuadro el código correspondiente y a continuación pulsar en el botón que está debajo.
 </p>
 
 <p>
-Los ejemplos que se incluyen en esta p&aacute;gina se pueden copiar y pegar (CTRL-C y CTRL-V) en el &aacute;rea de edici&oacute;n antes de pulsar en el bot&oacute;n. El usuario puede hacer los cambios que quiera en esta &aacute;rea.
+Los ejemplos que se incluyen en esta página se pueden copiar y pegar (CTRL-C y CTRL-V) en el área de edición antes de pulsar en el botón. El usuario puede hacer los cambios que quiera en esta área.
 </p>
 
 <p>
-La ayuda de esta p&aacute;gina es muy precaria y b&aacute;sica. Para profundizar m&aacute;s:
+La ayuda de esta página es muy precaria y básica. Para profundizar más:
+</p>
+
 <ul>
 <li>Referencia oficial: <a href="http://maxima.sourceforge.net/docs/manual/es/maxima.html" target="_blank">Manual de Maxima</a>.</li>
 <li>Tutorial: <a href="http://www.telefonica.net/web2/biomates/maxima/max.pdf">Primeros pasos en Maxima</a>.</li>
-<li>Desde la p&aacute;gina oficial: <a href="http://maxima.sourceforge.net/es/documentation.html" target="_blank">M&aacute;s tutoriales</a>. (Varias lenguas.)</li>
+<li>Desde la página oficial: <a href="http://maxima.sourceforge.net/es/documentation.html" target="_blank">Más tutoriales</a>. (Varias lenguas.)</li>
 </ul>
-</p>
 
 <p>
-La informaci&oacute;n que vamos a obtener tiene aspecto de conversaci&oacute;n. Nuestras peticiones llevan siempre la etiqueta <b>%i</b> seguida de un n&uacute;mero (<b>i</b> de <i>input</i>) y los resultados llevan la etiqueta <b>%o</b> seguida del correspondiente n&uacute;mero de orden (<b>o</b> de <i>output</i>).
+La información que vamos a obtener tiene aspecto de conversación. Nuestras peticiones llevan siempre la etiqueta <b>%i</b> seguida de un número (<b>i</b> de <i>input</i>) y los resultados llevan la etiqueta <b>%o</b> seguida del correspondiente número de orden (<b>o</b> de <i>output</i>).
 </p>
 
 
@@ -54,13 +59,13 @@ La informaci&oacute;n que vamos a obtener tiene aspecto de conversaci&oacute;n. 
 <h2>Contenido</h2>
 
 <ul>
-<li><a href="#operacions">Operaciones num&eacute;ricas</a></li>
-<li><a href="#alxebra">&Aacute;lgebra</a></li>
+<li><a href="#operacions">Operaciones numéricas</a></li>
+<li><a href="#alxebra">Álgebra</a></li>
 <li><a href="#ecuacions">Ecuaciones</a></li>
-<li><a href="#calculo">C&aacute;lculo infinitesimal</a></li>
-<li><a href="#matrices">C&aacute;lculo matricial</a></li>
-<li><a href="#graficos">Gr&aacute;ficos</a></li>
-<li><a href="#estatistica">Estad&iacute;stica</a></li>
+<li><a href="#calculo">Cálculo infinitesimal</a></li>
+<li><a href="#matrices">Cálculo matricial</a></li>
+<li><a href="#graficos">Gráficos</a></li>
+<li><a href="#estatistica">Estadística</a></li>
 <li><a href="#paquetes">Paquetes de usuario</a>
 </ul>
 
@@ -76,53 +81,38 @@ La informaci&oacute;n que vamos a obtener tiene aspecto de conversaci&oacute;n. 
 
 
 <hr>
-<a name="operacions"></a>
-<h2>Operaciones num&eacute;ricas</h2>
+<h2 id="operacions">Operaciones numéricas</h2>
 
 <p>
-Maxima siempre evita trabajar con cantidades aproximadas. Con el siguiente c&oacute;digo operamos con fracciones. Cada instrucci&oacute;n debe terminar con un punto y coma (<b>;</b>).
+Maxima siempre evita trabajar con cantidades aproximadas. Con el siguiente código operamos con fracciones. Cada instrucción debe terminar con un punto y coma (<b>;</b>).
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="2" cols="50" style="overflow: hidden;">
+<pre>
 1 + 5 * (5 - 7/9)^4 ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-Si queremos la aproximaci&oacute;n decimal de un resultado podemos proceder como sigue: primero guardamos (con dos puntos <b>:</b>) en una variable (en este caso <b>x</b>) el valor de la expresi&oacute;n exacta y despu&eacute;s ejecutamos la funci&oacute;n <b>float</b> para que la transforme a decimal.
+Si queremos la aproximación decimal de un resultado podemos proceder como sigue: primero guardamos (con dos puntos <b>:</b>) en una variable (en este caso <b>x</b>) el valor de la expresión exacta y después ejecutamos la función <b>float</b> para que la transforme a decimal.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="3" cols="50" style="overflow: hidden;">
+<pre>
 x : 1 + 5 * (5 - 7/9)^4 ;
 float(x);
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-El mismo resultado se puede conseguir con una sola instrucci&oacute;n.
+El mismo resultado se puede conseguir con una sola instrucción.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="2" cols="50" style="overflow: hidden;">
+<pre>
 float (1 + 5 * (5 - 7/9)^4) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-Otro ejemplo en el que se ve el uso de variables. Lo que se escribe entre los s&iacute;mbolos <b>/*</b> y <b>*/</b> son comentarios para los humanos, siendo ignorados por la m&aacute;quina, de manera que este ejemplo es autoexplicativo.
+Otro ejemplo en el que se ve el uso de variables. Lo que se escribe entre los símbolos <b>/*</b> y <b>*/</b> son comentarios para los humanos, siendo ignorados por la máquina, de manera que este ejemplo es autoexplicativo.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="9" cols="50" style="overflow: hidden;">
+<pre>
 /* Guardamos un valor en la variable 'a' */
 a : 8 / 24;
 
@@ -131,25 +121,19 @@ b: 1/5 ;
 
 /* El cuadrado de la suma de 'a' e 'b' */
 (a + b)^2;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-La funci&oacute;n <b>float</b> devuelve un n&uacute;mero limitado de decimales. Veamos c&oacute;mo pedir el n&uacute;mero &pi; con cinco mil decimales. Para eso debemos indicarle a la variable global <b>fpprec</b> la precisi&oacute;n deseada y despu&eacute;s hacer una llamada a la funci&oacute;n <b>bfloat</b>. Conviene recordar que &pi; se representa en Maxima por <b>%pi</b>.
+La función <b>float</b> devuelve un número limitado de decimales. Veamos cómo pedir el número &pi; con cinco mil decimales. Para eso debemos indicarle a la variable global <b>fpprec</b> la precisión deseada y después hacer una llamada a la función <b>bfloat</b>. Conviene recordar que &pi; se representa en Maxima por <b>%pi</b>. También calculamos la raíz cuadrada de 2 con 5000 cifras decimales.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="6" cols="50" style="overflow: hidden;">
+<pre>
 fpprec : 5000;
 bfloat(%pi);
 
 /* Tambien queremos la raiz cuadrada de dos */
 bfloat( sqrt(2) );
-</textarea>
-</form>
-</center>
+</pre>
 
 
 
@@ -164,63 +148,53 @@ bfloat( sqrt(2) );
 
 
 <hr>
-<a name="alxebra"></a>
-<h2>&Aacute;lgebra</h2>
+<h2 id="alxebra">Álgebra</h2>
 
 <p>
-De la misma forma que podemos operar con n&uacute;meros, lo podemos hacer con variables. F&iacute;jate c&oacute;mo se reducen las expresiones algebraicas.
+De la misma forma que podemos operar con números, lo podemos hacer con variables. Fíjate cómo se reducen las expresiones algebraicas.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="4" cols="50" style="overflow: hidden;">
+<pre>
 1 + x + 5 * y - 2/3 * x + y + 2 ;
 
 (5*x^2 * u * r) / (u^2 * t) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 Expandimos productos.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="2" cols="50" style="overflow: hidden;">
+<pre>
 expand( (x+1)^2 * (x+5) * (x-a) ) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 
 <p>
 Factorizamos polinomios.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="3" cols="50" style="overflow: hidden;">
+<pre>
 factor(u^6 - 14*u^5 - 23*u^4 + 808*u^3 - 320*u^2 - 12800*u) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-Si queremos calcular el valor num&eacute;rico de una expresi&oacute;n algebraica, haremos uso de la funci&oacute;n <b>subst</b> tal como se indica a continuaci&oacute;n, donde guardamos en la variable <b>f</b> la f&oacute;rmula para la fuerza de atracci&oacute;n gravitatoria y la calculamos para diferentes masa y distancias. El uso de los corchetes (<b>[</b> y <b>]</b>) en Maxima es muy com&uacute;n, ya que con ellos podemos construir listas y cualesquiera otras estructuras de datos.
+Si queremos calcular el valor numérico de una expresión algebraica, haremos uso de la función <b>subst</b> tal como se indica a continuación, donde guardamos en la variable <b>f</b> la fórmula para la fuerza de atracción gravitatoria y la calculamos para diferentes masa y distancias. El uso de los corchetes (<b>[</b> y <b>]</b>) en Maxima es muy común, ya que con ellos podemos construir listas y cualesquiera otras estructuras de datos.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="5" cols="50" style="overflow: hidden;">
+<pre>
 f : 6.67 * 10^-11 * m1 * m2 / r^2 ;
 
 subst([m1 = 4, m2 = 5, r = 7], f) ;
-subst([m1 = masa, m2 = masa], f) ;
-</textarea>
-</form>
-</center>
+subst([m1 = mass, m2 = mass], f) ;
+</pre>
 
+<p>
+Para obtener información sobre alguna función o variable global de Maxima debe hacerse uso de <b>describe</b>.
+</p>
+
+<pre>
+describe(subst);
+</pre>
 
 
 
@@ -231,65 +205,48 @@ subst([m1 = masa, m2 = masa], f) ;
 
 
 <hr>
-<a name="ecuacions"></a>
-<h2>Ecuaciones</h2>
+<h2 id="ecuacions">Ecuaciones</h2>
 
 <p>
-En general, la funci&oacute;n a utilizar es <b>solve</b>. Necesitamos dos argumentos: el primero ser&aacute; una lista de ecuaciones separadas por comas y el segundo otra lista con las inc&oacute;gnitas.
+En general, la función a utilizar es <b>solve</b>. Necesitamos dos argumentos: el primero será una lista de ecuaciones separadas por comas y el segundo otra lista con las incógnitas.
 </p>
 
 
 
 <p>
-Una sencilla ecuaci&oacute;n de primer grado.
+Una sencilla ecuación de primer grado.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="2" cols="50" style="overflow: hidden;">
+<pre>
 solve([5 * (x + 1/2) = 1 + x /3], [x]) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-La misma ecuaci&oacute;n pero con una constante.
+La misma ecuación pero con una constante.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="2" cols="50" style="overflow: hidden;">
+<pre>
 solve([5 * (x + 1/2) = k + x /3], [x]) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-Una ecuaci&oacute;n polin&oacute;mica de segundo grado. Recuerda que la ra&iacute;z cuadrada se representa en Maxima por <b>sqrt</b> y la unidad imaginaria por <b>%i</b>.
+Una ecuación polinómica de segundo grado. Recuerda que la raíz cuadrada se representa en Maxima por <b>sqrt</b> y la unidad imaginaria por <b>%i</b>.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="2" cols="50" style="overflow: hidden;">
+<pre>
 solve([2*x^2 - 3*x + 5 = 0], [x]) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-Un sistema de ecuaciones. Vemos en este ejemplo que podemos hacer uso de varias l&iacute;neas para escribir una sentencia. Tambi&eacute;n pedimos el resultado en formato decimal.
+Un sistema de ecuaciones. Vemos en este ejemplo que podemos hacer uso de varias líneas para escribir una sentencia. También pedimos el resultado en formato decimal.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="5" cols="50" style="overflow: hidden;">
+<pre>
 sol : solve([5*x + y/8 = 4, x^2 = y],
             [x,y]) ;
 
 float(sol);
-</textarea>
-</form>
-</center>
+</pre>
 
 
 
@@ -302,71 +259,54 @@ float(sol);
 
 
 <hr>
-<a name="calculo"></a>
-<h2>C&aacute;lculo infinitesimal</h2>
+<h2 id="calculo">Cálculo infinitesimal</h2>
 
 <p>
-El c&aacute;lculo de l&iacute;mites se realiza con la funci&oacute;n <b>limit</b>. 
+El cálculo de límites se realiza con la función <b>limit</b>. 
 </p>
 
 <p>
-Empezamos por unos l&iacute;mites muy sencillos. El infinito se representa por <b>inf</b> y el menos infinito por <b>minf</b>.
+Empezamos por unos límites muy sencillos. El infinito se representa por <b>inf</b> y el menos infinito por <b>minf</b>.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="4" cols="50" style="overflow: hidden;">
+<pre>
 limit( (x-1) / (2*x + 3), x, 1);
 
 limit( (x-1) / (2*x + 3), x, inf);
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-L&iacute;mites por la izquierda y por la derecha.
+Límites por la izquierda y por la derecha.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="4" cols="50" style="overflow: hidden;">
+<pre>
 limit( 1 / (x-1), x, 1, minus);
 
 limit( 1 / (x-1), x, 1, plus);
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-Ejemplo de c&aacute;lculo de derivadas de varios &oacute;rdenes.
+Ejemplo de cálculo de derivadas de varios órdenes.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="7" cols="50" style="overflow: hidden;">
+<pre>
 fun : sin(x) * x^4 ;
 
 diff( fun, x);
 
 /* tercera derivada */
 diff( fun, x, 3);
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-Una integral indefinida y otra definida. N&oacute;tese que el s&iacute;mbolo <b>%e</b> representa la base de los logaritmos naturales.
+Una integral indefinida y otra definida. Nótese que el símbolo <b>%e</b> representa la base de los logaritmos naturales.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="4" cols="50" style="overflow: hidden;">
+<pre>
 integrate(sin (2 + 3 * x), x) ;
 
 integrate( x * exp(x), x, 1, 2) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 
 
@@ -380,60 +320,45 @@ integrate( x * exp(x), x, 1, 2) ;
 
 
 <hr>
-<a name="matrices"></a>
-<h2>C&aacute;lculo matricial</h2>
+<h2 id="matrices">Cálculo matricial</h2>
 
 <p>
-Las matrices se pueden introducir de varias maneras. El m&aacute;s frecuente es hacer uso de la funci&oacute;n <b>matrix</b> declarando las filas. En este ejemplo se introducen dos matrices para despu&eacute;s sumarlas y restarlas.
+Las matrices se pueden introducir de varias maneras. El más frecuente es hacer uso de la función <b>matrix</b> declarando las filas. En este ejemplo se introducen dos matrices para después sumarlas y restarlas.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="6" cols="50" style="overflow: hidden;">
+<pre>
 a : matrix([1, 2, 3], [4, 5, 6]) ;
 b : matrix([7, 1/9, 2], [z, x+y, -5]) ;
 
 a + b ;
 a - b ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 El producto matricial se indica con el punto (<b>.</b>), no con el asterisco.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="5" cols="50" style="overflow: hidden;">
+<pre>
 a : matrix([1, 2, 3], [4, 5, 6]) ;
 b : matrix([7, 1/9], [z, -5], [1, 0]) ;
 
 a . b ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-Otra particularidad es que el c&aacute;lculo de la potencia de una matriz se indica mediante el doble acento circunflejo.
+Otra particularidad es que el cálculo de la potencia de una matriz se indica mediante el doble acento circunflejo.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="3" cols="50" style="overflow: hidden;">
+<pre>
 a : matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]) ;
 a^^3 ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 Otras operaciones con matrices.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="11" cols="50" style="overflow: hidden;">
+<pre>
 a : matrix([1, 4, 3], [7, 5, 6], [3, 8, 9]) ;
 
 /* Matriz inversa */
@@ -444,9 +369,7 @@ transpose(a) ;
 
 /* Determinante */
 determinant(a) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 
 
@@ -460,87 +383,59 @@ determinant(a) ;
 
 
 <hr>
-<a name="graficos"></a>
-<h2>Gr&aacute;ficos</h2>
+<h2 id="graficos">Gráficos</h2>
 
 <p>
-La mejor referencia para aprender a hacer gr&aacute;ficos con Maxima es el documento <a href="http://www.telefonica.net/web2/biomates/maxima/gpdraw">A Maxima-Gnuplot interface</a>, que contiene multitud de ejemplos que se pueden copiar y pegar en el formulario. El manual de Maxima tambi&eacute;n tiene una secci&oacute;n dedicada a los gr&aacute;ficos.
+La mejor referencia para aprender a hacer gráficos con Maxima es el documento <a href="http://riotorto.users.sf.net/gpdraw">A Maxima-Gnuplot interface</a>, que contiene multitud de ejemplos que se pueden copiar y pegar en el formulario. El manual de Maxima también tiene una sección dedicada a los gráficos.
 </p>
 
 <p>
-En el lenguaje de Maxima, la funci&oacute;n para dibujar gr&aacute;ficos en el plano es <b>draw2d</b>, pero nosotros trabajando en l&iacute;nea debemos utilizar <b>Draw2d</b>.
+En el lenguaje de Maxima, la función para dibujar gráficos en el plano es <b>draw2d</b>, pero nosotros trabajando en línea debemos utilizar <b>Draw2d</b>.
 </p>
 
 <p>
-En primer lugar vamos a representar una funci&oacute;n expl&iacute;cita de color azul sobre el plano.
+En primer lugar vamos a representar una función explícita de color rojo sobre el plano.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="4" cols="50" style="overflow: hidden;">
+<pre>
 Draw2d (
-  color = blue,
+  color = red,
   explicit(x^3-2*x^2+x-1, x, -3, 3) ) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-Vamos a a&ntilde;adirle una cuadr&iacute;cula que facilite la interpretaci&oacute;n del gr&aacute;fico. Adem&aacute;s, incorporamos a la escena una funci&oacute;n param&eacute;trica de trazo rojo algo m&aacute;s grueso.
+Vamos a añadirle una cuadrícula que facilite la interpretación del gráfico. Además, incorporamos a la escena una función paramétrica de trazo rojo algo más grueso.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="8" cols="50" style="overflow: hidden;">
+<pre>
 Draw2d (
-  color = blue,
   explicit(x^3-2*x^2+x-1, x, -3, 3),
   grid = true,
   color = red,
   line_width = 4,
   parametric(sin(t), t^2, t, -2*%pi, 2*%pi) ) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-Tambi&eacute;n podemos hacer gr&aacute;ficos en 3D. En este caso la funci&oacute;n a utilizar es <b>Draw3d</b>.
+También podemos hacer gráficos en 3D. En este caso la función a utilizar es <b>Draw3d</b>.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="4" cols="50" style="overflow: hidden;">
+<pre>
 Draw3d(
   surface_hide = true,
   explicit(20*exp(-x^2-y^2)-10,x,-3,3,y,-3,3));
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-Por &uacute;ltimo, un ejemplo de animaci&oacute;n.
+Por último, un ejemplo de animación.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="15" cols="50" style="overflow: hidden;">
+<pre>
 Draw(terminal   = animated_gif,
-       delay      = 40,
-       pic_width  = 300,
-       pic_height = 300,
-       gr2d(explicit(x^0.1,x,0,1)),
-       gr2d(explicit(x^0.2,x,0,1)),
-       gr2d(explicit(x^0.3,x,0,1)),
-       gr2d(explicit(x^0.4,x,0,1)),
-       gr2d(explicit(x^0.5,x,0,1)),
-       gr2d(explicit(x^0.6,x,0,1)),
-       gr2d(explicit(x^0.7,x,0,1)),
-       gr2d(explicit(x^0.8,x,0,1)),
-       gr2d(explicit(x^0.9,x,0,1)),
-       gr2d(explicit(x^1,x,0,1)) ) $
-</textarea>
-</form>
-</center>
+     delay      = 40,
+     dimensions = [300,300],
+     makelist(gr2d(explicit(x^(k/10),x,0,1)), k, 1, 10) ) $
+</pre>
 
 
 
@@ -555,20 +450,21 @@ Draw(terminal   = animated_gif,
 
 
 <hr>
-<a name="estatistica"></a>
-<h2>Estad&iacute;stica</h2>
+<h2 id="estatistica">Estadística</h2>
 
 <p>
-Las funciones estad&iacute;sticas est&aacute;n definidas en un fichero de nombre <b>descriptive</b>, por lo que hay que cargarlo antes de hacer uso de ellas.
+Las funciones estadísticas están definidas en un fichero de nombre <b>descriptive</b>, por lo que hay que cargarlo antes de hacer uso de ellas.
 </p>
 
 <p>
-En este ejemplo, a partir de una serie de datos calculamos algunos par&aacute;metros estad&iacute;sticos y generamos a partir de ellos un diagrama de sectores.
+Los gráficos estadísticos definidos en el paquete <b>descriptive</b> se deben escribir con la pimera letra en mayúscula: <b>Scatterplot</b>, <b>Histogram</b>, <b>Barsplot</b>, <b>Piechart</b>, <b>Boxplot</b> y <b>Starplot</b>.
+</p>
+
+<p>
+En este ejemplo, a partir de una serie de datos calculamos algunos parámetros estadísticos y generamos a partir de ellos un diagrama de sectores.
 <p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="17" cols="50" style="overflow: hidden;">
+<pre>
 load(descriptive) $
 mostra :
   [4, 7, 6, 1, 5, 10, 3, 6, 6, 6, 9, 9, 5, 2,
@@ -585,17 +481,13 @@ std(mostra) ;
 
 /* diagrama de sectores */
 Piechart(mostra) $
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
-En caso de muestra bivariante, los pares debemos introducirlos como una matriz de dos columnas. A partir de ah&iacute; podemos generar varios resultados.
+En caso de muestra bivariante, los pares debemos introducirlos como una matriz de dos columnas. A partir de ahí podemos generar varios resultados.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="22" cols="50" style="overflow: hidden;">
+<pre>
 load(descriptive) $
 mostra:
   matrix(
@@ -617,9 +509,7 @@ Draw2d(
    point_size = 3,
    color = navy,
    points(mostra)) $
-</textarea>
-</form>
-</center>
+</pre>
 
 
 
@@ -634,112 +524,36 @@ Draw2d(
 
 
 <hr>
-<a name="paquetes"></a>
-<h2>Paquetes de usuario</h2>
+<h2 id="paquetes">Paquetes de usuario</h2>
+
 <p>
-Es posible solicitarle al administrador de Yamwi que incluya nuevos paquetes de usuario en el sistema, de manera que el c&oacute;digo est&eacute; siempre accesible para ser utilizado desde cualquier lugar. Aqu&iacute; se muestran tres ejemplos de paquetes de usuario:
-<ol>
-<li><a href="#parabolico">Tiro parab&oacute;lico</a></li>
-<li><a href="#lentes">Lentes &oacute;pticas</a></li>
-<li><a href="#antena">Orientaci&oacute;n antena parab&oacute;lica</a></li>
-</ol></li>
+Es posible solicitarle al administrador de Yamwi que incluya nuevos paquetes de usuario en el sistema, de manera que el código esté siempre accesible para ser utilizado desde cualquier lugar. Aquí hay un ejemplo de un paquete de usuario.</p>
+
+<p>El paquete <b>mypackage.mac</b> está instalado en la carpeta <b>yamwi/packages</b>. No olvidarse de llamar a la función <b>load</b> antes de realizar los cálculos.</p>
+
+<p>
+Este es un ejemplo de cálculo que se puede preparar con esta herramienta. Se trata de una función llamada <b>trajectory</b> que admite cuatro argumentos:
 </p>
-<p>
-No olvidarse de llamar a la funci&oacute;n <b>load</b> antes de realizar los c&aacute;lculos.
-</p>
-<center><hr width="50%"></center>
 
-
-
-
-
-
-<a name="parabolico"></a>
-<h3>Tiro parab&oacute;lico</h3>
-
-<p>
-Este es un ejemplo de c&aacute;lculo que se puede preparar con esta herramienta. Se trata de una funci&oacute;n llamada <b>tiro</b> que admite cuatro argumentos:
 <ol>
 <li>Velocidad inicial del proyectil, en m/s.</li>
 <li>Altura desde la que se hace el disparo, en m.</li>
-<li>&Aacute;ngulo de disparo medido desde la horizontal, en grados, desde 0 hasta 90.</li>
-<li>Astro desde cuya superficie se hace el lanzamiento (T, Tierra; L, Luna; S, Sol; M, Marte; X, J&uacute;piter).</li>
+<li>Ángulo de disparo medido desde la horizontal, en grados, desde 0 hasta 90.</li>
+<li>Astro desde cuya superficie se hace el lanzamiento (T, Tierra; L, Luna; S, Sol; M, Marte; X, Júpiter).</li>
 </ol>
+
+<p>
+En este ejemplo, un proyectil es lanzado desde la superficie de Marte a nivel del suelo, con una velocidad de 35 m/s y ángulo de 47 grados.
 </p>
 
 <p>
-En este ejemplo, un proyectil es lanzado desde la superficie de Marte a nivel del suelo, con una velocidad de 35 m/s y &aacute;ngulo de 47 grados.
+El resultado que devuelve la función <b>trajectory</b> contiene la aceleración de la gravedad, la ecuación de la parábola correspondiente, el alcance y la altura máxima, así como un gráfico que simula la trayectoria.
 </p>
 
-<p>
-El resultado que devuelve la funci&oacute;n <b>tiro</b> contiene la aceleraci&oacute;n de la gravedad, la ecuaci&oacute;n de la par&aacute;bola correspondiente, el alcance y la altura m&aacute;xima, as&iacute; como un gr&aacute;fico que simula la trayectoria.
-</p>
-
-<center>
-<form action="">
-<textarea readonly="readonly" rows="6" cols="50" style="overflow: hidden;">
-load("tiro") $
-/* sintaxis:
-   tiro(velocidad, altura, angulo, astro) */
-
-tiro(35, 0, 47, M) ;
-</textarea>
-</form>
-</center>
-
-
-
-
-<a name="lentes"></a>
-<h3>Lentes &oacute;pticas</h3>
-
-<p>
-Simulador de lentes convergentes y divergentes. La funci&oacute;n <b>lentes</b> admite tres argumentos:
-<ol>
-<li>Distancia del objeto a la lente (siempre negativa).</li>
-<li>Distancia focal (negativa en el caso de lente convergente y positiva si es divergente).</li>
-<li>Altura del objeto (positiva si est&aacute; orientado hacia arriba, negativa hacia abajo).</li>
-</ol>
-</p>
-
-<center>
-<form action="">
-<textarea readonly="readonly" rows="6" cols="50" style="overflow: hidden;">
-load("lentes") $
-/* sintaxis:
-   lentes(dis.obj., dis.focal, alt.obj.) */
-
-lentes(-2, 1, 1) $ 
-</textarea>
-</form>
-</center>
-
-
-
-<a name="antena"></a>
-<h3>Orientaci&oacute;n antena parab&oacute;lica</h3>
-
-<p>
-Programa asistente para la instalaci&oacute;n de una antena parab&oacute;lica, devolviendo el <i>acimut</i> y la <i>elevaci&oacute;n</i>. La funci&oacute;n <b>antena</b> admite tres argumentos:
-<ol>
-<li>Latitud de la estaci&oacute;n terrestre.</li>
-<li>Longitude de la estaci&oacute;n terrestre.</li>
-<li>Sat&eacute;lite emisor (H, Hispasat; A, Astra; P, Panamsat 3R; I, Intelsat 907; E, Eutelsat W2; T, Telecom 2C).</li>
-</ol>
-</p>
-
-<center>
-<form action="">
-<textarea readonly="readonly" rows="6" cols="50" style="overflow: hidden;">
-load("antena") $
-/* sintaxis:
-   antena(latitud, longitud, sat) */
-
-antena(43.36666, 8+23/60, I) $
-</textarea>
-</form>
-</center>
-
+<pre>
+load("mypackage") $
+trajectory(35, 0, 47, M) ;
+</pre>
 
 
 </body>

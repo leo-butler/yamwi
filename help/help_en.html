@@ -1,14 +1,18 @@
+<!doctype html>
 <html>
 
 <head>
-<title>On line Yamwi help system</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <link rel="stylesheet" media="all" href="help.css">
+  <title>On line Yamwi help system</title>
 </head>
 
 <body>
 
-<center>
+
 <h1>On line Yamwi help system</h1>
-</center>
+
 
 
 <h2>Introduction</h2>
@@ -27,11 +31,11 @@ Examples included in this page can be copied and pasted (CTRL-C and CTRL-V) in t
 
 <p>
 The documentation in this page is very basic. For a deeper introduction on Maxima's syntax:
+</p>
 <ul>
 <li>Official reference: <a href="http://maxima.sourceforge.net/docs/manual/maxima.html" target="_blank">Maxima manual</a></li>
 <li>From official web site: <a href="http://maxima.sourceforge.net/documentation.html" target="_blank">Tutorials</a></li>
 </ul>
-</p>
 
 <p>
 The output obtained is like a dialog. Our questions are preceded by label <b>%i</b> followed by numbers and the results are labeled with <b>%o</b> followed by the corresponding number.
@@ -75,53 +79,38 @@ The output obtained is like a dialog. Our questions are preceded by label <b>%i<
 
 
 <hr>
-<a name="operacions"></a>
-<h2>Numerical operations</h2>
+<h2 id="operacions">Numerical operations</h2>
 
 <p>
 Maxima likes exact results. Here we make rational operations. Sentences must end with semicolons (<b>;</b>).
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="2" cols="50" style="overflow: hidden;">
+<pre>
 1 + 5 * (5 - 7/9)^4 ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 But it is also possible to get floting point approximations. Here we store in variable <b>x</b> (with a colon <b>:</b>) a rational expression and then we call function <b>float</b>.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="3" cols="50" style="overflow: hidden;">
+<pre>
 x : 1 + 5 * (5 - 7/9)^4 ;
 float(x);
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 The same result can be obtained with only one sentence.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="2" cols="50" style="overflow: hidden;">
+<pre>
 float (1 + 5 * (5 - 7/9)^4) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 Another example with variables. Since comments are written between symbols <b>/*</b> and <b>*/</b>, this is a self explained example.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="9" cols="50" style="overflow: hidden;">
+<pre>
 /* Bind variable 'a' to a value */
 a : 8 / 24;
 
@@ -130,26 +119,20 @@ b: 1/5 ;
 
 /* Squaring the sum of 'a' and 'b' */
 (a + b)^2;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 Function <b>float</b> returns numbers in double precission. Let's calculate number &pi; with five thousand decimal digits. First, we give global variable 
-<b>fpprec</b> the desired precission and then we call function <b>bfloat</b>. Remember that the Maxima symbol for &pi; is <b>%pi</b>.
+<b>fpprec</b> the desired precission and then we call function <b>bfloat</b>. Remember that the Maxima symbol for &pi; is <b>%pi</b>. We also calculate the square root of 2 with 5000 decimal digits.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="6" cols="50" style="overflow: hidden;">
+<pre>
 fpprec : 5000;
 bfloat(%pi);
 
 /* The square root of two */
 bfloat( sqrt(2) );
-</textarea>
-</form>
-</center>
+</pre>
 
 
 
@@ -164,64 +147,53 @@ bfloat( sqrt(2) );
 
 
 <hr>
-<a name="alxebra"></a>
-<h2>Algebra</h2>
+<h2 id="alxebra">Algebra</h2>
 
 <p>
 We can make operations with variables. Look how we transform algebraic expressions.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="4" cols="50" style="overflow: hidden;">
+<pre>
 1 + x + 5 * y - 2/3 * x + y + 2 ;
 
 (5*x^2 * u * r) / (u^2 * t) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 Expanding products.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="2" cols="50" style="overflow: hidden;">
+<pre>
 expand( (x+1)^2 * (x+5) * (x-a) ) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 
 <p>
 Factoring polynomials.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="3" cols="50" style="overflow: hidden;">
+<pre>
 factor(u^6 - 14*u^5 - 23*u^4 + 808*u^3 - 320*u^2 - 12800*u) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 Make use of function <b>subst</b> if you want to calculate the numerical value of an algebraic expression. Square brackets in Maxima are very important, since we can build lists with them.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="5" cols="50" style="overflow: hidden;">
+<pre>
 f : 6.67 * 10^-11 * m1 * m2 / r^2 ;
 
 subst([m1 = 4, m2 = 5, r = 7], f) ;
-subst([m1 = masa, m2 = masa], f) ;
-</textarea>
-</form>
-</center>
+subst([m1 = mass, m2 = mass], f) ;
+</pre>
 
+<p>
+If you want to get information on some Maxima function or global variable, make use of <b>describe</b>.
+</p>
 
+<pre>
+describe(subst);
+</pre>
 
 
 
@@ -231,8 +203,7 @@ subst([m1 = masa, m2 = masa], f) ;
 
 
 <hr>
-<a name="ecuacions"></a>
-<h2>Equations</h2>
+<h2 id="ecuacions">Equations</h2>
 
 <p>
 In general, we use function <b>solve</b>. Two arguments are needed, the list of equations followed by the list of unknowns.
@@ -244,52 +215,36 @@ In general, we use function <b>solve</b>. Two arguments are needed, the list of 
 A simple linear equation.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="2" cols="50" style="overflow: hidden;">
+<pre>
 solve([5 * (x + 1/2) = 1 + x /3], [x]) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 Linear equation with parameter.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="2" cols="50" style="overflow: hidden;">
+<pre>
 solve([5 * (x + 1/2) = k + x /3], [x]) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 A quadratic equation. Remember that <b>sqrt</b> is the square root and <b>%i</b> is the Maxima symbol for the imaginary unit.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="2" cols="50" style="overflow: hidden;">
+<pre>
 solve([2*x^2 - 3*x + 5 = 0], [x]) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 A system of equations. We can edit more than one line for entering a sentence. We also call for the floating point result.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="5" cols="50" style="overflow: hidden;">
+<pre>
 sol : solve([5*x + y/8 = 4, x^2 = y],
             [x,y]) ;
 
 float(sol);
-</textarea>
-</form>
-</center>
+</pre>
 
 
 
@@ -302,8 +257,7 @@ float(sol);
 
 
 <hr>
-<a name="calculo"></a>
-<h2>Calculus</h2>
+<h2 id="calculo">Calculus</h2>
 
 <p>
 Make use of function <b>limit</b> for calculating limits.
@@ -313,60 +267,44 @@ Make use of function <b>limit</b> for calculating limits.
 Infinity is represented by <b>inf</b> and minus infinity by <b>minf</b>.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="4" cols="50" style="overflow: hidden;">
+<pre>
 limit( (x-1) / (2*x + 3), x, 1);
 
 limit( (x-1) / (2*x + 3), x, inf);
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 Limits from above and from below.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="4" cols="50" style="overflow: hidden;">
+<pre>
 limit( 1 / (x-1), x, 1, minus);
 
 limit( 1 / (x-1), x, 1, plus);
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 Derivatives.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="7" cols="50" style="overflow: hidden;">
+<pre>
 fun : sin(x) * x^4 ;
 
 diff( fun, x);
 
 /* derivative of order three */
 diff( fun, x, 3);
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 Indefinite and definite integrals. The base of natural logarithms is <b>%e</b>.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="4" cols="50" style="overflow: hidden;">
+<pre>
 integrate(sin (2 + 3 * x), x) ;
 
 integrate( x * exp(x), x, 1, 2) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 
 
@@ -380,60 +318,45 @@ integrate( x * exp(x), x, 1, 2) ;
 
 
 <hr>
-<a name="matrices"></a>
-<h2>Matrices</h2>
+<h2 id="matrices">Matrices</h2>
 
 <p>
 Function <b>matrix</b> builds matrices; its arguments are the rows of the matrix in list form. We define two matrices and then we add and subtract them.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="6" cols="50" style="overflow: hidden;">
+<pre>
 a : matrix([1, 2, 3], [4, 5, 6]) ;
 b : matrix([7, 1/9, 2], [z, x+y, -5]) ;
 
 a + b ;
 a - b ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 The operator for the matrix product is the dot (<b>.</b>)
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="5" cols="50" style="overflow: hidden;">
+<pre>
 a : matrix([1, 2, 3], [4, 5, 6]) ;
 b : matrix([7, 1/9], [z, -5], [1, 0]) ;
 
 a . b ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 The operator for matrix exponentiation is <b>^^</b>
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="3" cols="50" style="overflow: hidden;">
+<pre>
 a : matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]) ;
 a^^3 ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 Other operations with matrices.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="11" cols="50" style="overflow: hidden;">
+<pre>
 a : matrix([1, 4, 3], [7, 5, 6], [3, 8, 9]) ;
 
 /* Inverse */
@@ -444,9 +367,7 @@ transpose(a) ;
 
 /* Determinant */
 determinant(a) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 
 
@@ -460,11 +381,10 @@ determinant(a) ;
 
 
 <hr>
-<a name="graficos"></a>
-<h2>Graphics</h2>
+<h2 id="graficos">Graphics</h2>
 
 <p>
-The best reference for package draw is the html document <a href="http://www.telefonica.net/web2/biomates/maxima/gpdraw">A Maxima-Gnuplot interface</a>, which contains lots of examples. You can find more examples in the Maxima manual.
+The best reference for package draw is the html document <a href="http://riotorto.users.sf.net/gpdraw">A Maxima-Gnuplot interface</a>, which contains lots of examples. You can find more examples in the Maxima manual.
 </p>
 
 <p>
@@ -472,75 +392,48 @@ In Maxima, plane drawings are made with function <b>draw2d</b>, but in Yamwi you
 </p>
 
 <p>
-A blue explicit function.
+A red explicit function.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="4" cols="50" style="overflow: hidden;">
+<pre>
 Draw2d (
-  color = blue,
+  color = red,
   explicit(x^3-2*x^2+x-1, x, -3, 3) ) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 An explicit function together with a parametric one. A grid is added in the background.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="8" cols="50" style="overflow: hidden;">
+<pre>
 Draw2d (
-  color = blue,
   explicit(x^3-2*x^2+x-1, x, -3, 3),
   grid = true,
   color = red,
   line_width = 4,
   parametric(sin(t), t^2, t, -2*%pi, 2*%pi) ) ;
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 For 3D graphics, the function to be used is <b>Draw3d</b>.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="4" cols="50" style="overflow: hidden;">
+<pre>
 Draw3d(
   surface_hide = true,
   explicit(20*exp(-x^2-y^2)-10,x,-3,3,y,-3,3));
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 The last example is an animation.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="15" cols="50" style="overflow: hidden;">
+<pre>
 Draw(terminal   = animated_gif,
-       delay      = 40,
-       pic_width  = 300,
-       pic_height = 300,
-       gr2d(explicit(x^0.1,x,0,1)),
-       gr2d(explicit(x^0.2,x,0,1)),
-       gr2d(explicit(x^0.3,x,0,1)),
-       gr2d(explicit(x^0.4,x,0,1)),
-       gr2d(explicit(x^0.5,x,0,1)),
-       gr2d(explicit(x^0.6,x,0,1)),
-       gr2d(explicit(x^0.7,x,0,1)),
-       gr2d(explicit(x^0.8,x,0,1)),
-       gr2d(explicit(x^0.9,x,0,1)),
-       gr2d(explicit(x^1,x,0,1)) ) $
-</textarea>
-</form>
-</center>
+     delay      = 40,
+     dimensions = [300,300],
+     makelist(gr2d(explicit(x^(k/10),x,0,1)), k, 1, 10) ) $
+</pre>
 
 
 
@@ -555,20 +448,21 @@ Draw(terminal   = animated_gif,
 
 
 <hr>
-<a name="estatistica"></a>
-<h2>Statistics</h2>
+<h2 id="estatistica">Statistics</h2>
 
 <p>
 Statistical functions are defined in package <b>descriptive</b> and we have to load them before performing our calculations.
 </p>
 
 <p>
+Statiscal graphics defined in package <b>descriptive</b> must be written with first letter in upper case: <b>Scatterplot</b>, <b>Histogram</b>, <b>Barsplot</b>, <b>Piechart</b>, <b>Boxplot</b>, and <b>Starplot</b>.
+</p>
+
+<p>
 Our records here are stored in a list.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="17" cols="50" style="overflow: hidden;">
+<pre>
 load(descriptive) $
 sample :
   [4, 7, 6, 1, 5, 10, 3, 6, 6, 6, 9, 9, 5, 2,
@@ -583,17 +477,13 @@ std(sample) ;
 
 /* piechart */
 Piechart(sample) $
-</textarea>
-</form>
-</center>
+</pre>
 
 <p>
 In case of bivariate records, pairs are inroduced as a two columns matrix.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="22" cols="50" style="overflow: hidden;">
+<pre>
 load(descriptive) $
 sample:
   matrix(
@@ -615,9 +505,7 @@ Draw2d(
    point_size = 3,
    color = navy,
    points(sample)) $
-</textarea>
-</form>
-</center>
+</pre>
 
 
 
@@ -631,109 +519,35 @@ Draw2d(
 
 
 <hr>
-<a name="paquetes"></a>
-<h2>User Packages</h2>
-<p>
-You can ask your Yamwi administrator to add your own Maxima packages, so that you can have your own code accesible from anywhere ready to be used in any moment. Here are three examples of user packages:
-<ol>
-<li><a href="#parabolico">Parabolic trajectory</a></li>
-<li><a href="#lentes">Lenses</a></li>
-<li><a href="#antena">Parabolic antenna</a></li>
-</ol></li>
-</p>
-<p>
-Do not forget to call function <b>load</b> before calculations.
-</p>
-<center><hr width="50%"></center>
-
-
-
-<a name="parabolico"></a>
-<h3>Parabolic trajectory</h3>
+<h2 id="paquetes">User Packages</h2>
 
 <p>
-We want to calculate some results on parabolic trajectories. The function to be used is <b>tiro</b>, which admits four arguments:
+You can ask your Yamwi administrator to add your own Maxima packages, so that you can have your own code accesible from anywhere ready to be used in any moment. Here is an example of a user package.</p>
+
+<p>Package <b>mypackage.mac</b> is installed in folder <b>yamwi/packages</b>, and do not forget to call function <b>load</b> before calculations.</p>
+
+<p>
+We want to calculate some results on parabolic trajectories. The function to be used is <b>tiro</b>, which admits four arguments:</p>
+
 <ol>
 <li>Initial velocity, in m/s.</li>
 <li>Tossing height, in m.</li>
 <li>Tossing angle, in degrees, from 0 to 90.</li>
 <li>Heavenly body (T, Earth; L, Moon; S, Sun; M, Mars; X, Jupiter).</li>
 </ol>
-</p>
 
 <p>
 In this example, an object is tossed on Mars at ground level, with velocity 35 m/s and angle 47 degrees.
 </p>
 
 <p>
-The output returned by function <b>tiro</b> contains the acceleration of gravity on Mars, the parabolic equation, horizontal range, maximum height and a graphical simulation.
+The output returned by function <b>trajectory</b> contains the acceleration of gravity on Mars, the parabolic equation, horizontal range, maximum height and a graphical simulation.
 </p>
 
-<center>
-<form action="">
-<textarea readonly="readonly" rows="6" cols="50" style="overflow: hidden;">
-load("tiro") $
-/* syntax:
-   tiro(velocity, height, angle, body) */
-
-tiro(35, 0, 47, M) ;
-</textarea>
-</form>
-</center>
-
-
-
-
-<a name="lentes"></a>
-<h3>Lenses</h3>
-
-<p>
-Converging and diverging lens simulator. Function <b>lentes</b> admits three arguments:
-<ol>
-<li>Object distance from lens (always negative).</li>
-<li>Focal distance (negative in case of converging lens, and negative when diverging).</li>
-<li>Object height (positive when oriented upwards, negative when oriented downwards).</li>
-</ol>
-</p>
-
-<center>
-<form action="">
-<textarea readonly="readonly" rows="6" cols="50" style="overflow: hidden;">
-load("lentes") $
-/* syntax:
-   lentes(dis.obj., focal.dis., obj.hei.) */
-
-lentes(-2, 1, 1) $ 
-</textarea>
-</form>
-</center>
-
-
-
-<a name="antena"></a>
-<h3>Parabolic antenna</h3>
-
-<p>
-This program helps during the installation of a parabolic antenna, returning the <i>azimut</i> and the <i>elevation</i>. Function <b>antena</b> admits three arguments:
-<ol>
-<li>Latitude of terrestrial station.</li>
-<li>Longitude of terrestrial station.</li>
-<li>Emitter satellite (H, Hispasat; A, Astra; P, Panamsat 3R; I, Intelsat 907; E, Eutelsat W2; T, Telecom 2C).</li>
-</ol>
-</p>
-
-<center>
-<form action="">
-<textarea readonly="readonly" rows="6" cols="50" style="overflow: hidden;">
-load("antena") $
-/* syntax:
-   antena(latitude, longitude, sat) */
-
-antena(43.36666, 8+23/60, I) $
-</textarea>
-</form>
-</center>
-
+<pre>
+load("mypackage") $
+trajectory(35, 0, 47, M) ;
+</pre>
 
 </body>
 </html>
