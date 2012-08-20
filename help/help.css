@@ -1,0 +1,16 @@
+h1{
+  font-size:      150%;
+  font-weight:    bold;}
+h2{
+  font-size:      125%;
+  font-style:     italic;
+  font-weight:    bold;}
+p{
+  margin-left:    auto;
+  margin-right:   auto;
+  font-size:      100%;
+  text-align:     justify;
+  color:          #000000; }
+pre{
+  font-family:      Courier, monospace;
+  background-color: cyan;}
