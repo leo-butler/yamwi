@@ -263,7 +263,7 @@ function prepare_enhanced_ascii_output($out, $sentences) {
   // scan Maxima output
   while (strlen($subout) > 0) {
     $text_code_ini = strpos($subout,"%%%");
-    $print_code[$out_counter] = trim(substr($subout,0,$text_code_ini));
+    $print_code[$out_counter] = substr($subout,0,$text_code_ini);
     if ($print_code[$out_counter] != '')
       $print_code[$out_counter] = '<pre class="print">' . gtlt($print_code[$out_counter]) . '</pre>';
     $image_code[$out_counter] = search_images($out_counter);
@@ -337,7 +337,7 @@ function prepare_tex_output($out, $sentences) {
   // scan Maxima output
   while (strlen($subout) > 0) {
     $tex_code_ini = strpos($subout,"$$");
-    $print_code[$out_counter] = trim(substr($subout,0,$tex_code_ini));
+    $print_code[$out_counter] = substr($subout,0,$tex_code_ini);
     if ($print_code[$out_counter] != '')
       $print_code[$out_counter] = '<pre class="print">' .
                                   gtlt($print_code[$out_counter]) .
@@ -378,7 +378,7 @@ function prepare_tex_output($out, $sentences) {
       if ($mode == 1) {
         $this_result2 = '<img src='.'tmp/'.$key.'.'.$nproc.'.'.$i.'.png'.' alt="eq">';}
       else {
-        $this_result2 = $tex_code[$i-1];} }
+        $this_result2 = '\(' . trim($tex_code[$i-1],"$") . '\)';} }
     $result = $result .
               '<tr>' .
               '<td><br><pre class="input">' . '(%i' . $i . ')' . "</pre></td>\n" .
@@ -402,6 +402,7 @@ function alert ($message) {
 
 
 function error_detected ($out) {
+  global $message_prog_error;
   $yamwi1a_pos = strpos($out, "yamwi1a");
   if (! $yamwi1a_pos === false)
     return "Not enough information on some of: " . 
@@ -421,7 +422,7 @@ function error_detected ($out) {
 // run Maxima and output results
 function calculate () {
   global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info,
-         $message_prog_error, $mode, $yamwi_path;
+         $mode, $yamwi_path;
   $nproc = $nproc + 1;
   $display2d = "";
   if ($mode == 3) $display2d = "display2d: false,";
