@@ -25,7 +25,7 @@
 
 
 
-$mode = 4; // 0 -> ASCII-Art output,
+$mode = 2; // 0 -> ASCII-Art output,
            // 1 -> Binary TeX output, 
            // 2 -> Enhanced ASCII-Art output,
            // 3 -> Syntactic output

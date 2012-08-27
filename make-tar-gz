@@ -5,17 +5,19 @@ mkdir yamwi/help
 mkdir yamwi/packages
 
 # Copy files
-cp *.php yamwi
+cp index.php yamwi
+cp style.css yamwi
 cp README_?? yamwi
 cp INSTALL yamwi
 cp LICENSE yamwi
-cp yamwi.mac yamwi
+cp yamwi.* yamwi
 cp help/*.html yamwi/help
+cp help/help.css yamwi/help
 cp packages/*.mac yamwi/packages
-cp packages/*.lisp yamwi/packages
+# cp packages/*.lisp yamwi/packages
 
 # Packaging
-tar -czvf yamwi-10.10post.tar.gz yamwi
+tar -czvf yamwi-12.08.tar.gz yamwi
 
 # Remove folder
 rm -r yamwi

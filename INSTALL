@@ -1,12 +1,19 @@
 clear
 
 echo "Installing Yamwi ..."
-cd yamwi
-chmod 755 ../yamwi
-chmod 644 *
-mkdir tmp
-chmod 777 tmp
-chmod 755 help packages
-chmod 644 help/* packages/*
+echo ""
 
-echo "Done"
+echo "  Step 1. Make temporary folder..."
+mkdir yamwi/tmp
+
+echo "  Step 2. Make www-data as yamwi owner..."
+chown -R www-data:www-data yamwi
+
+echo "  Step 3. Give read and executable permissions to owner, and nobody else..."
+chmod -R u=rx,go= yamwi
+
+echo "  Step 4. Give also write permission in temporary folder..."
+chmod u+w yamwi/tmp
+
+echo ""
+echo "That's all. Enjoy doing maths on-line!"
