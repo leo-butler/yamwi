@@ -37,14 +37,37 @@ $max_process_time = 120;
 
 $max_num_processes = 30; 
 
+
+
+
+
+//////////////
+// MESSAGES //
+//////////////
+
+
 $message_dangerous = "Yamwi detected forbidden code: ";
-
 $message_time_process = "Requested process aborted. It exceeded maximum execution time.";
-
 $message_too_many_processes = "Too many users. Please, try later.";
-
 $message_prog_error = "Programming error detected. Check your input.";
+$submit_button = "Clic";
+$clear_button = "Clear";
 
+
+
+
+
+//////////////////////
+// Global variables //
+//////////////////////
+
+
+$key = $_GET["c"];
+$nproc = $_GET["n"];
+$input = trim($_POST["max"]);
+$apache_user_name = shell_exec('whoami');
+$maxima_path = shell_exec('which maxima');
+$yamwi_path = getcwd();
 $dangerous_words =
    array(':lisp',':lisp-quiet','to_lisp','to-maxima','system','eval_string',
          'compfile','compile','translate','translate_file','compile_file',
@@ -57,32 +80,22 @@ $dangerous_words =
          'openplot_curves','xgraph_curves','plot2d_ps','psdraw_curve',
          'pscom','plot2d','plot3d','concat','sconcat','?');
 
-$submit_button = "Clic";
 
-$clear_button = "Clear";
+
+
+
+////////////////
+// Debug info //
+////////////////
+
 
 $show_info = false;
-
-
-
-//////////////////////
-// Global variables //
-//////////////////////
-
-
-
-$key = $_GET["c"];
-$nproc = $_GET["n"];
-$input = trim($_POST["max"]);
-$apache_user_name = shell_exec('whoami');
-$maxima_path = shell_exec('which maxima');
-$yamwi_path = getcwd();
-
-
 if ($show_info)
   echo '<u>Maximum time for files in tmp folder (min)</u>:<pre>'.$max_file_time.'</pre><br>'.
        '<u>Maximum time for running a process (sec)</u>:<pre>'.$max_process_time.'</pre><br>'.
        '<u>Maximum number of processes at a time</u>: <pre>'.$max_num_processes .'</pre><br>';
+
+
 
 
 
