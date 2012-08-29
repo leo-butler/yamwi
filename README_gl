@@ -9,7 +9,7 @@ Yamwi (Yet Another Maxima Web Interface)  é un interface web, baseado
 en Linux+Apache+Php, para o programa de cálculo simbólico e numérico 
 Maxima (maxima.sourceforge.net).
 
-Maxima é a versión libre (GPL) do sistema Macsyma desenrolado en Lisp
+Maxima é a versión libre (GPL) do sistema Macsyma desenvolvido en Lisp
 no MIT nos anos 70; outros programas similares (Mathematica, Maple)
 inspiráronse nel nos 80. No ano 2000 foi aloxado nos repositorios 
 de Sourceforge e actualmente mantense coa aportación 
@@ -60,11 +60,14 @@ http://sourceforge.net/projects/yamwi/files
 Descríbese a continuación o proceso de instalación:
 (é posible que sexan necesarios privilexios de administrador)
 
-1.- Unha vez descargado o ficheiro yamwi-x.y.z.tar.gz do proxecto,
+1.- Unha vez descargado o ficheiro yamwi-yy.mm.tar.gz do proxecto,
+    no que yy fai referencia ó ano da liberación e mm ó mes,
     lévase a un cartafol ó que Apache teña acceso; unha vez aí, 
-    descomprímese, co que se creará o novo cartafol yamwi:
+    descomprímese:
 
-    tar -xvf yamwi-x.y.z.tar.gz
+    tar -xvf yamwi-yy.mm.tar.gz
+
+    co que se creará o novo cartafol 'yamwi'.
 
 2.- Execútase o script INSTALL, o cal dálle ós cartafois e ficheiros
     os permisos necesarios. Ademáis crea o cartafol tmp que gardará
@@ -82,14 +85,17 @@ Descríbese a continuación o proceso de instalación:
     cartafol raíz de Apache.
 
 No ficheiro 'yamwi.php', preto do comezo, hai unha sección adicada
-a configurar alguns aspectos da interface:
+a configurar algúns aspectos da interface:
 
-'$mode': 0, 1 ou 2. Cando sexa 0, Yamwi amosará os resultados en ASCII Art;
+'$mode': 0, 1, 2, 3 ou 4. Cando sexa 0, Yamwi amosará os resultados en ASCII Art;
     cando sexa 1, os resultados amosaranse como ficheiros binarios con
     formato TeX (compróbese que os programas texi2dvi, dvips e convert 
-    están instalados), e cando sexa 2, amosaranse os resultados en 
-    ASCII Art mellorado, máis sinxelo de ler ca no modo 0. Ten o valor
-    2 por defecto. Os tempos de resposta son menores en modo ASCII Art.
+    están instalados); cando sexa 2, amosaranse os resultados en 
+    ASCII Art mellorado, máis sinxelo de ler ca no modo 0; cando sexa 3,
+    os resultados devólvense en forma de expresión sintáctica de Maxima;
+    cando sexa 4, os resultádos baséanse no sistema MathJax
+    (http://www.mathjax.org). Ten o valor 2 por defecto. Os tempos de 
+    resposta son menores en modo ASCII Art.
 
 '$max_file_time': Yamwi xera alguns ficheiros que vai 
     gardando no cartafol 'tmp'. Cada vez que un usuario quere facer
@@ -103,28 +109,6 @@ a configurar alguns aspectos da interface:
 '$max_num_processes': é o número máximo de procesos Maxima abertos
     de forma simultánea. O valor por defecto é 30.
 
-'$message_dangerous': mensaxe enviado ó usuario cando se atopen
-    elementos considerados perigosos para o sistema.
-
-'$message_time_process': mensaxe enviado ó usuario cando se interumpa
-    o seu proceso por exceder o tempo máximo de execución.
-
-'$message_too_many_processes': mensaxe enviado ó usuario cando o seu
-    requeremento non se poida satisfacer porque o número de procesos
-    Maxima abertos no servidor excede do máximo autorizado.
-
-'$dangerous_words': Maxima pode executar instrucións que poden
-    danar o servidor, como é executar comandos do sistema
-    mediante unha chamada á función 'system'. A variable $dangerous_words
-    garda unha lista das que poden conter algún risco. O administrador
-    do servidor poderá modificar esta lista a vontade.
-
-'$initial_code': é o código Maxima do exemplo que o sistema amosa 
-    ó usuario cando accede a él.
-
-No cartafol 'package' se poderán aloxar os paquetes que se lle queiran
-engadir.
-
 
 
 4. Paquetes adicionais
@@ -135,7 +119,7 @@ necesidades especiais, pódense engadir na carpeta 'packages' outros
 novos, ben sexa ca extensión 'mac', se están escritos no código
 de Maxima, bien coa extensión 'lisp', se están escritos en Common Lisp.
 Os visitantes poderán chamar ás función definidas nestes paquetes
-utilizando a instrucción 'load'. Véxanse os ficheiros de axuda HTML.
+utilizando a instrucción 'load'. Véxase o ficheiro de axuda help_gl.html.
 
 
 
@@ -154,8 +138,6 @@ deseñáronse as seguintes barreiras:
   variable de configuración '$max_process_time'.
 
 A pesar da existencia destes filtros, non se pode asegurar o 100% de seguridade.
-
-Este software distribúese sen ningún tipo de garantía sobre o particular.
 
 
 

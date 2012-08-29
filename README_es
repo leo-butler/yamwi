@@ -37,7 +37,7 @@ Software necesario en la parte del servidor:
 * Maxima (http://maxima.sourceforge.net). Es el motor matemático. (Ver. >= 5.20).
 * timelimit
 
-En caso de que el adminsitrador quiera que los resultados se devuelvan
+En caso de que el administrador quiera que los resultados se devuelvan
 en formato TeX binario, se deben tener instalados también los siguientes
 paquetes (véase la variable de configuración '$mode' más abajo):
 
@@ -62,11 +62,14 @@ http://sourceforge.net/projects/yamwi/files
 Se describe a continuación el proceso de instalación:
 (es posible que sean necesarios privilegios de administrador)
 
-1.- Una vez descargado el ficheiro yamwi-x.y.z.tar.gz del proyecto,
-    se lleva a una carpeta a la que Apache tenga acceso; una vez ahí, 
-    se descomprime, con lo que se creará la carpeta yamwi:
+1.- Una vez descargado el ficheiro yamwi-yy.mm.tar.gz del proyecto,
+    donde yy es el año de la liberación y mm el mes, se lleva a una
+    carpeta a la que Apache tenga acceso; una vez ahí, 
+    se descomprime:
 
-    tar -xvf yamwi-x.y.z.tar.gz
+    tar -xvf yamwi-yy.mm.tar.gz
+
+    con lo que se creará la carpeta 'yamwi'.
 
 2.- Se ejecuta el script INSTALL, el cual da a las carpetas y ficheros
     los permisos necesarios. Además crea la carpeta tmp que gardará
@@ -86,13 +89,15 @@ Se describe a continuación el proceso de instalación:
 En el fichero 'yamwi.php', casi al comienzo, hay una sección destinada
 a configurar algunos aspectos del interfaz:
 
-'$mode': 0, 1 ó 2. Cuando valga 0, Yamwi mostrará los resultados en ASCII Art;
+'$mode': 0, 1, 2, 3 ó 4. Cuando valga 0, Yamwi mostrará los resultados en ASCII Art;
     cuando valga 1, los resultados se mostrarán como ficheros binarios con
     formato TeX (comprobar que los programas texi2dvi, dvips y convert 
-    están instalados), y cuando valga 2, los resultados se muestran
-    en ASCII Art mejorado, que es más fácil de leer que el modo 0. Tiene 
-    el valor 2 por defecto. Los tiempos de respuesta es menor en los modos
-    ASCII Art.
+    están instalados); cuando valga 2, los resultados se muestran
+    en ASCII Art mejorado, que es más fácil de leer que el modo 0; cuando
+    valga 3, los resultados se devuelven como expresiones sintácticas de
+    Maxima; cuando valga 4, los resultados se basan en el sistema MathJax
+    (http://www.mathjax.org). Tiene el valor 2 por defecto. Los tiempos de 
+    respuesta es menor en los modos     ASCII Art.
 
 '$max_file_time': Yamwi genera algunos ficheros que va 
     almacenando en la carpeta 'tmp'. Cada vez que un usuario solicita
@@ -106,28 +111,6 @@ a configurar algunos aspectos del interfaz:
 '$max_num_processes': es el número máximo de procesos Maxima abiertos
     de forma simultánea. El valor por defecto es 30.
 
-'$message_dangerous': mensaje enviado al usuario cuando se encuentren
-    elementos considerados peligrosos para el sistema.
-
-'$message_time_process': mensaje enviado al usuario cuando se interumpa
-    su proceso por exceder el tempo máximo de ejecución.
-
-'$message_too_many_processes': mensaje enviado al usuario cuando su
-    requerimiento no se pueda satisfacer porque el número de procesos
-    Maxima abiertos en el servidor excede del máximo autorizado.
-
-'$dangerous_words': Maxima puede ejecutar instrucciones que pueden
-    ser peligrosas para el servidor, como ejecutar comandos del sistema
-    mediante una llamada a la función 'system'. La variable $dangerous_words
-    guarda una lista de las que pueden contener algún riesgo. El administrador
-    del servidor podrá modificar esta lista a voluntad.
-
-'$initial_code': es el código Maxima de ejemplo que el sistema muestra 
-    al usuario cuando accede a él.
-
-En la carpeta 'package' se podrán alojar los paquetes que se quieran
-añadir.
-
 
 
 4. Paquetes adicionales
@@ -138,7 +121,7 @@ necesidades especiales, se pueden añadir en la carpeta 'packages' otros
 nuevos, bien sea con la extensión 'mac', si están escritos en el código
 de Maxima, bien con la extensión 'lisp', si están escritos en Common Lisp.
 Los visitantes podrán llamar a las funciones definidas en estos paquetes
-utilizando la instrucción 'load'. Véanse los ficheros de ayuda HTML.
+utilizando la instrucción 'load'. Véase el fichero de ayuda help_es.html.
 
 
 
@@ -149,16 +132,13 @@ Este programa debe utilizarse con cuidado. A fin de evitar daños en el
 servidor, se han diseñado algunas barreras:
 
 * Existe una lista de términos peligrosos para evitar que código sospechoso
-  escrito por el usuario pase a Maxima. Véase más arriba información sobre
-  la variable de configuración '$dangerous_words'.
+  escrito por el usuario pase a Maxima. Véase la variable global '$dangerous_words'.
 * El número de procesos Maxima abiertos de forma simultánea puede ser establecido
   a voluntad. Véase la variable de configuración '$max_num_processes'.
 * Es posible limitar el tiempo de ejecución de los procesos Maxima. Véase la
   variable de configuración '$max_process_time'.
 
 A pesar de la existencia de estos filtros, no se pode asegurar el 100% de seguridad.
-
-Así, este software se distribuye sin ningún tipo de garantía sobre el particular.
 
 
 

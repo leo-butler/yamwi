@@ -57,10 +57,13 @@ http://sourceforge.net/projects/yamwi/files
 This is the installation process:
 (maybe you need root privileges)
 
-1.- Download file yamwi-x.y.z.tar.gz and place it somewhere accesible
-    from Apache. After that, untar it, which creates new folder yamwi:
+1.- Download file yamwi-yy.mm.tar.gz, where yy stands for the year
+    and mm for the month of release, and place it somewhere accesible
+    from Apache. After that, untar it:
 
-    tar -xvf yamwi-x.y.z.tar.gz
+    tar -xvf yamwi-yy.mm.tar.gz
+
+    which creates a new folder called 'yamwi'.
 
 2.- Execute script INSTALL, it gives folders and files the neccesary
     permissions. It also creates temporary folder tmp, where working
@@ -78,11 +81,13 @@ This is the installation process:
 
 Near the beginning of file 'yamwi.php', there is a configuration section:
 
-'$mode': 0, 1 or 2. When 0, Yamwi output is rendered in ASCII Art style; when
-    1, results are rendered in binary files containing TeX output (be sure
-    programs texi2dvi, dvips and convert are installed), and when 2,
-    output is rendered in enhanced ASCII-Art style, which is easier to read
-    than mode 0. Defaults to 2. Response times are shorter in ASCII Art modes.
+'$mode': 0, 1, 2, 3 or 4. When 0, Yamwi output is rendered in ASCII Art style;
+    when 1, results are rendered in binary files containing TeX output (be sure
+    programs texi2dvi, dvips and convert are installed); when 2, output is 
+    rendered in enhanced ASCII-Art style, which is easier to read than mode 0;
+    when 3, output is returned as a syntactical Maxima expression; when 4, 
+    results are based on the nice looking MathJax (http://www.mathjax.org)
+    system. Defaults to 2. Response times are shorter in ASCII Art modes.
 
 '$max_file_time': Yamwi creates some files which are stored in folder
     'tmp'. Every time a user asks for a calculation, Yamwi removes those
@@ -95,25 +100,6 @@ Near the beginning of file 'yamwi.php', there is a configuration section:
 '$max_num_processes': maximum number of Maxima processes simultaneously
      running on the server. Default value is 30.
 
-'$message_dangerous': message to be sent to the user when dangerous code
-    is detected.
-
-'$message_time_process': message to be sent to the user when a Maxima process
-    is killed when it exceedes maximum execution time.
-
-'$message_too_many_processes': message to be sent to the user when the requiered
-    process can't be started due to server activity.
-
-'$dangerous_words': when Yamwi detects one of the words contained in this 
-    list, the code entered by the user is not passed to Maxima. The system
-    administrator can modify this list at will.
-
-'$initial_code': contains the initial Maxima code presented to the user as
-    an example.
-
-You can place in folder 'package' all new packages you want to add to
-the interface.
-
 
 
 4. User Add-ons
@@ -123,8 +109,8 @@ Yamwi gives access to all standard Maxima packages. If you have
 special needs, place in folder 'packages' your own packages, either with
 'mac' extension, if it is written in Maxima code, or with 'lisp' extension,
 if it is written in Common Lisp. Then visitors can invoque functions
-defined in these packages by means of the 'load' command. See the HTML
-help files.
+defined in these packages by means of the 'load' command. See help file
+help_en.html.
 
 
 
@@ -136,7 +122,7 @@ barriers have been designed:
 
 * There is a list of so called dangerous terms, which prevents user
   code to be passed to Maxima in case some of them are detected. See
-  configuration variable '$dangerous_words' above.
+  global variable '$dangerous_words'.
 * The number of running Maxima processes can be limited at will. See
   configuration variable '$max_num_processes'.
 * It is possible to limit the execution time of Maxima processes. See
