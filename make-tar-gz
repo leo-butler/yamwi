@@ -17,7 +17,7 @@ cp packages/*.mac yamwi/packages
 # cp packages/*.lisp yamwi/packages
 
 # Packaging
-tar -czvf yamwi-12.9.tar.gz yamwi
+tar -czvf yamwi-12.09.tar.gz yamwi
 
 # Remove folder
 rm -r yamwi
