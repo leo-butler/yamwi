@@ -74,7 +74,7 @@ trajectory(v0, y0, a, m):=
                           color      = red,
                           points([[subst(aux, x), subst(aux, y)]])),
                      anima)  ),
-        apply(Draw, append([terminal=animated_gif,
+        apply(draw, append([terminal=animated_gif,
                               delay = 20],
                               anima)),
 

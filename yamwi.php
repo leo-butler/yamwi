@@ -432,6 +432,15 @@ function error_detected ($out) {
 
 
 
+function pre_process ($str) {
+   $tmp = str_replace("\\", "" , $str);
+   $tmp = str_replace(array("wxdraw3d", "draw3d"), "Draw3d", $tmp);
+   $tmp = str_replace(array("wxdraw2d", "draw2d"), "Draw2d", $tmp);
+   $tmp = str_replace(array("wxdraw", "draw"), "Draw", $tmp);
+   return $tmp;}
+
+
+
 // run Maxima and output results
 function calculate () {
   global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info,
@@ -450,7 +459,7 @@ function calculate () {
          $display2d .
          "\"%%%\")\$\n" . 
          $input;
-  $val = str_replace("\\", "" , $val);
+  $val = pre_process ($val);
 
   // in TeX or enhanced ASCII mode, isolate sentences.
   if ($mode == 1 || $mode == 2 || $mode == 3 || $mode == 4) {

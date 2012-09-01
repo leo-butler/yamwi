@@ -31,7 +31,7 @@ $default =
    "solve(x^2-x+2=0);\n\n".
    "invert(matrix([2,3,1], [a,0,0], [1,4,8]));\n\n".
    "integrate(x * sin(x), x);\n\n".
-   "Draw3d(explicit(x^2+y^2,x,-1,1,y,-1,1));";
+   "draw3d(explicit(x^2+y^2,x,-1,1,y,-1,1));";
 
 start($default);
 ?>

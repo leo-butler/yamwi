@@ -390,7 +390,7 @@ La mejor referencia para aprender a hacer gráficos con Maxima es el documento <
 </p>
 
 <p>
-En el lenguaje de Maxima, la función para dibujar gráficos en el plano es <b>draw2d</b>, pero nosotros trabajando en línea debemos utilizar <b>Draw2d</b>.
+En Yamwi, la función para dibujar gráficos en el plano es <b>draw2d</b>. Yamwi no ejecuta la función gráfica <b>plot2d</b>, pero <b>wxdraw2d</b> también se acepta.
 </p>
 
 <p>
@@ -398,7 +398,7 @@ En primer lugar vamos a representar una función explícita de color rojo sobre 
 </p>
 
 <pre>
-Draw2d (
+draw2d (
   color = red,
   explicit(x^3-2*x^2+x-1, x, -3, 3) ) ;
 </pre>
@@ -408,7 +408,7 @@ Vamos a añadirle una cuadrícula que facilite la interpretación del gráfico. 
 </p>
 
 <pre>
-Draw2d (
+draw2d (
   explicit(x^3-2*x^2+x-1, x, -3, 3),
   grid = true,
   color = red,
@@ -417,11 +417,11 @@ Draw2d (
 </pre>
 
 <p>
-También podemos hacer gráficos en 3D. En este caso la función a utilizar es <b>Draw3d</b>.
+También podemos hacer gráficos en 3D. En este caso la función a utilizar es <b>draw3d</b>.
 </p>
 
 <pre>
-Draw3d(
+draw3d(
   surface_hide = true,
   explicit(20*exp(-x^2-y^2)-10,x,-3,3,y,-3,3));
 </pre>
@@ -431,7 +431,7 @@ Por último, un ejemplo de animación.
 </p>
 
 <pre>
-Draw(terminal   = animated_gif,
+draw(terminal   = animated_gif,
      delay      = 40,
      dimensions = [300,300],
      makelist(gr2d(explicit(x^(k/10),x,0,1)), k, 1, 10) ) $
@@ -504,7 +504,7 @@ cov(mostra) ;
 cor(mostra) ;
 
 /* grafico de dispersion */
-Draw2d(
+draw2d(
    point_type = circle,
    point_size = 3,
    color = navy,

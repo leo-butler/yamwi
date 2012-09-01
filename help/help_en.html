@@ -388,7 +388,7 @@ The best reference for package draw is the html document <a href="http://riotort
 </p>
 
 <p>
-In Maxima, plane drawings are made with function <b>draw2d</b>, but in Yamwi you have to call function <b>Draw2d</b>.
+In Yamwi, 2D drawings are made with function <b>draw2d</b>. Yamwi does not execute command <b>plot2d</b>, but <b>wxdraw2d</b> is also accepted.
 </p>
 
 <p>
@@ -396,7 +396,7 @@ A red explicit function.
 </p>
 
 <pre>
-Draw2d (
+draw2d (
   color = red,
   explicit(x^3-2*x^2+x-1, x, -3, 3) ) ;
 </pre>
@@ -406,7 +406,7 @@ An explicit function together with a parametric one. A grid is added in the back
 </p>
 
 <pre>
-Draw2d (
+draw2d (
   explicit(x^3-2*x^2+x-1, x, -3, 3),
   grid = true,
   color = red,
@@ -415,11 +415,11 @@ Draw2d (
 </pre>
 
 <p>
-For 3D graphics, the function to be used is <b>Draw3d</b>.
+For 3D graphics, the function to be used is <b>draw3d</b>.
 </p>
 
 <pre>
-Draw3d(
+draw3d(
   surface_hide = true,
   explicit(20*exp(-x^2-y^2)-10,x,-3,3,y,-3,3));
 </pre>
@@ -429,7 +429,7 @@ The last example is an animation.
 </p>
 
 <pre>
-Draw(terminal   = animated_gif,
+draw(terminal   = animated_gif,
      delay      = 40,
      dimensions = [300,300],
      makelist(gr2d(explicit(x^(k/10),x,0,1)), k, 1, 10) ) $
@@ -500,7 +500,7 @@ cov(sample) ;
 cor(sample) ;
 
 /* dispersion cloud */
-Draw2d(
+draw2d(
    point_type = circle,
    point_size = 3,
    color = navy,
