@@ -14,7 +14,7 @@ cp yamwi.* yamwi
 cp help/*.html yamwi/help
 cp help/help.css yamwi/help
 cp packages/*.mac yamwi/packages
-# cp packages/*.lisp yamwi/packages
+cp packages/*.lisp yamwi/packages
 
 # Packaging
 tar -czvf yamwi-12.09.tar.gz yamwi
