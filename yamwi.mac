@@ -1,7 +1,17 @@
 
+
+/* add paths to package folder */
+
 file_search_maxima:
    append (file_search_maxima,
            [concat(%dir_sources%, "/###.mac")])$
+
+
+file_search_lisp:
+   append (file_search_lisp,
+           [concat(%dir_sources%, "/###.lisp")])$
+
+
 
 
 
@@ -13,7 +23,7 @@ file_search_maxima:
 
 mwdrawxd(func, descgraf):=
   block([haiterm: false, file_output_append: true, format],
-    load("draw"),
+    if not get('draw,'version) then load("draw"),
     descgraf: append([dimensions=[400,300],
                       gnuplot_file_name = concat(%codigo_usuario%,".gnuplot"),
                       data_file_name = concat(%codigo_usuario%,".data"),
