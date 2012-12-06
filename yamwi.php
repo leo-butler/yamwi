@@ -2,7 +2,7 @@
 
 // COPYRIGHT NOTICE
 // 
-// Copyright 2009-2010 by Mario Rodriguez Riotorto
+// Copyright 2009-2012 by Mario Rodriguez Riotorto
 //    http://yamwi.sourceforge.net
 //    mario@edu.xunta.es
 // 
@@ -481,9 +481,10 @@ function calculate () {
     echo '<u>Complete Maxima input</u>: '.'<pre>'.$val.'</pre><br>';
     echo '<u>Complete Maxima output</u>: '.'<pre>'.$out.'</pre><br>';}
   
-  // if process did not exceed maximum execution time
-  // generate html output.
-  if (strstr($out, 'Exiting on signal') === false) {
+  // Checks wether the last line returned by the shell call
+  // contains the path to the Maxima script; if not, it 
+  // means that the process has been interrupted by timelimit.
+  if (strstr(substr($out,strrpos(trim($out), "\n", -1)), $yamwi_path.'/tmp/'.$key.'.mac')) {
     $out = substr($out,strpos($out, "%%%") + 4);
     $out = rtrim(str_replace($yamwi_path.'/tmp/'.$key.'.mac','', $out));
     $out = substr($out,0, strlen($out) - strlen(strrchr($out,"%")) - 1);
