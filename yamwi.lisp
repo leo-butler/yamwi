@@ -43,3 +43,12 @@
 		    (tdzero $askexp) (setq sign '$zero) (return t)))
 	     (merror "yamwi1a ~M yamwi1b" ($listofvars $askexp)))
 	   (if minus (flip sign) sign))))
+
+
+
+;; to avoid problems with Internet browsers when reading strict ordering symbols
+;; in inequalities (<, >) in LaTeX mode (mainly for MathJax), we need them
+;; to be translated into \lt and \gt, respectively.
+(defprop mlessp ("\\lt ") texsym)
+(defprop mgreaterp ("\\gt ") texsym)
+
