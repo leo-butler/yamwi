@@ -64,7 +64,6 @@ The output obtained is like a dialog. Our questions are preceded by label <b>%i<
 <li><a href="#matrices">Matrices</a></li>
 <li><a href="#graficos">Graphics</a></li>
 <li><a href="#estatistica">Statistics</a></li>
-<li><a href="#paquetes">User Packages</a>
 </ul>
 
 
@@ -246,6 +245,17 @@ sol : solve([5*x + y/8 = 4, x^2 = y],
 float(sol);
 </pre>
 
+<p>When algebraic methods are impossible to apply, we can make use of numerical routines. Library <b>mnewton</b> can solve equations and systems of equations by Newton's method. We call function <b>mnewton</b> with three arguments: the list of equations, the list of unknowns, and the coordinates of the seed point.</p>
+
+<pre>
+load("mnewton") $
+
+/* equation with sigle unknown */
+mnewton([2*a^a = 5],[a],[1]);
+
+/* multiple unknowns */
+mnewton([2*3^u-v/u-5 = 0, u+2^v = 4], [u, v], [2, 2]);
+</pre>
 
 
 
@@ -515,39 +525,6 @@ draw2d(
 
 
 
-
-
-
-<hr>
-<h2 id="paquetes">User Packages</h2>
-
-<p>
-You can ask your Yamwi administrator to add your own Maxima packages, so that you can have your own code accesible from anywhere ready to be used in any moment. Here is an example of a user package.</p>
-
-<p>Package <b>mypackage.mac</b> is installed in folder <b>yamwi/packages</b>, and do not forget to call function <b>load</b> before calculations.</p>
-
-<p>
-We want to calculate some results on parabolic trajectories. The function to be used is <b>tiro</b>, which admits four arguments:</p>
-
-<ol>
-<li>Initial velocity, in m/s.</li>
-<li>Tossing height, in m.</li>
-<li>Tossing angle, in degrees, from 0 to 90.</li>
-<li>Heavenly body (T, Earth; L, Moon; S, Sun; M, Mars; X, Jupiter).</li>
-</ol>
-
-<p>
-In this example, an object is tossed on Mars at ground level, with velocity 35 m/s and angle 47 degrees.
-</p>
-
-<p>
-The output returned by function <b>trajectory</b> contains the acceleration of gravity on Mars, the parabolic equation, horizontal range, maximum height and a graphical simulation.
-</p>
-
-<pre>
-load("mypackage") $
-trajectory(35, 0, 47, M) ;
-</pre>
 
 </body>
 </html>

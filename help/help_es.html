@@ -66,7 +66,6 @@ La información que vamos a obtener tiene aspecto de conversación. Nuestras pet
 <li><a href="#matrices">Cálculo matricial</a></li>
 <li><a href="#graficos">Gráficos</a></li>
 <li><a href="#estatistica">Estadística</a></li>
-<li><a href="#paquetes">Paquetes de usuario</a>
 </ul>
 
 
@@ -84,7 +83,7 @@ La información que vamos a obtener tiene aspecto de conversación. Nuestras pet
 <h2 id="operacions">Operaciones numéricas</h2>
 
 <p>
-Maxima siempre evita trabajar con cantidades aproximadas. Con el siguiente código operamos con fracciones. Cada instrucción debe terminar con un punto y coma (<b>;</b>).
+Maxima siempre evita trabajar con cantidades aproximadas. Con el siguiente código operamos con racionales. Cada instrucción debe terminar con un punto y coma (<b>;</b>).
 </p>
 
 <pre>
@@ -248,6 +247,17 @@ sol : solve([5*x + y/8 = 4, x^2 = y],
 float(sol);
 </pre>
 
+<p>Cuando los métodos algebraicos no se puedan utilizar, podemos hacer uso de las rutinas numéricas. La librería <b>mnewton</b> puede resolver ecuaciones y sistemas de ecuaciones por el método de Newton. Llamamos a la función <b>mnewton</b> con tres argumentos: la lista de ecuaciones, la lista de incógnitas y las coordenadas del punto inicial.</p>
+
+<pre>
+load("mnewton") $
+
+/* equation with sigle unknown */
+mnewton([2*a^a = 5],[a],[1]);
+
+/* multiple unknowns */
+mnewton([2*3^u-v/u-5 = 0, u+2^v = 4], [u, v], [2, 2]);
+</pre>
 
 
 
@@ -323,7 +333,7 @@ integrate( x * exp(x), x, 1, 2) ;
 <h2 id="matrices">Cálculo matricial</h2>
 
 <p>
-Las matrices se pueden introducir de varias maneras. El más frecuente es hacer uso de la función <b>matrix</b> declarando las filas. En este ejemplo se introducen dos matrices para después sumarlas y restarlas.
+Las matrices se pueden introducir de varias maneras. La más frecuente es hacer uso de la función <b>matrix</b> declarando las filas. En este ejemplo se introducen dos matrices para después sumarlas y restarlas.
 </p>
 
 <pre>
@@ -519,41 +529,6 @@ draw2d(
 
 
 
-
-
-
-
-<hr>
-<h2 id="paquetes">Paquetes de usuario</h2>
-
-<p>
-Es posible solicitarle al administrador de Yamwi que incluya nuevos paquetes de usuario en el sistema, de manera que el código esté siempre accesible para ser utilizado desde cualquier lugar. Aquí hay un ejemplo de un paquete de usuario.</p>
-
-<p>El paquete <b>mypackage.mac</b> está instalado en la carpeta <b>yamwi/packages</b>. No olvidarse de llamar a la función <b>load</b> antes de realizar los cálculos.</p>
-
-<p>
-Este es un ejemplo de cálculo que se puede preparar con esta herramienta. Se trata de una función llamada <b>trajectory</b> que admite cuatro argumentos:
-</p>
-
-<ol>
-<li>Velocidad inicial del proyectil, en m/s.</li>
-<li>Altura desde la que se hace el disparo, en m.</li>
-<li>Ángulo de disparo medido desde la horizontal, en grados, desde 0 hasta 90.</li>
-<li>Astro desde cuya superficie se hace el lanzamiento (T, Tierra; L, Luna; S, Sol; M, Marte; X, Júpiter).</li>
-</ol>
-
-<p>
-En este ejemplo, un proyectil es lanzado desde la superficie de Marte a nivel del suelo, con una velocidad de 35 m/s y ángulo de 47 grados.
-</p>
-
-<p>
-El resultado que devuelve la función <b>trajectory</b> contiene la aceleración de la gravedad, la ecuación de la parábola correspondiente, el alcance y la altura máxima, así como un gráfico que simula la trayectoria.
-</p>
-
-<pre>
-load("mypackage") $
-trajectory(35, 0, 47, M) ;
-</pre>
 
 
 </body>

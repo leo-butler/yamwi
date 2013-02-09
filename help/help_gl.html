@@ -59,7 +59,6 @@ A información que imos obter ten aspecto de conversación. As nosas peticións 
 <li><a href="#matrices">Cálculo matricial</a></li>
 <li><a href="#graficos">Gráficos</a></li>
 <li><a href="#estatistica">Estatística</a></li>
-<li><a href="#paquetes">Paquetes de usuario</a>
 </ul>
 
 
@@ -77,7 +76,7 @@ A información que imos obter ten aspecto de conversación. As nosas peticións 
 <h2 id="operacions">Operacións numéricas</h2>
 
 <p>
-Maxima sempre evita traballar con cantidades aproximadas. Co seguinte código operamos con fraccións. Cada instrucción debe rematar cun punto e coma (<b>;</b>).
+Maxima sempre evita traballar con cantidades aproximadas. Co seguinte código operamos con racionais. Cada instrucción debe rematar cun punto e coma (<b>;</b>).
 </p>
 
 <pre>
@@ -171,7 +170,7 @@ factor(u^6 - 14*u^5 - 23*u^4 + 808*u^3 - 320*u^2 - 12800*u) ;
 </pre>
 
 <p>
-Se queremos calcular o valor numérico dunha expresión alxébrica, faremos uso da función <b>subst</b> tal como se indica a continuación, onde gardamos na variable <b>f</b> a fórmula para a forza de atracción gravitatoria e a calculamos para diferentes masa e distancias. O uso dos corchetes (<b>[</b> e <b>]</b>) en Maxima é moi común, xa que con eles podemos construir listas e calesqueira outras estruturas de datos.
+Se queremos calcular o valor numérico dunha expresión alxébrica, faremos uso da función <b>subst</b> tal como se indica a continuación, onde gardamos na variable <b>f</b> a fórmula para a forza de atracción gravitatoria e a calculamos para diferentes masas e distancias. O uso dos corchetes (<b>[</b> e <b>]</b>) en Maxima é moi común, xa que con eles podemos construir listas e calesqueira outras estruturas de datos.
 </p>
 
 <pre>
@@ -241,7 +240,17 @@ sol : solve([5*x + y/8 = 4, x^2 = y],
 float(sol);
 </pre>
 
+<p>Cando os métodos alxébricos non se poidan utilizar, podemos facer uso das rutinas numéricas. A libraría <b>mnewton</b> pode resolver ecuacións e sistemas de ecuacións polo método de Newton. Chamamos á función <b>mnewton</b> con tres argumentos: a lista de ecuacións, a lista de incógnitas e as coordenadas do punto inicial.</p>
 
+<pre>
+load("mnewton") $
+
+/* equation with sigle unknown */
+mnewton([2*a^a = 5],[a],[1]);
+
+/* multiple unknowns */
+mnewton([2*3^u-v/u-5 = 0, u+2^v = 4], [u, v], [2, 2]);
+</pre>
 
 
 
@@ -513,39 +522,6 @@ draw2d(
 
 
 
-
-
-<hr>
-<h2 id="paquetes">Paquetes de usuario</h2>
-
-<p>
-É posible solicitarlle ó administrador de Yamwi que inclúa novos paquetes de usuario no sistema, de xeito que o código estea sempre accesible para ser utilizado dende cualquera lugar. Aquí hai un exemplo dun paquete de usuario.</p>
-
-<p>O paquete <b>mypackage.mac</b> está instalado no cartafol <b>yamwi/packages</b>. Non esquecer de chamar á función <b>load</b> antes de facer os cálculos.</p>
-
-<p>
-Este é un exemplo de cálculo que se pode preparar con esta ferramenta. Trátase dunha función chamada <b>trajectory</b> que admite catro argumentos:
-</p>
-
-<ol>
-<li>Velocidade inicial dun proxectil, en m/s.</li>
-<li>Altura dende a que se fai o disparo, en m.</li>
-<li>Ángulo de disparo medido dende a horizontal, en graos, dende 0 ata 90.</li>
-<li>Astro dende cuxa superficie se fai o lanzamento (T, Terra; L, Lúa; S, Sol; M, Marte; X, Xúpiter).</li>
-</ol>
-
-<p>
-Neste exemplo, un proxectil é lanzado dende a superficie de Marte a nivel do chan, cunha velocidade de 35 m/s e ángulo de 47 graos.
-</p>
-
-<p>
-O resultado que devolve a función <b>trajectory</b> contén a aceleración da gravidade, a ecuación da parábola correspondente, o alcance e a altura máxima, así como un gráfico que simula a traxectoria.
-</p>
-
-<pre>
-load("mypackage") $
-trajectory(35, 0, 47, M) ;
-</pre>
 
 
 </body>
