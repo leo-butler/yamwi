@@ -310,7 +310,11 @@ integrate(sin (2 + 3 * x), x) ;
 integrate( x * exp(x), x, 1, 2) ;
 </pre>
 
+<p>Cando os métodos simbólicos non se poidan aplicar, podemos facer uso dalgunhas rutinas numéricas. Unha delas é <b>quad_qag</b>; pasarémoslle cinco argumentos, o integrando, a variable independente, os dous límites de integración e un enteiro entre 1 e 6, que é un parámetro do procedemento (3 adoita ser unha boa elección). O que se obtén é unha lista de números; o primero é o valor da integral definida e o segundo unha estimación do erro cometido.</p>
 
+<pre>
+quad_qag(exp(sin(x)),x,2,7,3);
+</pre>
 
 
 
@@ -373,7 +377,27 @@ transpose(a) ;
 determinant(a) ;
 </pre>
 
+<p>Hai matrices que se definen de xeito especial, como a identidade e a matriz nula.</p>
 
+<pre>
+ident(4);
+zeromatrix(4,2);
+</pre>
+
+<p>Dada unha matriz, calculamos o seu polinomio característico, os seus valores e vectores propios.</p>
+
+<pre>
+A: matrix([1,3], [5,7]);
+
+/* o segundo argumento e o nome da variable */
+charpoly(A, x);
+
+/* os valores propios e as suas multiplicidades */
+eigenvalues(A);
+
+/* os valores propios e os seus vectores correspondentes */
+eigenvectors(A);
+</pre>
 
 
 
