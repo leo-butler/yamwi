@@ -1,7 +1,12 @@
 h1{
-  font-size:      150%;
+  font-size:      200%;
+  font-style:     italic;
   font-weight:    bold;}
 h2{
+  font-size:      170%;
+  font-style:     italic;
+  font-weight:    bold;}
+h3{
   font-size:      125%;
   font-style:     italic;
   font-weight:    bold;}
@@ -13,4 +18,12 @@ p{
   color:          #000000; }
 pre{
   font-family:      Courier, monospace;
+  font-size:        100%;
   background-color: cyan;}
+p.pie{
+  font-size:   75%;
+  font-style:  italic;
+  margin-left: 5px;
+  text-align:  left;
+  color:       #A52A2A;}
+

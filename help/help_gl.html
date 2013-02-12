@@ -52,11 +52,29 @@ A información que imos obter ten aspecto de conversación. As nosas peticións 
 <h2>Contido</h2>
 
 <ul>
-<li><a href="#operacions">Operacións numéricas</a></li>
-<li><a href="#alxebra">Álxebra</a></li>
-<li><a href="#ecuacions">Ecuacións</a></li>
-<li><a href="#calculo">Cálculo infinitesimal</a></li>
-<li><a href="#matrices">Cálculo matricial</a></li>
+<li><a href="#numeros">Números</a>
+  <ul>
+  <li><a href="#enteiros">Enteiros</a></li>
+  <li><a href="#racionais">Racionais</a></li>
+  <li><a href="#complexos">Complexos</a></li>
+  </ul>
+</li>
+<li><a href="#alxebra">Álxebra</a>
+  <ul>
+  <li><a href="#polinomios">Polinomios</a></li>
+  <li><a href="#ecuacions">Ecuacións</a></li>
+  <li><a href="#vectores">Vectores</a></li>
+  <li><a href="#matrices">Matrices</a></li>
+  </ul>
+</li>
+<li><a href="#calculo">Cálculo</a>
+  <ul>
+  <li><a href="#limites">Límites</a></li>
+  <li><a href="#derivadas">Derivadas</a></li>
+  <li><a href="#integrais">Integrais</a></li>
+  <li><a href="#ecdiferenciais">Ecuacións diferenciais</a></li>
+  </ul>
+</li>
 <li><a href="#graficos">Gráficos</a></li>
 <li><a href="#estatistica">Estatística</a></li>
 </ul>
@@ -73,7 +91,60 @@ A información que imos obter ten aspecto de conversación. As nosas peticións 
 
 
 <hr>
-<h2 id="operacions">Operacións numéricas</h2>
+<h2 id="numeros">Números</h2>
+
+<h3 id="enteiros">Enteiros</h3>
+
+<p>Pódense utilizar enteiros tan grandes como sexa necesario. Aquí calculamos o factorial de 100,</p>
+
+<pre>
+100! ;
+</pre>
+
+<p>Coma en calquera outra linguaxe de programación, podemos sumar (<b>+</b>), restar (<b>-</b>), multiplicar (<b>*</b>), dividir (<b>/</b>), calcular potencias (<b>^</b>) y raíces cadradas (<b>sqrt</b>).</p>
+
+<pre>
+3^4 * (5-91+(-24)) + 75 / sqrt(25) ;
+</pre>
+
+<p>Vexamos a lista dos divisores dun enteiro dado e a súa factorización en números primos,</p>
+
+<pre>
+/* primeiro gardamos o numero na variable a */
+a: 169996284 $
+divisors(a) ;
+factor(a) ;
+</pre>
+
+<p>Preguntamos a Maxima se 1502933 é un número primo.</p>
+
+<pre>
+primep(1502933);
+</pre>
+
+<p>Facemos uso de <b>gcd</b> para calcular o <i>máximo común divisor</i> de dous números e <b>lcm</b> para o <i>mínimo común múltiplo</i> dun conxunto arbitrario de enteiros, pero tendo en conta que para usar <b>lcm</b> temos que cargar primeiro a libraría <b>functs</b>.</p>
+
+<pre>
+gcd(16479936, 43375500000); 
+
+load("functs")$
+lcm(16479936, 43375500000, 111375);
+</pre>
+
+<p>A función <b>divide</b> devolve unha lista con dous elementos, o cociente e o resto (módulo) dunha división enteira.</p>
+
+<pre>
+divide(34, 5);
+</pre>
+
+
+
+
+
+
+
+
+<h3 id="racionais">Racionais</h3>
 
 <p>
 Maxima sempre evita traballar con cantidades aproximadas. Co seguinte código operamos con racionais. Cada instrucción debe rematar cun punto e coma (<b>;</b>).
@@ -136,11 +207,72 @@ bfloat( sqrt(2) );
 
 
 
+<h3 id="complexos">Complexos</h3>
+
+<p>A unidade imaxinaria represéntase por <b>%i</b>. Con este símbolo, podemos escribir cualquera número complexo e realizar algunhas operacións con eles.</p>
+
+<pre>
+z1: 3 + 5*%i;
+z2: 2/3 - %i;
+
+z1 + z2;
+z1 - z2;
+</pre>
+
+<p>Ás veces, Maxima devolve expresións complexas con parénteses. Se queremos simplificalas, podemos chamar á función <b>expand</b>.</p>
+
+<pre>
+z1: 3 + 5*%i $
+z2: 2/3 - %i $
+
+3*z1 - 7*z2;
+expand(3*z1 - 7*z2);
+
+z1 * z2;
+expand(z1 * z2);
+</pre>
+
+<p>Podemos transformar números complexos en forma binomial á súa forma polar e ó revés.</p>
+
+<pre>
+z: 3 + 5*%i ;
+p: polarform(z);
+b: rectform(p);
+</pre>
+
+<p>Dividamos dous números complexos e obteñamos o resultado en forma binomial,</p>
+
+<pre>
+d: (3 + 5*%i) / (7/8 - 1/4*%i) ;
+rectform(d);
+</pre>
+
+<p>Dado un número complexo, podemos obter as súas partes real e imaxinaria, así coma o seu módulo e ángulo.</p>
+
+<pre>
+z: 7/8 - 1/4*%i;
+realpart(z);
+imagpart(z);
+cabs(z);
+carg(z);
+</pre>
+
+
+
+
+
+
 
 
 
 <hr>
 <h2 id="alxebra">Álxebra</h2>
+
+
+
+
+
+<h3 id="polinomios">Polinomios</h3>
 
 <p>
 Da mesma maneira que podemos operar con números podemos facelo con variables. Fíxate como se reducen as expresións alxébricas.
@@ -180,13 +312,6 @@ subst([m1 = 4, m2 = 5, r = 7], f) ;
 subst([m1 = mass, m2 = mass], f) ;
 </pre>
 
-<p>
-Para obter información sobre algunha das funcións ou variables globais de Maxima cómpre facer uso de <b>describe</b>.
-</p>
-
-<pre>
-describe(subst);
-</pre>
 
 
 
@@ -194,16 +319,11 @@ describe(subst);
 
 
 
-
-
-<hr>
-<h2 id="ecuacions">Ecuacións</h2>
+<h3 id="ecuacions">Ecuacións</h3>
 
 <p>
 En xeral, a función a utilizar é <b>solve</b>. Necesitará dous argumentos: o primeiro será unha lista de ecuacións separadas por comas, e o segundo a lista de incógnitas.
 </p>
-
-
 
 <p>
 Unha sinxela ecuación de primeiro grao.
@@ -260,60 +380,37 @@ mnewton([2*3^u-v/u-5 = 0, u+2^v = 4], [u, v], [2, 2]);
 
 
 
-<hr>
-<h2 id="calculo">Cálculo infinitesimal</h2>
+<h3 id="vectores">Vectores</h3>
 
-<p>
-O cálculo de límites faise coa función <b>limit</b>. 
-</p>
-
-<p>
-Empezamos por uns límites moi sinxelos. O infinito represéntase por <b>inf</b> e o menos infinito por <b>minf</b>.
-</p>
+<p>Os vectores represéntanse como listas pechadas entre corchetes. Podemos realizar con eles algunhas operacións habituais.</p>
 
 <pre>
-limit( (x-1) / (2*x + 3), x, 1);
+v1: [1, 2, 3] $
+v2: [a, b, c] $
 
-limit( (x-1) / (2*x + 3), x, inf);
+/* suma e resta */
+v1 + v2;
+v1 - v2;
+
+/* produto por un numero */
+k * v1;
+
+/* produto escalar */
+v1 . v2;
 </pre>
 
-<p>
-Límites pola esquerda e pola dereita.
-</p>
+<p>O produto vectorial está definido na libraría <b>vector3d</b>.</p>
 
 <pre>
-limit( 1 / (x-1), x, 1, minus);
-
-limit( 1 / (x-1), x, 1, plus);
+load(vector3d) $
+cross([a, b, c] , [x, y, z]);
 </pre>
 
-<p>
-Exemplo de cálculo de derivadas de varios ordes.
-</p>
+<p>Aquí hai un exemplo de como se define unha nova función en Maxima. Queremos escribir unha función que calcule o módulo dun vector; obsérvese que as funcións defínense por medio do operador <b>:=</b>. Vale, non te preocupes se non entendes a parte interna da función.</p>
 
 <pre>
-fun : sin(x) * x^4 ;
-
-diff( fun, x);
-
-/* terceira derivada */
-diff( fun, x, 3);
-</pre>
-
-<p>
-Unha integral indefinida e outra definida. Nótese que o símbolo <b>%e</b> representa a base dos logaritmos naturais.
-</p>
-
-<pre>
-integrate(sin (2 + 3 * x), x) ;
-
-integrate( x * exp(x), x, 1, 2) ;
-</pre>
-
-<p>Cando os métodos simbólicos non se poidan aplicar, podemos facer uso dalgunhas rutinas numéricas. Unha delas é <b>quad_qag</b>; pasarémoslle cinco argumentos, o integrando, a variable independente, os dous límites de integración e un enteiro entre 1 e 6, que é un parámetro do procedemento (3 adoita ser unha boa elección). O que se obtén é unha lista de números; o primero é o valor da integral definida e o segundo unha estimación do erro cometido.</p>
-
-<pre>
-quad_qag(exp(sin(x)),x,2,7,3);
+modulus(v):= sqrt(apply("+", v^2)) $
+modulus([a, 5, c]);
 </pre>
 
 
@@ -324,9 +421,7 @@ quad_qag(exp(sin(x)),x,2,7,3);
 
 
 
-
-<hr>
-<h2 id="matrices">Cálculo matricial</h2>
+<h3 id="matrices">Matrices</h3>
 
 <p>
 As matrices pódense introducir de varios xeitos. O máis frecuente é facer uso da función <b>matrix</b> declarando as filas. Neste exemplo introdúcense dúas matrices para despois sumalas e restalas.
@@ -398,6 +493,227 @@ eigenvalues(A);
 /* os valores propios e os seus vectores correspondentes */
 eigenvectors(A);
 </pre>
+
+
+
+
+
+
+
+
+
+
+
+<hr>
+<h2 id="calculo">Cálculo</h2>
+
+
+<h3 id="limites">Límites</h3>
+
+<p>
+A función <b>limit</b> á a que nos permite calcular límites.
+</p>
+
+<p>
+O máis infinito represéntase por <b>inf</b> e o menos infinito por <b>minf</b>.
+</p>
+
+<pre>
+f: (x-1) / (2*x + 3) ;
+
+/* x achegase a 1 */
+limit(f, x, 1);
+
+/* x achegase a mais infinito */
+limit(f, x, inf);
+
+/* x achegase a menos infinito */
+limit(f, x, minf);
+</pre>
+
+<p>
+Podemos achegarnos ó límite pola dereita o pola esquerda.
+</p>
+
+<pre>
+g: 1 / (x-1);
+limit(g, x, 1);
+
+/* achegamonos a 1 pola dereita */
+limit(g, x, 1, plus);
+
+/* achegamonos a 1 pola esquerda */
+limit(g, x, 1, minus);
+</pre>
+
+
+
+
+
+
+
+
+<h3 id="derivadas">Derivadas</h3>
+
+<p>
+Temos que chamar á función <b>diff</b>.
+</p>
+
+<pre>
+fun: sin(x) * x^4 ;
+diff(f, x);
+</pre>
+
+<p>Calculando derivadas de orde maior ca un.</p>
+
+<pre>
+/* orden tres */
+diff(log(x)*x^x, x, 3);
+</pre>
+
+<p>Se queremos calcular derivadas implícitas, temos que dicirlle a Maxima que variables dependen da variable independente.</p>
+
+<pre>
+/* y e unha constante */
+i: x^4 - x*y = cos(y^2+x);
+diff(i, x);
+
+/* agora, y depende de x */
+depends(y,x) $
+diff(i, x);
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+<h3 id="integrais">Integrais</h3>
+
+<p>
+Chamamos á función <b>integrate</b> tanto para as integrais indefinidas como definidas.
+</p>
+
+<pre>
+/* integral indefinida */
+integrate(sin (2 + 3 * x), x) ;
+
+/* integral definida */
+integrate( x * exp(x), x, 1, 2) ;
+</pre>
+
+<p>Cando os métodos simbólicos non se poidan aplicar, podemos facer uso dalgunhas rutinas numéricas. Unha delas é <b>quad_qag</b>; pasarémoslle cinco argumentos, o integrando, a variable independente, os dous límites de integración e un enteiro entre 1 e 6, que é un parámetro do procedemento (3 adoita ser unha boa elección). O que se obtén é unha lista de números; o primero é o valor da integral definida e o segundo unha estimación do erro cometido.</p>
+
+<pre>
+quad_qag(exp(sin(x)),x,2,7,3);
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+<h3 id="ecdiferenciais">Ecuacións diferenciais</h3>
+
+<p>Para traballar con ecuacións diferenciais necesitamos dicirlle a Maxima que variable depende da variable independiente. Teremos que facer uso da función <b>ode2</b> para resolver ecuacións diferenciais ordinarias. </p>
+
+<pre>
+depends(y, x) $
+
+/* unha ecuacion con variables separadas */
+e: (x-1)*y^3+(y-1)*x^3*diff(y,x)=0;
+r: ode2(e,y,x);
+
+/* aplicamos condicions iniciais */
+ic1(r,x=2,y=-3);
+</pre>
+
+<p>Resolvemos unha ecuación diferencial de Bernoulli.</p>
+
+<pre>
+depends(y, x) $
+r: ode2(diff(y,x)-y+sqrt(y),y,x);
+
+/* despexamos a variable dependente con solve */
+solve(r, y);
+</pre>
+
+<p>Xunto coa función <b>ode2</b>, a libraría <b>contrib_ode</b> engade máis funcionalidades para resolver ecuacións diferenciais; véxase a documentación dispoñible.</p>
+
+<p>Resolvendo unha ecuación diferencial de orde dous, trátase da ecuación do <i>movemento harmónico simple</i>.</p>
+
+<pre>
+depends(x, t) $
+
+assume(k>0) $
+e: diff(x,t,2) + k^2 * x = 0;
+r: ode2(e, x, t);
+
+/* aplicamos condicions iniciais */
+ic2(r, t=0, x=1, diff(x,t)=1/2);
+
+/* ou aplicamos condicions de contorna */
+bc2(r, t=0, x=1, x=3, t=-1);
+
+/* debuxamola! */
+draw2d(explicit(rhs(s), t, 0, 10))$
+</pre>
+
+<p>Coa función <b>desolve</b> podemos resolver sistemas de ecuacións diferenciais, pero neste caso debemos indicar explícitamente as dependencias das funcións.</p>
+
+<pre>
+desolve(
+    [diff(f(x),x)=3*f(x)-2*g(x),
+     diff(g(x),x)=2*f(x)-2*g(x)],
+    [f(x),g(x)]);
+</pre>
+
+<p>Se queremos aplicar condicións iniciais, temos que declaralas con <b>atvalue</b> antes de chamar a <b>desolve</b>.</p>
+
+<pre>
+atvalue(f(x),x=0,-1)$
+atvalue(g(x),x=0,3)$
+atvalue(h(x),x=0,1)$
+
+desolve(
+  [diff(f(x),x)=f(x)+g(x)+3*h(x),
+   diff(g(x),x)=g(x)-2*h(x),
+   diff(h(x),x)=f(x)+h(x)],
+  [f(x),g(x),h(x)]);
+</pre>
+
+<p>Cando os métodos simbólicos non estean permitidos, podemos usar o método de Runge-Kutta (<b>rk</b>). Aquí tamén debuxamos a función resultante.</p>
+
+<pre>
+/* resolvemos dy/dt = 2 y^2-exp(-3 t) */
+sol: rk(2*y^2-exp(-3*t), y, 0, [t, 0, 10, 0.2]) $
+
+draw2d(
+  points_joined = true,
+  points(sol))$
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -545,8 +861,7 @@ draw2d(
 
 
 
-
-
-
+<hr>
+<p class="pie">Mario Rodríguez Riotorto</p>
 </body>
 </html>
