@@ -75,7 +75,12 @@ A información que imos obter ten aspecto de conversación. As nosas peticións 
   <li><a href="#ecdiferenciais">Ecuacións diferenciais</a></li>
   </ul>
 </li>
-<li><a href="#graficos">Gráficos</a></li>
+<li><a href="#graficos">Gráficos</a>
+  <ul>
+  <li><a href="#graficos2d">Gráficos 2D</a></li>
+  <li><a href="#graficos3d">Gráficos 3D</a></li>
+  </ul>
+</li>
 <li><a href="#estatistica">Estatística</a></li>
 </ul>
 
@@ -93,7 +98,7 @@ A información que imos obter ten aspecto de conversación. As nosas peticións 
 <hr>
 <h2 id="numeros">Números</h2>
 
-<h3 id="enteiros">Enteiros</h3>
+<h3 id="enteiros"><br>Enteiros</h3>
 
 <p>Pódense utilizar enteiros tan grandes como sexa necesario. Aquí calculamos o factorial de 100,</p>
 
@@ -144,7 +149,7 @@ divide(34, 5);
 
 
 
-<h3 id="racionais">Racionais</h3>
+<h3 id="racionais"><br>Racionais</h3>
 
 <p>
 Maxima sempre evita traballar con cantidades aproximadas. Co seguinte código operamos con racionais. Cada instrucción debe rematar cun punto e coma (<b>;</b>).
@@ -207,7 +212,7 @@ bfloat( sqrt(2) );
 
 
 
-<h3 id="complexos">Complexos</h3>
+<h3 id="complexos"><br>Complexos</h3>
 
 <p>A unidade imaxinaria represéntase por <b>%i</b>. Con este símbolo, podemos escribir cualquera número complexo e realizar algunhas operacións con eles.</p>
 
@@ -272,7 +277,7 @@ carg(z);
 
 
 
-<h3 id="polinomios">Polinomios</h3>
+<h3 id="polinomios"><br>Polinomios</h3>
 
 <p>
 Da mesma maneira que podemos operar con números podemos facelo con variables. Fíxate como se reducen as expresións alxébricas.
@@ -319,7 +324,7 @@ subst([m1 = mass, m2 = mass], f) ;
 
 
 
-<h3 id="ecuacions">Ecuacións</h3>
+<h3 id="ecuacions"><br>Ecuacións</h3>
 
 <p>
 En xeral, a función a utilizar é <b>solve</b>. Necesitará dous argumentos: o primeiro será unha lista de ecuacións separadas por comas, e o segundo a lista de incógnitas.
@@ -380,7 +385,7 @@ mnewton([2*3^u-v/u-5 = 0, u+2^v = 4], [u, v], [2, 2]);
 
 
 
-<h3 id="vectores">Vectores</h3>
+<h3 id="vectores"><br>Vectores</h3>
 
 <p>Os vectores represéntanse como listas pechadas entre corchetes. Podemos realizar con eles algunhas operacións habituais.</p>
 
@@ -421,7 +426,7 @@ modulus([a, 5, c]);
 
 
 
-<h3 id="matrices">Matrices</h3>
+<h3 id="matrices"><br>Matrices</h3>
 
 <p>
 As matrices pódense introducir de varios xeitos. O máis frecuente é facer uso da función <b>matrix</b> declarando as filas. Neste exemplo introdúcense dúas matrices para despois sumalas e restalas.
@@ -508,7 +513,7 @@ eigenvectors(A);
 <h2 id="calculo">Cálculo</h2>
 
 
-<h3 id="limites">Límites</h3>
+<h3 id="limites"><br>Límites</h3>
 
 <p>
 A función <b>limit</b> á a que nos permite calcular límites.
@@ -553,7 +558,7 @@ limit(g, x, 1, minus);
 
 
 
-<h3 id="derivadas">Derivadas</h3>
+<h3 id="derivadas"><br>Derivadas</h3>
 
 <p>
 Temos que chamar á función <b>diff</b>.
@@ -593,7 +598,7 @@ diff(i, x);
 
 
 
-<h3 id="integrais">Integrais</h3>
+<h3 id="integrais"><br>Integrais</h3>
 
 <p>
 Chamamos á función <b>integrate</b> tanto para as integrais indefinidas como definidas.
@@ -623,7 +628,7 @@ quad_qag(exp(sin(x)),x,2,7,3);
 
 
 
-<h3 id="ecdiferenciais">Ecuacións diferenciais</h3>
+<h3 id="ecdiferenciais"><br>Ecuacións diferenciais</h3>
 
 <p>Para traballar con ecuacións diferenciais necesitamos dicirlle a Maxima que variable depende da variable independiente. Teremos que facer uso da función <b>ode2</b> para resolver ecuacións diferenciais ordinarias. </p>
 
@@ -731,32 +736,101 @@ draw2d(
 A mellor referencia para aprender a facer gráficos con Maxima é o documento <a href="http://riotorto.users.sf.net/gpdraw">A Maxima-Gnuplot interface</a>, que contén multitude de exemplos que se poden copiar e pegar no formulario. O manual de Maxima tamén ten unha sección adicada ós gráficos.
 </p>
 
+
+
+
+
+
+
+
+
+
+<h3 id="graficos2d"><br>Gráficos 2D</h3>
+
 <p>
-En Yamwi, a función para debuxar gráficos no plano é <b>draw2d</b>. Yamwi non executa a función gráfica <b>plot2d</b>, pero <b>wxdraw2d</b> tamén se acepta.
+Os gráficos en 2D pódense facer coa función <b>draw2d</b>.
 </p>
 
 <p>
-En primeiro lugar imos representar unha función explícita de cor vermella sobre o plano.
+As opcións escríbense co formato <b>opción = valor</b> e os obxectos gráficos da forma  <b>obxecto(arg<sub>1</sub>, arg<sub>2</sub>, ...)</b>. 
 </p>
+
+<p>Aquí represéntase unha función explícita en vermello. As funcións explícitas necesitan una expresión, o nome da variable independente e os extremos do dominio a representar.</p>
 
 <pre>
 draw2d (
   color = red,
-  explicit(x^3-2*x^2+x-1, x, -3, 3) ) ;
+  explicit(x^3-2*x^2+x-1, x, -3, 3) ) $
 </pre>
 
 <p>
-Imos engadirlle unha cuadrícula que faga máis doada a interpretación do gráfico. Ademáis, incorporamos á escena unha función paramétrica de trazo vermello algo máis groso.
+As opcións lense secuencialmente e afectan ós obxectos gráficos que se declaren a continuación. De seguido unha función explícita xunto con outra paramétrica. Engádese unha grella ó fondo.
 </p>
 
 <pre>
 draw2d (
   explicit(x^3-2*x^2+x-1, x, -3, 3),
-  grid = true,
-  color = red,
+  grid       = true,
+  color      = red,
   line_width = 4,
-  parametric(sin(t), t^2, t, -2*%pi, 2*%pi) ) ;
+  parametric(sin(t), t^2, t, -2*%pi, 2*%pi) ) $
 </pre>
+
+<p>Podemos debuxar puntos illados e liñas poligonais. As coordenadas dos puntos pódenselle pasar ó obxecto <b>points</b> como una lista de pares, escribindo a lista de abscisas seguida da lista de ordenadas ou ben dando soamente a lista de ordenadas. Tamén  vese que as cores se pueden declarar en forma hexadecimal e que o estilo dos puntos, agás a cor, afecta ós últimos dous obxectos.</p>
+
+<pre>
+draw2d (
+  /* estilo por defecto */
+  points([[2,3], [7,4], [0,5], [5,2/3], [7,-1], [8,3], [-2,10]]),
+
+  point_type    = circle,
+  point_size    = 3,
+  color         = brown,
+  points_joined = true,
+  points([3, 4, 6, 8], [-2, -5, 3, 1]),
+
+  color = "#ff670d",
+  points([2, 6, 2, 8, 9])  ) $
+</pre>
+
+<p>Unha función implícita, unha función definida en coordenadas polares e un polígono.</p>
+
+<pre>
+draw2d(
+  /* opcions globais */
+  title      = "Escribe o teu titulo",
+  xlabel     = "eixe-x",
+  ylabel     = "eixe-y",
+  grid       = true,
+  dimensions = [500,500],
+
+  /* funcion implicita */
+  key = "Implicita",
+  implicit(y^2=x^3-2*x+1, x, -4,4, y, -4,6),
+
+  /* coordenadas polares */
+  key   = "Polar",
+  color = red,
+  polar(10/theta,theta,1,3*%pi),
+
+  /* poligono */
+  key        = "Poligono",
+  fill_color = sea_green,
+  color      = aquamarine,
+  line_width = 6,
+  polygon([[1,1],[3,0],[4,5],[0,3]]) ) $
+</pre>
+
+
+
+
+
+
+
+
+
+
+<h3 id="graficos3d"><br>Gráficos 3D</h3>
 
 <p>
 Tamén podemos facer gráficos en 3D. Neste caso a función a utilizar é <b>draw3d</b>.

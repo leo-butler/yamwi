@@ -80,7 +80,12 @@ The output obtained is like a dialog. Our questions are preceded by label <b>%i<
   <li><a href="#ecdiferenciais">Differential equations</a></li>
   </ul>
 </li>
-<li><a href="#graficos">Graphics</a></li>
+<li><a href="#graficos">Graphics</a>
+  <ul>
+  <li><a href="#graficos2d">2D graphics</a></li>
+  <li><a href="#graficos3d">3D graphics</a></li>
+  </ul>
+</li>
 <li><a href="#estatistica">Statistics</a></li>
 </ul>
 
@@ -98,7 +103,7 @@ The output obtained is like a dialog. Our questions are preceded by label <b>%i<
 <hr>
 <h2 id="numeros">Numbers</h2>
 
-<h3 id="enteiros">Integers</h3>
+<h3 id="enteiros"><br>Integers</h3>
 
 <p>You can use integer numbers as large as you need. Here is the factorial of 100,</p>
 
@@ -150,7 +155,7 @@ divide(34, 5);
 
 
 
-<h3 id="racionais">Rationals</h3>
+<h3 id="racionais"><br>Rationals</h3>
 
 <p>
 Maxima likes exact results. Here we make rational operations. Sentences must end with semicolons (<b>;</b>).
@@ -215,7 +220,7 @@ bfloat( sqrt(2) );
 
 
 
-<h3 id="complexos">Complex</h3>
+<h3 id="complexos"><br>Complex</h3>
 
 <p>The imaginary unit is represented as <b>%i</b>. With this symbol, we can write any complex number and make some operations with them.</p>
 
@@ -283,7 +288,7 @@ carg(z);
 <h2 id="alxebra">Algebra</h2>
 
 
-<h3 id="polinomios">Polynomials</h3>
+<h3 id="polinomios"><br>Polynomials</h3>
 
 <p>
 We can make operations with variables. Look how we transform algebraic expressions.
@@ -326,7 +331,7 @@ subst([m1 = mass, m2 = mass], f) ;
 
 
 
-<h3 id="ecuacions">Equations</h3>
+<h3 id="ecuacions"><br>Equations</h3>
 
 <p>
 In general, we use function <b>solve</b>. Two arguments are needed, the list of equations followed by the list of unknowns.
@@ -391,7 +396,7 @@ mnewton([2*3^u-v/u-5 = 0, u+2^v = 4], [u, v], [2, 2]);
 
 
 
-<h3 id="vectores">Vectors</h3>
+<h3 id="vectores"><br>Vectors</h3>
 
 <p>Vectors are represented as list with square brackets. We can make with them several common operations.</p>
 
@@ -434,7 +439,7 @@ modulus([a, 5, c]);
 
 
 
-<h3 id="matrices">Matrices</h3>
+<h3 id="matrices"><br>Matrices</h3>
 
 <p>
 Function <b>matrix</b> builds matrices; its arguments are the rows of the matrix in list form. We define two matrices and then we add and subtract them.
@@ -522,7 +527,7 @@ eigenvectors(A);
 
 
 
-<h3 id="limites">Limits</h3>
+<h3 id="limites"><br>Limits</h3>
 
 <p>
 Function <b>limit</b> lets you calculate limits.
@@ -570,7 +575,7 @@ limit(g, x, 1, minus);
 
 
 
-<h3 id="derivadas">Derivatives</h3>
+<h3 id="derivadas"><br>Derivatives</h3>
 
 <p>
 We have to call function <b>diff</b>.
@@ -608,7 +613,7 @@ diff(i, x);
 
 
 
-<h3 id="integrais">Integrals</h3>
+<h3 id="integrais"><br>Integrals</h3>
 
 <p>
 We call <b>integrate</b> for indefinite and definite integrals.
@@ -636,7 +641,7 @@ quad_qag(exp(sin(x)),x,2,7,3);
 
 
 
-<h3 id="ecdiferenciais">Differential equations</h3>
+<h3 id="ecdiferenciais"><br>Differential equations</h3>
 
 <p>When working with differential equations, we need to tell Maxima which variable depends on the independent variable. We have to call function <b>ode2</b> in order to solve ordinary differential equations. </p>
 
@@ -728,35 +733,102 @@ draw2d(
 <h2 id="graficos">Graphics</h2>
 
 <p>
-The best reference for package draw is the html document <a href="http://riotorto.users.sf.net/gpdraw">A Maxima-Gnuplot interface</a>, which contains lots of examples. You can find more examples in the Maxima manual.
+The best reference for package <b>draw</b> is the html document <a href="http://riotorto.users.sf.net/gpdraw">A Maxima-Gnuplot interface</a>, which contains lots of examples. You can find more examples in the Maxima manual.
+</p>
+
+
+
+
+
+
+
+
+
+
+<h3 id="graficos2d"><br>2D graphics</h3>
+
+<p>
+2D drawings are made with function <b>draw2d</b>.
 </p>
 
 <p>
-In Yamwi, 2D drawings are made with function <b>draw2d</b>. Yamwi does not execute command <b>plot2d</b>, but <b>wxdraw2d</b> is also accepted.
+Options are written in the form <b>option = value</b> and graphic objects as <b>object(arg<sub>1</sub>, arg<sub>2</sub>, ...)</b>. 
 </p>
 
-<p>
-A red explicit function.
-</p>
+<p>Here is an explicit function in red. Explicit functions need an expression, the name of the independent variable, and the extrems of the domine to be plotted.</p>
 
 <pre>
 draw2d (
   color = red,
-  explicit(x^3-2*x^2+x-1, x, -3, 3) ) ;
+  explicit(x^3-2*x^2+x-1, x, -3, 3) ) $
 </pre>
 
 <p>
-An explicit function together with a parametric one. A grid is added in the background.
+Options are read sequentially, and they affect the objects declared after them. Her is a an explicit function together with a parametric one. A grid is added in the background.
 </p>
 
 <pre>
 draw2d (
   explicit(x^3-2*x^2+x-1, x, -3, 3),
-  grid = true,
-  color = red,
+  grid       = true,
+  color      = red,
   line_width = 4,
-  parametric(sin(t), t^2, t, -2*%pi, 2*%pi) ) ;
+  parametric(sin(t), t^2, t, -2*%pi, 2*%pi) ) $
 </pre>
+
+<p>We can plot isolated points and polygonal lines. Coordinate points can be passed to object <b>points</b> as a list of pairs, writing the list of abscissas followed by the list of ordinates, or giving only the list of ordinates. See also that colors can be declared in hexadecimal form, and how point styles, except the color, affect the two last objects.</p>
+
+<pre>
+draw2d (
+  /* default style */
+  points([[2,3], [7,4], [0,5], [5,2/3], [7,-1], [8,3], [-2,10]]),
+
+  point_type    = circle,
+  point_size    = 3,
+  color         = brown,
+  points_joined = true,
+  points([3, 4, 6, 8], [-2, -5, 3, 1]),
+
+  color = "#ff670d",
+  points([2, 6, 2, 8, 9])  ) $
+</pre>
+
+<p>An implicit function, a function defined in polar coordinates and a polygon.</p>
+
+<pre>
+draw2d(
+  /* global options */
+  title      = "Write here your title",
+  xlabel     = "x-axis",
+  ylabel     = "y-axis",
+  grid       = true,
+  dimensions = [500,500],
+
+  /* implicit function */
+  key = "Implicit",
+  implicit(y^2=x^3-2*x+1, x, -4,4, y, -4,6),
+
+  /* polar coordinates */
+  key   = "Polar",
+  color = red,
+  polar(10/theta,theta,1,3*%pi),
+
+  /* polygon */
+  key        = "Polygon",
+  fill_color = sea_green,
+  color      = aquamarine,
+  line_width = 6,
+  polygon([[1,1],[3,0],[4,5],[0,3]]) ) $
+</pre>
+
+
+
+
+
+
+
+
+<h3 id="graficos3d"><br>3D graphics</h3>
 
 <p>
 For 3D graphics, the function to be used is <b>draw3d</b>.
