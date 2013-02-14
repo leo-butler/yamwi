@@ -86,6 +86,7 @@ La información que vamos a obtener tiene aspecto de conversación. Nuestras pet
   <ul>
   <li><a href="#graficos2d">Gráficos 2D</a></li>
   <li><a href="#graficos3d">Gráficos 3D</a></li>
+  <li><a href="#animacions">Animaciones</a></li>
   </ul>
 </li>
 <li><a href="#estatistica">Estadística</a></li>
@@ -806,7 +807,7 @@ draw2d(
   grid       = true,
   dimensions = [500,500],
 
-  /* funcion implicita */
+  /* funcion implícita */
   key = "Implicita",
   implicit(y^2=x^3-2*x+1, x, -4,4, y, -4,6),
 
@@ -816,7 +817,7 @@ draw2d(
   polar(10/theta,theta,1,3*%pi),
 
   /* poligono */
-  key        = "Poligono",
+  key        = "Polígono",
   fill_color = sea_green,
   color      = aquamarine,
   line_width = 6,
@@ -836,14 +837,130 @@ draw2d(
 <h3 id="graficos3d"><br>Gráficos 3D</h3>
 
 <p>
-También podemos hacer gráficos en 3D. En este caso la función a utilizar es <b>draw3d</b>.
+Los gráficos en 3D se realizan con la función <b>draw3d</b>.
 </p>
+
+<p>Tres estilos diferentes de dibujar la misma superficie explícita.</p>
+
+<pre>
+/* rejilla */
+draw3d(
+  explicit(20*exp(-x^2-y^2)-10,x,-3,3,y,-3,3)) $
+
+/* superficie oculta con líneas rojas */
+draw3d(
+  surface_hide = true,
+  color        = red,
+  explicit(20*exp(-x^2-y^2)-10,x,-3,3,y,-3,3)) $
+
+/* superficie coloreada en función de las coordenadas */
+draw3d(
+  enhanced3d = [sin(x*y), x, y, z],
+  explicit(20*exp(-x^2-y^2)-10,x,-3,3,y,-3,3)) $
+</pre>
+
+<p>También podemos representar superficies paramétricas.</p>
 
 <pre>
 draw3d(
+  /* se fija el número de nodos a calcular */
+  xu_grid      = 50,
+  yv_grid      = 15,
+
   surface_hide = true,
-  explicit(20*exp(-x^2-y^2)-10,x,-3,3,y,-3,3));
+  parametric_surface(
+      cos(a)*(3+b*cos(a/2)),
+      sin(a)*(3+b*cos(a/2)),
+      b*sin(a/2),
+      a,-%pi,%pi,b,-1,1) )$
 </pre>
+
+<p>Una curva paramétrica. Véase cómo depende el color del parámetro <i>u</i>.</p>
+
+<pre>
+draw3d(
+   /* se fija el número de puntos a calcular */
+   nticks     = 60,
+   title      = "Curva parametrica coloreada",
+   line_width = 2,
+   enhanced3d = (u-1)^2,
+   dimensions = [500, 500], /* tamaño de la imagen */
+   parametric(cos(5*u)^2,sin(7*u),u-2,u,0,2)) $
+</pre>
+
+<p>Una superficie implícita.</p>
+
+<pre>
+draw3d(
+  enhanced3d = [x-z,x,y,z],
+  palette    = gray,
+  dimensions = [500, 600],
+  implicit(min(x^2+y^2+z^2,2*x^2+2*y^2)=1,
+           x,-1.5,1.5,y,-1.5,1.5,z,-1.5,1.5)) $
+</pre>
+
+<p>Puntos aislados y líneas poligonales.</p>
+
+<pre>
+xx: [1,2,3,4,5]$
+yy: [4,5,7,1,2]$
+zz: [3,2,1,9,4]$
+xyz: [[10,15,12],[11,13,16],[16,10,11],[15,15,15]]$
+
+draw3d(
+  point_type = filled_square,
+  color      = blue,
+  points(xx,yy,zz),
+  point_type = circle,
+  color      = green,
+  points_joined = true,
+  points(xyz)) $
+</pre>
+
+<p>Superficie definida en coordenadas esféricas.</p>
+
+<pre>
+draw3d(
+  color        = green,
+  surface_hide = true,
+  axis_3d      = false,
+  xtics        = none,
+  ytics        = none,
+  ztics        = none,
+  title        = "Nautilus",
+  spherical(a+z,a,0,3*%pi,z,0,%pi))$
+</pre>
+
+<p>Familia de superficies en coordenadas cilíndricas.</p>
+
+<pre>
+draw3d(
+  proportional_axes = xyz,
+  dimensions   = [500,500],
+  surface_hide = true,
+  axis_3d      = false,
+  xtics        = none,
+  ytics        = none,
+  ztics        = none,
+  color        = blue,
+  cylindrical(z,z,-2,2,a,0,2*%pi), /*cono*/
+  color        = brown,
+  cylindrical(3,z,-2,2,az,0,%pi),  /*cilindro*/
+  color        = green,
+  cylindrical(sqrt(25-z^2),z,-5,5,a,0,%pi) /*esfera*/ )$
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+<h3 id="animacions"><br>Animaciones</h3>
 
 <p>
 Por último, un ejemplo de animación.
