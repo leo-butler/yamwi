@@ -70,6 +70,7 @@ La información que vamos a obtener tiene aspecto de conversación. Nuestras pet
   <ul>
   <li><a href="#polinomios">Polinomios</a></li>
   <li><a href="#ecuacions">Ecuaciones</a></li>
+  <li><a href="#inecuacions">Inecuaciones</a></li>
   <li><a href="#vectores">Vectores</a></li>
   <li><a href="#matrices">Matrices</a></li>
   </ul>
@@ -394,6 +395,53 @@ mnewton([2*a^a = 5],[a],[1]);
 mnewton([2*3^u-v/u-5 = 0, u+2^v = 4], [u, v], [2, 2]);
 </pre>
 
+
+
+
+
+
+
+
+
+
+
+<h3 id="inecuacions"><br>Inecuaciones</h3>
+
+<p>La resolución de inecuaciones necesita la librería <b>fourier_elim</b>. Primero resolvemos una inecuación lineal de una incógnita. La función  <b>fourier_elim</b> necesita dos argumentos, la lista de inecuaciones y la de incógnitas.</p>
+
+<pre>
+load("fourier_elim") $
+ine : (5*x-16)/6 + (x+8)/12 < (x+1)/3;
+fourier_elim([ine], [x]);
+</pre>
+
+<p>Una inecuación de grado cuatro.</p>
+
+<pre>
+load("fourier_elim") $
+fourier_elim([x^4+5*x^3+5*x^2-5*x-6 > 0],[x]);
+</pre>
+
+<p>Un sistema de inecuaciones de una incógnita.</p>
+
+<pre>
+load("fourier_elim") $
+fourier_elim(
+  [(x+2)/4 <= x/2-3,
+   (8-x)/3 < (1+x)/2-1],
+  [x]);
+</pre>
+
+<p>Un sistema de inecuaciones de dos incógnitas.</p>
+
+<pre>
+load("fourier_elim") $
+
+des1: 3*x - 5*y < 2;
+des2: x+y> (1+x)/3;
+des3: y < 2;
+fourier_elim([des1, des2, des3],[x,y]);
+</pre>
 
 
 

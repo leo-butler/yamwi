@@ -68,6 +68,7 @@ The output obtained is like a dialog. Our questions are preceded by label <b>%i<
   <ul>
   <li><a href="#polinomios">Polynomials</a></li>
   <li><a href="#ecuacions">Equations</a></li>
+  <li><a href="#inecuacions">Inequalities</a></li>
   <li><a href="#vectores">Vectors</a></li>
   <li><a href="#matrices">Matrices</a></li>
   </ul>
@@ -390,6 +391,52 @@ mnewton([2*a^a = 5],[a],[1]);
 mnewton([2*3^u-v/u-5 = 0, u+2^v = 4], [u, v], [2, 2]);
 </pre>
 
+
+
+
+
+
+
+
+
+
+<h3 id="inecuacions"><br>Inequalities</h3>
+
+<p>Solving inequalities require package <b>fourier_elim</b>. We first solve a linear inequality with only one unknown. Function <b>fourier_elim</b> needs two arguments, the list of inequalities, and the list of unknowns.</p>
+
+<pre>
+load("fourier_elim") $
+ine : (5*x-16)/6 + (x+8)/12 < (x+1)/3;
+fourier_elim([ine], [x]);
+</pre>
+
+<p>An inequality of degree four.</p>
+
+<pre>
+load("fourier_elim") $
+fourier_elim([x^4+5*x^3+5*x^2-5*x-6 > 0],[x]);
+</pre>
+
+<p>A system of inequalities with one unknown.</p>
+
+<pre>
+load("fourier_elim") $
+fourier_elim(
+  [(x+2)/4 <= x/2-3,
+   (8-x)/3 < (1+x)/2-1],
+  [x]);
+</pre>
+
+<p>A system of inequalities with two unknowns.</p>
+
+<pre>
+load("fourier_elim") $
+
+des1: 3*x - 5*y < 2;
+des2: x+y> (1+x)/3;
+des3: y < 2;
+fourier_elim([des1, des2, des3],[x,y]);
+</pre>
 
 
 
