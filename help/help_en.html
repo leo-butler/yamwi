@@ -84,11 +84,14 @@ The output obtained is like a dialog. Our questions are preceded by label <b>%i<
   <ul>
   <li><a href="#graficos2d">2D graphics</a></li>
   <li><a href="#graficos3d">3D graphics</a></li>
+  <li><a href="#grafmult">Multiplots</a></li>
   <li><a href="#animacions">Animations</a></li>
   </ul>
 </li>
 <li><a href="#estatistica">Statistics</a></li>
 </ul>
+
+
 
 
 
@@ -842,7 +845,7 @@ draw2d(
 draw3d(
   explicit(20*exp(-x^2-y^2)-10,x,-3,3,y,-3,3)) $
 
-/* hided surface with red lines */
+/* hidden surface with red lines */
 draw3d(
   surface_hide = true,
   color        = red,
@@ -956,10 +959,72 @@ draw3d(
 
 
 
+<h3 id="grafmult"><br>Multiplots</h3>
+
+<p>In order to draw several independent scenes, you have to call function <b>draw</b>, passing as many 2D and 3D graphics as you need, with objects <b>gr2d</b> and <b>gr3d</b>, respectively. Here is a simple example, where we fix the dimensions to our needs.</p>
+
+<pre>
+draw(
+  dimensions = [400, 600],
+  gr2d(
+    color = red,
+    explicit(sin(x), x, -5, 5)),
+  gr3d(
+    color        = black,
+    surface_hide = true,
+    explicit(sin(x)*cos(y), x, -5, 5, y, -5, 5))  ) $
+</pre>
+
+<p>By default, multiple plots are arranged in only one column, but you can change this behaviour with option <b>columns</b>.</p>
+
+<pre>
+draw(
+  columns = 2,
+  dimensions = [600, 300],
+  gr2d(
+    color = red,
+    explicit(sin(x), x, -5, 5)),
+  gr3d(
+    color        = black,
+    surface_hide = true,
+    explicit(sin(x)*cos(y), x, -5, 5, y, -5, 5))  ) $
+</pre>
+
+<p>This last example shows how to plot a scene inside another one. Option <b>allocation</b> needs a list of two pairs of numbers: the coordinates of the lower-left corner of the scene, and its width and height; all values must be relative, from 0 to 1.</p>
+
+<pre>
+draw(
+  dimensions = [500, 400],
+  gr2d(
+    background_color = cyan,
+    color            = red,
+    explicit(x^2,x,-1,1)),
+  gr2d(
+    allocation        = [[0.30, 0.50],[0.50, 0.40]],
+    background_color = green,
+    explicit(x^3,x,-1,1),
+    grid = true) ) $
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <h3 id="animacions"><br>Animations</h3>
 
 <p>
-The last example is an animation.
+For animations, we have to use function <b>draw</b> and set <b>terminal = animated_gif</b>.
 </p>
 
 <pre>

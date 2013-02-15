@@ -86,6 +86,7 @@ La información que vamos a obtener tiene aspecto de conversación. Nuestras pet
   <ul>
   <li><a href="#graficos2d">Gráficos 2D</a></li>
   <li><a href="#graficos3d">Gráficos 3D</a></li>
+  <li><a href="#grafmult">Gráficos múltiples</a></li>
   <li><a href="#animacions">Animaciones</a></li>
   </ul>
 </li>
@@ -960,10 +961,68 @@ draw3d(
 
 
 
+<h3 id="grafmult"><br>Gráficos múltiples</h3>
+
+<p>Para representar varias escenas independientes, se llamará a la función <b>draw</b>, a la que se le pasarán tantos gráficos en 2D y 3D como sean necesarios con los objetos <b>gr2d</b> y <b>gr3d</b>, respectivamente. Aquí un sencillo ejemplo, donde fijamos las dimensiones del gráfico compuesto a nuestra voluntad.</p>
+
+<pre>
+draw(
+  dimensions = [400, 600],
+  gr2d(
+    color = red,
+    explicit(sin(x), x, -5, 5)),
+  gr3d(
+    color        = black,
+    surface_hide = true,
+    explicit(sin(x)*cos(y), x, -5, 5, y, -5, 5))  ) $
+</pre>
+
+<p>Por defecto, los gráficos múltiples se disponen en una sola columna, pero podemos cambiar este comportamiento con la opción <b>columns</b>.</p>
+
+<pre>
+draw(
+  columns = 2,
+  dimensions = [600, 300],
+  gr2d(
+    color = red,
+    explicit(sin(x), x, -5, 5)),
+  gr3d(
+    color        = black,
+    surface_hide = true,
+    explicit(sin(x)*cos(y), x, -5, 5, y, -5, 5))  ) $
+</pre>
+
+<p>Este último ejemplo muestra una escena dentro de otra. La opción <b>allocation</b> necesita una lista de dos pares de números: las coordenadas de la esquina inferior izquierda de la escena, junto con su ancho y alto; todos estos valores deben darse con valores relativos, entre 0 y 1.</p>
+
+<pre>
+draw(
+  dimensions = [500, 400],
+  gr2d(
+    background_color = cyan,
+    color            = red,
+    explicit(x^2,x,-1,1)),
+  gr2d(
+    allocation        = [[0.30, 0.50],[0.50, 0.40]],
+    background_color = green,
+    explicit(x^3,x,-1,1),
+    grid = true) ) $
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+
 <h3 id="animacions"><br>Animaciones</h3>
 
 <p>
-Por último, un ejemplo de animación.
+Para animaciones, tenemos que utilizar la función <b>draw</b> y declarar <b>terminal = animated_gif</b>.
 </p>
 
 <pre>
