@@ -62,6 +62,7 @@ The output obtained is like a dialog. Our questions are preceded by label <b>%i<
   <li><a href="#enteiros">Integers</a></li>
   <li><a href="#racionais">Rationals</a></li>
   <li><a href="#complexos">Complex</a></li>
+  <li><a href="#factcon">Conversion factors</a></li>
   </ul>
 </li>
 <li><a href="#alxebra">Algebra</a>
@@ -278,6 +279,61 @@ carg(z);
 
 
 
+
+
+
+
+
+
+<h3 id="factcon"><br>Conversion factors</h3>
+
+<p>Package <b>ezunits</b> provides all we need for unit conversions. Let's see some examples.</p>
+
+<pre>
+load("ezunits") $
+
+/* convert m/s to km/hour */
+5 ` m/s `` km/hour ;
+
+/* convert N/cm^2 to Pa */
+32 ` N/cm^2 `` Pa ;
+
+/* convert m to inch in two steps */
+d : 10 ` m $
+d `` inch;
+
+/* list all conversion factors */
+for k in known_unit_conversions do print(k)$
+</pre>
+
+<p>You can declare your own conversion factors.</p>
+
+<pre>
+load("ezunits") $
+
+declare_unit_conversion (
+    Pa = 9.869*10^-6 * atm,
+    bar = 100000 * Pa ) $
+
+5.3 ` atm `` bar ;
+</pre>
+
+<p>We can convert any physical units to fundamental units.</p>
+
+<pre>
+load("ezunits") $
+
+f: 7 ` kg*km/minute^2;
+
+/* tell me the dimensions */
+dimensions (f);
+
+/* tell me the fundamental units */
+fundamental_units (f);
+
+/* make conversion */
+f `` fundamental_units (f);
+</pre>
 
 
 

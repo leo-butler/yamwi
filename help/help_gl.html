@@ -57,6 +57,7 @@ A información que imos obter ten aspecto de conversación. As nosas peticións 
   <li><a href="#enteiros">Enteiros</a></li>
   <li><a href="#racionais">Racionais</a></li>
   <li><a href="#complexos">Complexos</a></li>
+  <li><a href="#factcon">Factores de conversión</a></li>
   </ul>
 </li>
 <li><a href="#alxebra">Álxebra</a>
@@ -264,6 +265,69 @@ imagpart(z);
 cabs(z);
 carg(z);
 </pre>
+
+
+
+
+
+
+
+
+
+
+
+<h3 id="factcon"><br>Factores de conversión</h3>
+
+<p>A libraría <b>ezunits</b> contén todo canto fai falla para cambiar unidades. Vexamos alguns exemplos.</p>
+
+<pre>
+load("ezunits") $
+
+/* cambia m/s a km/hour */
+5 ` m/s `` km/hour ;
+
+/* cambia N/cm^2 a Pa */
+32 ` N/cm^2 `` Pa ;
+
+/* cambia m a inch en dous pasos */
+d : 10 ` m $
+d `` inch;
+
+/* lista todos os factores de conversión */
+for k in known_unit_conversions do print(k)$
+</pre>
+
+<p>Podemos declarar os nosos propios factores de conversión.</p>
+
+<pre>
+load("ezunits") $
+
+declare_unit_conversion (
+    Pa = 9.869*10^-6 * atm,
+    bar = 100000 * Pa ) $
+
+5.3 ` atm `` bar ;
+</pre>
+
+<p>Podemos pasar cualquera unidade física a fundamental.</p>
+
+<pre>
+load("ezunits") $
+
+f: 7 ` kg*km/minute^2;
+
+/* dime as dimensións */
+dimensions (f);
+
+/* dime as unidades fundamentais */
+fundamental_units (f);
+
+/* fai a conversión */
+f `` fundamental_units (f);
+</pre>
+
+
+
 
 
 
