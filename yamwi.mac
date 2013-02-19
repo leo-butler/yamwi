@@ -97,6 +97,20 @@ Starplot([desc]) := Draw2d(apply(starplot_description, desc)) $
 
 
 
+
+
+
+/* direction fields package */
+
+Drawdf([params]) := Draw(apply('df_graphics, params))$
+
+
+
+
+
+
+
+
 /* output formats */
 
 translate_into_tex(sentencias) :=
