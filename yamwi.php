@@ -2,7 +2,7 @@
 
 // COPYRIGHT NOTICE
 // 
-// Copyright 2009-2012 by Mario Rodriguez Riotorto
+// Copyright 2009-2015 by Mario Rodriguez Riotorto
 //    http://yamwi.sourceforge.net
 //    mario@edu.xunta.es
 // 
@@ -78,7 +78,7 @@ $dangerous_words =
          'read_lisp_array','read_maxima_array','read_hashed_array',
          'read_nested_list','read_list','write_data','entermatrix',
          'openplot_curves','xgraph_curves','plot2d_ps','psdraw_curve',
-         'pscom','plot2d','plot3d','concat','sconcat','?');
+         'pscom','concat','sconcat','?');
 
 
 

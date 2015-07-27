@@ -15,14 +15,20 @@ file_search_lisp:
 
 
 
-/* general drawings */
+/* Global variables */
 
 %num_sentence%: 0$
 
 %num_grafico%: 0$
 
+
+
+
+
+/* Code for draw */
+
 mwdrawxd(func, descgraf):=
-  block([haiterm: false, file_output_append: true, format],
+  block([haiterm: false, formato],
     if not get('draw,'version) then load("draw"),
     descgraf: append([dimensions=[400,300],
                       gnuplot_file_name = concat(%codigo_usuario%,".gnuplot"),
@@ -38,7 +44,7 @@ mwdrawxd(func, descgraf):=
                                           %num_grafico%) ],
                      descgraf),
 
-    /* Se non se especifica terminal, forzamos a png */
+    /* If terminal is not specified, force png */
     for elem in descgraf do
        if part(elem,1) = 'terminal and 
           member(part(elem,2), ['png, 'gif, 'animated_gif, 'jpg, 'svg])
@@ -86,6 +92,67 @@ Draw([descgraf])  := mwdrawxd('draw, descgraf) $
 
 
 
+/* Code for plot */
+/* 
+   Example controlling graphic dimensions:
+   plot2d (sin(x), [x, -%pi, %pi], [gnuplot_png_term_command, "set term pngcairo size 800,800"])$
+*/
+
+mwplotxd(func, descgraf):=
+  block([gptc: false, formato:"png", cleandescgraf:[]],
+
+    for k in descgraf do
+      if not listp(k) or 
+         not member(first(k), ['png_file, 'svg_file, 'pdf_file, 'ps_file, 'gnuplot_term, 'gnuplot_out_file,
+                               'run_viewer ])
+        then (if not atom(k) and first(k)='gnuplot_png_term_command
+                then gptc:true,
+              cleandescgraf: endcons(k, cleandescgraf)),
+
+    cleandescgraf: append(cleandescgraf,
+                          [[gnuplot_out_file,  concat(%codigo_usuario%,".gnuplot")],
+                           [png_file, concat(maxima_tempdir,
+                                             "/",
+                                             %codigo_usuario%,
+                                             ".g.",
+                                             %num_proceso%,
+                                             ".",
+                                             %num_sentence%,
+                                             ".",
+                                             %num_grafico%,
+                                             ".png")] ] ),
+    if not gptc
+      then cleandescgraf: endcons([gnuplot_png_term_command, "set term pngcairo size 500,400"],
+                                  cleandescgraf),
+    with_stdout(
+      concat(maxima_tempdir,
+             "/",
+             %codigo_usuario%,
+             ".gr.",
+             %num_proceso%,
+             ".",
+             %num_sentence%,
+             ".txt"), 
+      print(concat("tmp/",
+                   %codigo_usuario%,
+                   ".g.",
+                   %num_proceso%,
+                   ".",
+                   %num_sentence%,
+                   ".",
+                   %num_grafico%,
+                   ".",
+                   formato))),
+    %num_grafico%: %num_grafico% + 1,
+    apply(func,cleandescgraf)  ) $
+
+Plot2d([descgraf]):= mwplotxd('plot2d, descgraf) $
+Plot3d([descgraf]):= mwplotxd('plot3d, descgraf) $
+
+
+
+
+
 /* statistical graphics */
 
 Scatterplot([desc]) := Draw(apply('scatterplot_description, desc)) $
@@ -99,13 +166,9 @@ Starplot([desc]) := Draw2d(apply(starplot_description, desc)) $
 
 
 
-
 /* direction fields package */
 
 Drawdf([params]) := Draw(apply('df_graphics, params))$
-
-
-
 
 
 
@@ -125,6 +188,7 @@ translate_into_tex(sentencias) :=
 
 
 
+
 translate_into_print(sentencias) :=
   block([res],
     print("start_maxima_output_print_code:"),
@@ -136,4 +200,3 @@ translate_into_print(sentencias) :=
                print(res),
                print("%%%")),
         sentencias)) $
-
