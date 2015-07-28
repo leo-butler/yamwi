@@ -25,7 +25,7 @@
 
 
 
-$mode = 2; // 0 -> ASCII-Art output,
+$mode = 4; // 0 -> ASCII-Art output,
            // 1 -> Binary TeX output, 
            // 2 -> Enhanced ASCII-Art output,
            // 3 -> Syntactic output
@@ -437,6 +437,8 @@ function pre_process ($str) {
    $tmp = str_replace(array("wxdraw3d", "draw3d"), "Draw3d", $tmp);
    $tmp = str_replace(array("wxdraw2d", "draw2d"), "Draw2d", $tmp);
    $tmp = str_replace(array("wxdraw", "draw"), "Draw", $tmp);
+   $tmp = str_replace(array("wxplot3d", "plot3d"), "Plot3d", $tmp);
+   $tmp = str_replace(array("wxplot2d", "plot2d"), "Plot2d", $tmp);
    return $tmp;}
 
 
