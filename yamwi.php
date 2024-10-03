@@ -566,7 +566,7 @@ function start ($initial_code) {
     $nproc = 0;
     $input = $initial_code;
     create_key();
-    write_form(); } 
+    write_form(); }
   elseif ($danger) {
     write_form();
     alert($message_dangerous . $danger );}
