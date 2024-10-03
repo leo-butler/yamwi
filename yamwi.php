@@ -53,7 +53,7 @@ $message_dangerous = "Yamwi detected forbidden code: ";
 $message_time_process = "Requested process aborted. It exceeded maximum execution time.";
 $message_too_many_processes = "Too many users. Please, try later.";
 $message_prog_error = "Programming error detected. Check your input.";
-$submit_button = "Clic";
+$submit_button = "Submit";
 $clear_button = "Clear";
 
 
