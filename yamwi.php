@@ -329,7 +329,7 @@ function prepare_enhanced_ascii_output($out, $sentences) {
     $result = $result .
               '<tr>' .
               '<td><pre class="input">' . '(%i' . $i . ')' . "</pre></td>\n" .
-              '<td><pre class="input">' . trim($sentences[$i]) . "</pre>\n".
+              '<td><pre class="inputcode">' . trim($sentences[$i]) . "</pre>\n".
               $print_code[$i-1] .
               "</td>\n" .
               "</tr>\n" .
@@ -427,13 +427,13 @@ function prepare_tex_output($out, $sentences) {
     $result = $result .
               '<tr>' .
               '<td><br><pre class="input">' . '(%i' . $i . ')' . "</pre></td>\n" .
-              '<td><br><pre class="input">' . trim($sentences[$i]) . "</pre>\n" .
+              '<td><br><pre class="inputcode">' . trim($sentences[$i]) . "</pre>\n" .
               $print_code[$i-1] .
               "</td>\n" .
               "</tr>\n" .
               '<tr>' .
-              '<td>' . $this_result1 . "</td>\n" .
-              '<td>' . $image_code[$i-1] . $this_result2 . "</td>\n" .
+              '<td class="output">' . $this_result1 . "</td>\n" .
+              '<td class="output">' . $image_code[$i-1] . $this_result2 . "</td>\n" .
               "</tr>\n"; }
   $result = $result . "</table>\n\n";
   write_results($result); }
