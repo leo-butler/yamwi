@@ -65,11 +65,10 @@ $clear_button = "Clear";
 //////////////////////
 
 
-$key = $_GET["c"];
-$nproc = $_GET["n"];
-$input = trim($_POST["max"]);
+$key = $_GET["c"] ?? "" ;
+$nproc = $_GET["n"] ?? null;
+$input = trim($_POST["max"] ?? "");
 $apache_user_name = shell_exec('whoami');
-$maxima_path = shell_exec('which maxima');
 $yamwi_path = getcwd();
 $dangerous_words =
    array(
