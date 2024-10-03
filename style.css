@@ -22,10 +22,16 @@ p{
 pre{
   font-family:    Courier, monospace;}
 .input{
+  color:          darkred;
+  font-size:      100%;
+  font-weight:    bold;}
+.inputcode{
+  color:          darkgreen;
   font-size:      100%;
   font-weight:    bold;}
 .output{
-  font-size:      75%;}
+  color:          blue;
+  font-size:      100%;}
 .print{
   font-size:      75%;
   font-style:     italic;}
