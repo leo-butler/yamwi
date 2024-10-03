@@ -48,8 +48,7 @@ mwdrawxd(func, descgraf):=
                                           ".",
                                           %num_grafico%) ],
                      descgraf),
-
-    /* If terminal is not specified, force png */
+    /* If terminal is not specified, force svg */
     for elem in descgraf do
        if part(elem,1) = 'terminal and 
           member(part(elem,2), ['png, 'gif, 'animated_gif, 'jpg, 'svg])
@@ -64,9 +63,8 @@ mwdrawxd(func, descgraf):=
                  then formato: "svg",
                return()),
     if not haiterm
-       then (formato: "png",
-             descgraf: endcons(terminal = 'png,
-                              descgraf)),
+       then (formato: "svg",
+             descgraf: endcons(terminal = 'svg,
     with_stdout(
       concat(maxima_tempdir,
              "/",
