@@ -104,7 +104,7 @@ Draw([descgraf])  := mwdrawxd('draw, descgraf) $
 */
 
 mwplotxd(func, descgraf):=
-  block([gptc: false, formato:"png", cleandescgraf:[]],
+  block([gptc: false, formato:"svg", cleandescgraf:[]],
 
     for k in descgraf do
       if not listp(k) or 
@@ -116,7 +116,7 @@ mwplotxd(func, descgraf):=
 
     cleandescgraf: append(cleandescgraf,
                           [[gnuplot_out_file,  concat(%codigo_usuario%,".gnuplot")],
-                           [png_file, concat(maxima_tempdir,
+                           [svg_file, concat(maxima_tempdir,
                                              "/",
                                              %codigo_usuario%,
                                              ".g.",
@@ -125,9 +125,9 @@ mwplotxd(func, descgraf):=
                                              %num_sentence%,
                                              ".",
                                              %num_grafico%,
-                                             ".png")] ] ),
+                                             ".svg")] ] ),
     if not gptc
-      then cleandescgraf: endcons([gnuplot_png_term_command, "set term pngcairo size 500,400"],
+      then cleandescgraf: endcons([gnuplot_svg_term_command, "set term svg size 500,400"],
                                   cleandescgraf),
     with_stdout(
       concat(maxima_tempdir,
