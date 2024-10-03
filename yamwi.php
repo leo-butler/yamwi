@@ -172,7 +172,7 @@ function dangerous ($code) {
   global $dangerous_words;
   $alert = false;
   foreach ($dangerous_words as $word) {
-    if (! strstr($code, $word) === false)  {
+    if (! str_contains($code, $word) === false)  {
       $alert = $word;
       break; }}
   return $alert;}
