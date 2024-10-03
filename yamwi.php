@@ -30,6 +30,7 @@ $mode = 4; // 0 -> ASCII-Art output,
            // 2 -> Enhanced ASCII-Art output,
            // 3 -> Syntactic output
            // 4 -> Remote TeX + MathJax
+	   // 5 -> Mathml
 
 $max_file_time = 1;
 
