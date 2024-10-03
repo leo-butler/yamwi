@@ -106,9 +106,11 @@ $dangerous_words =
    'openplot_curves','xgraph_curves','plot2d_ps','psdraw_curve','pscom',
    // Prevent string/symbol creation
    'concat','sconcat','printf','string','readbyte','readchar','readline','writebyte',
-   'make_string_input_stream','make_string_output_stream','get_output_stream_string'
+   'make_string_input_stream','make_string_output_stream','get_output_stream_string',
    // Prevent access to functions/variables in yamwi.mac
-   'file_search_maxima','file_search_lisp','%num_sentence%','%num_grafico%','mwdrawxd','Draw2d','Draw3d','Draw','mwplotxd','Plot2d','Plot3d','Scatterplot','Histogram','Barsplot','Piechart','Boxplot','Starplot','Drawdf','translate_into_tex','translate_into_print'
+   'file_search_maxima','file_search_lisp','%num_sentence%','%num_grafico%','mwdrawxd','Draw2d','Draw3d','Draw','mwplotxd','Plot2d','Plot3d','Scatterplot','Histogram','Barsplot','Piechart','Boxplot','Starplot','Drawdf','translate_into_tex','translate_into_print',
+   // not available
+   'plotdf'
    );
 
 
