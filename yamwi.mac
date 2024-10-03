@@ -4,31 +4,20 @@ texput(?rat,lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(de
 texput("/",lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
 texput("^",lambda([expr],apply(lambda([b,e],if e=-1 then printf(false,"\\dfrac{1}{~a} ",tex1(b)) else printf(false,"{~a}^{~a}",tex1(b),tex1(e))),args(expr))));
 
-
 /* add paths to package folder */
 
 file_search_maxima:
    append (file_search_maxima,
            [concat(%dir_sources%, "/###.mac")])$
 
-
 file_search_lisp:
    append (file_search_lisp,
            [concat(%dir_sources%, "/###.lisp")])$
 
-
-
-
-
 /* Global variables */
 
 %num_sentence%: 0$
-
 %num_grafico%: 0$
-
-
-
-
 
 /* Code for draw */
 
@@ -91,10 +80,6 @@ Draw2d([descgraf]):= mwdrawxd('draw2d, descgraf) $
 Draw3d([descgraf]):= mwdrawxd('draw3d, descgraf) $
 Draw([descgraf])  := mwdrawxd('draw, descgraf) $
 
-
-
-
-
 /* Code for plot */
 /* 
    Example controlling graphic dimensions:
@@ -103,7 +88,6 @@ Draw([descgraf])  := mwdrawxd('draw, descgraf) $
 
 mwplotxd(func, descgraf):=
   block([gptc: false, formato:"svg", cleandescgraf:[]],
-
     for k in descgraf do
       if not listp(k) or 
          not member(first(k), ['png_file, 'svg_file, 'pdf_file, 'ps_file, 'gnuplot_term, 'gnuplot_out_file,
@@ -111,7 +95,6 @@ mwplotxd(func, descgraf):=
         then (if not atom(k) and first(k)='gnuplot_png_term_command
                 then gptc:true,
               cleandescgraf: endcons(k, cleandescgraf)),
-
     cleandescgraf: append(cleandescgraf,
                           [[gnuplot_out_file,  concat(%codigo_usuario%,".gnuplot")],
                            [svg_file, concat(maxima_tempdir,
@@ -152,10 +135,6 @@ mwplotxd(func, descgraf):=
 Plot2d([descgraf]):= (mwplotxd('plot2d, descgraf), 'plot2d) $
 Plot3d([descgraf]):= (mwplotxd('plot3d, descgraf), 'plot3d) $
 
-
-
-
-
 /* statistical graphics */
 
 Scatterplot([desc]) := Draw(apply('scatterplot_description, desc)) $
@@ -165,17 +144,9 @@ Piechart([desc]) := Draw2d(apply(piechart_description, desc)) $
 Boxplot([desc]) := Draw2d(apply(boxplot_description, desc)) $
 Starplot([desc]) := Draw2d(apply(starplot_description, desc)) $
 
-
-
-
-
 /* direction fields package */
 
 Drawdf([params]) := Draw(apply('df_graphics, params))$
-
-
-
-
 
 /* output formats */
 
@@ -187,10 +158,6 @@ translate_into_tex(sentencias) :=
                %num_grafico%: 1,
                tex(eval_string(%%lambda_argument%%))),
         sentencias)) $
-
-
-
-
 
 translate_into_print(sentencias) :=
   block([res],
