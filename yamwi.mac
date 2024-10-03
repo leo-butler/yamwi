@@ -151,8 +151,8 @@ mwplotxd(func, descgraf):=
     %num_grafico%: %num_grafico% + 1,
     apply(func,cleandescgraf)  ) $
 
-Plot2d([descgraf]):= mwplotxd('plot2d, descgraf) $
-Plot3d([descgraf]):= mwplotxd('plot3d, descgraf) $
+Plot2d([descgraf]):= (mwplotxd('plot2d, descgraf), 'plot2d) $
+Plot3d([descgraf]):= (mwplotxd('plot3d, descgraf), 'plot3d) $
 
 
 
