@@ -37,8 +37,11 @@ $max_process_time = 120;
 
 $max_num_processes = 30; 
 
+$timelimit_binary = '/usr/bin/timeout';
 
+$maxima_binary = '/usr/bin/maxima';
 
+$maxima_args = "";
 
 
 //////////////
@@ -474,7 +477,7 @@ function pre_process ($str) {
 // run Maxima and output results
 function calculate () {
   global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info,
-         $mode, $yamwi_path;
+      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary;
   $nproc = $nproc + 1;
   $display2d = "";
   if ($mode == 3) $display2d = "display2d: false,";
@@ -504,17 +507,26 @@ function calculate () {
   fclose($fich);
 
   // call Maxima in batch mode
-  $out = shell_exec('timelimit -t '. 
-                    $max_process_time .
-                    ' -T 5 maxima -b "'.$yamwi_path.'/tmp/'.$key.'.mac"');
+  // timelimit
+  if (preg_match('/timelimit/',$timelimit_binary) == 1) {
+      echo $timelimit_binary;
+    $out = shell_exec($timelimit_binary . ' -t ' .
+                      $max_process_time .
+    		      ' -T 5 ' . $maxima_binary . ' ' . $maxima_args . ' -b "'.$yamwi_path.'/tmp/'.$key.'.mac"');
+		      } else {
+  // timeout
+    $out = shell_exec($timelimit_binary . ' --signal=TERM --kill-after=5 ' .
+                      $max_process_time . ' ' .
+                      $maxima_binary . ' ' . $maxima_args . ' -b "'.$yamwi_path.'/tmp/'.$key.'.mac"');}
+
   if ($show_info){
     echo '<u>Complete Maxima input</u>: '.'<pre>'.$val.'</pre><br>';
     echo '<u>Complete Maxima output</u>: '.'<pre>'.$out.'</pre><br>';}
-  
+
   // Checks wether the last line returned by the shell call
-  // contains the path to the Maxima script; if not, it 
+  // contains the path to the Maxima script; if not, it
   // means that the process has been interrupted by timelimit.
-  if (strstr(substr($out,strrpos(trim($out), "\n", -1)), $yamwi_path.'/tmp/'.$key.'.mac')) {
+  if (str_contains(substr($out,strrpos(trim($out), "\n", -1)), $yamwi_path.'/tmp/'.$key.'.mac')) {
     $out = substr($out,strpos($out, "%%%") + 4);
     $out = rtrim(str_replace($yamwi_path.'/tmp/'.$key.'.mac','', $out));
     $out = substr($out,0, strlen($out) - strlen(strrchr($out,"%")) - 1);
