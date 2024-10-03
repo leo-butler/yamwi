@@ -1,3 +1,8 @@
+/* texput */
+texput(matrix,lambda([expr], printf(false,"\\begin{bmatrix}~%~{~{~a~^&~}~^\\\\~}~%\\end{bmatrix}",map(lambda([row],map(tex1,row)),args(expr)))));
+texput(?rat,lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
+texput("/",lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
+texput("^",lambda([expr],apply(lambda([b,e],if e=-1 then printf(false,"\\dfrac{1}{~a} ",tex1(b)) else printf(false,"{~a}^{~a}",tex1(b),tex1(e))),args(expr))));
 
 
 /* add paths to package folder */
