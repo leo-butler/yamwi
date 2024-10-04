@@ -54,6 +54,7 @@ mwdrawxd(func, descgraf):=
     if not haiterm
        then (formato: "svg",
              descgraf: endcons(terminal = 'svg,
+               descgraf)),
     with_stdout(
       concat(maxima_tempdir,
              "/",
@@ -74,7 +75,7 @@ mwdrawxd(func, descgraf):=
                    ".",
                    formato))),
     %num_grafico%: %num_grafico% + 1,
-    apply(func,descgraf))))$
+    apply(func,descgraf))$
 
 Draw2d([descgraf]):= mwdrawxd('draw2d, descgraf) $
 Draw3d([descgraf]):= mwdrawxd('draw3d, descgraf) $
