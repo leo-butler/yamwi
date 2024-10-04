@@ -34,7 +34,8 @@ require 'yamwi-conf.php';
 
 $key = $_GET["c"] ?? "" ;
 $nproc = $_GET["n"] ?? null;
-$input = trim($_POST["max"] ?? "");
+$input = trim(($_POST["max"] ?? $_GET["max"]) ?? "");
+$mode = $_GET["mode"] ?? $mode;
 $apache_user_name = shell_exec('whoami');
 $yamwi_path = getcwd();
 $dangerous_words =
@@ -228,9 +229,9 @@ function graphics() {
 
 
 function write_form() {
-  global $key, $nproc, $input, $submit_button, $clear_button;
-  echo '<form method="post" action="'. 
-       $_SERVER["SCRIPT_NAME"] .'?c=' . $key . '&n=' . $nproc. "\">\n".
+    global $key, $nproc, $input, $submit_button, $clear_button, $mode;
+  echo '<form id="maxform" method="post" action="'.
+       $_SERVER["SCRIPT_NAME"] .'?c=' . $key . '&n=' . $nproc. '&mode=' . $mode . "\">\n".
        "<textarea name=\"max\" rows=\"10\">\n".
        $input.
        "</textarea><br>\n".
@@ -240,6 +241,15 @@ function write_form() {
        "<input type=\"button\" value=\"".
             $clear_button.
             "\" onClick=\"this.form.max.value=''; return false\">\n".
+       "<select name=\"modeselect\" id=\"modeselect\" class=\"modeselect\" onchange=\"this.form.action=this.form.action+'&mode='+this.form.getElementsByTagName('select')[0].value; this.form.getElementsByTagName('input')[0].click(); return true;\">\n".
+       '   <option value="" disabled>Select Print Mode and Submit</option>'.
+       '   <option value=0 '. ($mode == 0 ? "selected=\"selected\"" : "") . ">0 - ASCII-Art output</option>\n".
+       '   <option value=1 '. ($mode == 1 ? "selected=\"selected\"" : "") . ">1 - Binary TeX output</option>\n".
+       '   <option value=2 '. ($mode == 2 ? "selected=\"selected\"" : "") . ">2 - Enhanced ASCII-Art output</option>\n".
+       '   <option value=3 '. ($mode == 3 ? "selected=\"selected\"" : "") . ">3 - Syntactic output</option>\n".
+       '   <option value=4 '. ($mode == 4 ? "selected=\"selected\"" : "") . ">4 - Remote TeX + MathJax</option>\n".
+       '   <option value=4 '. ($mode == 5 ? "selected=\"selected\"" : "") . ">5 - MathML (not implemented)</option>\n".
+       "</select>\n".
        "</form>\n".
        "<hr>\n\n" ; }
 
