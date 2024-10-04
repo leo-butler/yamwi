@@ -2,16 +2,18 @@
 
 // COPYRIGHT NOTICE
 // 
-// Copyright 2009-2015 by Mario Rodriguez Riotorto
-//    http://yamwi.sourceforge.net
-//    mario@edu.xunta.es
+// Copyright 2009-2015 by Mario Rodriguez Riotorto <mario@edu.xunta.es>
+// Copyright 2024 Leo Butler <leo.butler@umanitoba.ca>
 // 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License, version 2.
 // 
 // This program has NO WARRANTY, not even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// For details, see the LICENSE file.
 
+// DESCRIPTION
+//
 // A simple php-web interface for Maxima.
 // Basically, it creates a file with user input
 // and calls Maxima in batch mode.
