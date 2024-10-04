@@ -241,7 +241,7 @@ function write_form() {
        "<input type=\"button\" value=\"".
             $clear_button.
             "\" onClick=\"this.form.max.value=''; return false\">\n".
-       "<select name=\"modeselect\" id=\"modeselect\" class=\"modeselect\" onchange=\"this.form.action=this.form.action+'&mode='+this.form.getElementsByTagName('select')[0].value; this.form.getElementsByTagName('input')[0].click(); return true;\">\n".
+       "<select name=\"modeselect\" id=\"modeselect\" class=\"modeselect\" onchange=\"this.form.action=this.form.action.replace(/&mode=[0-9]/,'&mode='+this.form.getElementsByTagName('select')[0].value); this.form.getElementsByTagName('input')[0].click(); return true;\">\n".
        '   <option value="" disabled>Select Print Mode and Submit</option>'.
        '   <option value=0 '. ($mode == 0 ? "selected=\"selected\"" : "") . ">0 - ASCII-Art output</option>\n".
        '   <option value=1 '. ($mode == 1 ? "selected=\"selected\"" : "") . ">1 - Binary TeX output</option>\n".
