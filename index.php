@@ -13,7 +13,7 @@
 
 <body>
 
-<h1><i>Maxima on line</i></h1>
+<h1><a href="index.php" class="homepage"><i>Maxima Online</i></a></h1>
 
 <p class="small-right">Help: 
 <a href="help/help_es.html" target="_blank">Español</a>, 
