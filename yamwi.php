@@ -340,6 +340,7 @@ function search_images ($sn) {
 
 function latex_template ($tex) {
   return "\documentclass{article}\n" .
+         "\usepackage{amsmath,amssymb}\n".
          "\pagestyle{empty}\n" .
          "\begin{document}\n" .
          $tex .
@@ -375,15 +376,15 @@ function prepare_tex_output($out, $sentences) {
     for($i = 1 ; $i <= $out_counter ; $i++){
       if (substr($sentences[$i], -1) === ";") {
         // write latex file
-        $fich = fopen($yamwi_path . '/tmp/' . $key . '.tex', 'w');
+        $fich = fopen($yamwi_path . '/tmp/' . $key . '-' . $nproc . '-' . $i . '.tex', 'w');
         fwrite($fich, latex_template($tex_code[$i-1]));
         fclose($fich);
         // compile latex source
         shell_exec(
           'cd ' . $yamwi_path . '/tmp/' . ';' .
-          'texi2dvi ' . $key . '.tex ;' . 
-          'dvips -E ' . $key . '.dvi ;' . 
-          'convert -density 150x150 '. $key .'.ps '.$key.'.'.$nproc.'.'.$i.'.png'); } }}
+          'texi2dvi ' . $key . '-' . $nproc . '-' . $i . '.tex ;' .
+          'dvips -E ' . $key . '-' . $nproc . '-' . $i . '.dvi ;' .
+          'convert -density 150x150 '. $key . '-' . $nproc . '-' . $i .'.ps '.$key.'.'.$nproc.'.'.$i.'.png'); } }}
 
   // write html code
   if ($mode == 4) {
