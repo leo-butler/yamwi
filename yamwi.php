@@ -343,7 +343,7 @@ function latex_template ($tex) {
          "\pagestyle{empty}\n" .
          "\begin{document}\n" .
          $tex .
-         "\n\end{document}\n" ;}
+         "\n\\end{document}\n" ;}
 
 
 
@@ -387,7 +387,7 @@ function prepare_tex_output($out, $sentences) {
 
   // write html code
   if ($mode == 4) {
-    $result = '<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>' . "\n\n";}
+    $result = '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>' . "\n\n";}
   else {
     $result = '';}
   write_form();
