@@ -30,6 +30,7 @@ pre{
   font-size:      100%;
   font-weight:    bold;}
 .output{
+  background-color: lightgray;
   color:          blue;
   font-size:      100%;}
 .print{
