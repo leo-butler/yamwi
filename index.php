@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" media="all" href="style.css">
   <title>Maxima on line</title>
 </head>
