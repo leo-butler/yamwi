@@ -58,7 +58,7 @@ $dangerous_words =
    'file_search','file_search_maxima','file_search_lisp',
    'file_search_demo','file_search_usage','file_search_tests',
    'file_type','file_type_lisp','file_type_maxima',
-   'load','load_pathname','loadfile',
+   'load_pathname','loadfile',
    'loadprint','pathname_directory','pathname_name',
    'pathname_type','printfile','save',
    'stringout','with_stdout','writefile',
@@ -67,7 +67,7 @@ $dangerous_words =
    'filename_merge','file_search','file_type','directory',
    'pathname_directory','pathname_name','pathname_type',
    // Prevent package loading
-   'batch','batchload','load','loadfile','setup_autoload',
+   'batch','batchload','loadfile','setup_autoload',
    // Prevent reading files
    'read_matrix','read_lisp_array','read_maxima_array','read_hashed_array',
    'read_nested_list','read_list','entermatrix',
