@@ -203,7 +203,7 @@ function list_of_sentences ($sentences) {
              str_replace("\"", "\\\"" , $sentences[$i]) .
              "\"";
   if ($i < $sentence_counter-1)
-    $lista = $lista.",\n";}
+    $lista = $lista.",";}
   if ($mode == 1 || $mode == 4)
     $lista = $sentences[0]."\ntranslate_into_tex([".$lista."])$";
   else
