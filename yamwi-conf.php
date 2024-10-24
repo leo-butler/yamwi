@@ -20,6 +20,7 @@ $maxima_binary = '/usr/bin/maxima';
 
 $maxima_args = "";
 
+$magic_key = "1dc53ea6b0ae1e618fc4e123238192b"; // CHANGE THIS!!
 
 //////////////
 // MESSAGES //

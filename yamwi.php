@@ -90,11 +90,12 @@ $dangerous_words =
 ////////////////
 
 
-$show_info = false;
+$show_info = ($key == $magic_key);
 if ($show_info)
-  echo '<u>Maximum time for files in tmp folder (min)</u>:<pre>'.$max_file_time.'</pre><br>'.
-       '<u>Maximum time for running a process (sec)</u>:<pre>'.$max_process_time.'</pre><br>'.
-       '<u>Maximum number of processes at a time</u>: <pre>'.$max_num_processes .'</pre><br>';
+  echo '<u>Input: </u><pre>'.$input.'</pre><br/>'.
+       '<u>Maximum time for files in tmp folder (min)</u>:<pre>'.$max_file_time.'</pre><br/>'.
+       '<u>Maximum time for running a process (sec)</u>:<pre>'.$max_process_time.'</pre><br/>'.
+       '<u>Maximum number of processes at a time</u>: <pre>'.$max_num_processes .'</pre><br/>';
 
 
 
