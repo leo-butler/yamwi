@@ -34,7 +34,7 @@ require 'yamwi-conf.php';
 
 $key = $_GET["c"] ?? "" ;
 $nproc = $_GET["n"] ?? null;
-$input = trim(($_POST["max"] ?? $_GET["max"]) ?? "");
+$input = trim(($_POST["max"] ?? base64_decode($_GET["max"] ?? "")) ?? "");
 $mode = $_GET["mode"] ?? $mode;
 if ($mode == 1 && $mode1is4 == true) { $mode = 4; }
 $apache_user_name = shell_exec('whoami');
@@ -232,13 +232,13 @@ function graphics() {
 function write_form() {
     global $key, $nproc, $input, $submit_button, $clear_button, $mode;
   echo '<form id="maxform" method="post" action="'.
-       $_SERVER["SCRIPT_NAME"] .'?c=' . $key . '&n=' . $nproc. '&mode=' . $mode . "\">\n".
+       $_SERVER["SCRIPT_NAME"] .'?c=' . $key . '&n=' . $nproc. '&mode=' . $mode . "&max=" . base64_encode($input) . "\">\n".
        "<textarea name=\"max\" rows=\"10\">\n".
        $input.
        "</textarea><br>\n".
-       "<input type=\"submit\" value=\"".
+       "<input type=\"button\" value=\"".
             $submit_button.
-            "\">\n".
+            "\" onClick=\"this.form.action=this.form.action.replace(/&max=[^&]*/,'&max='+btoa(this.form.max.value)); location.href=this.form.action;\">\n".
        "<input type=\"button\" value=\"".
             $clear_button.
             "\" onClick=\"this.form.max.value=''; return false\">\n".
