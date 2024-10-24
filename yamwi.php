@@ -36,6 +36,7 @@ $key = $_GET["c"] ?? "" ;
 $nproc = $_GET["n"] ?? null;
 $input = trim(($_POST["max"] ?? $_GET["max"]) ?? "");
 $mode = $_GET["mode"] ?? $mode;
+if ($mode == 1 && $mode1is4 == true) { $mode = 4; }
 $apache_user_name = shell_exec('whoami');
 $yamwi_path = getcwd();
 $dangerous_words =
