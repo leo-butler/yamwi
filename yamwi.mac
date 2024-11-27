@@ -2,7 +2,8 @@
 texput(matrix,lambda([expr], printf(false,"\\begin{bmatrix}~%~{~{~a~^&~}~^\\\\~}~%\\end{bmatrix}",map(lambda([row],map(tex1,row)),args(expr)))));
 texput(?rat,lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
 texput("/",lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
-texput(nounify(diff), lambda([expr],block([Y,X,n], [Y,X,n] : args(expr), if n=1 then printf(false,"\\dfrac{d\,}{d{~a}}{~a}",tex1(X),tex1(Y)) else printf(false,"\\dfrac{d^{~a}\,}{d{~a}^{~a}}{~a}",n,tex1(X),n,tex1(Y))))) ;
+texput(nounify(diff), lambda([expr],block([Y,X,n], [Y,X,n] : args(expr), if n=1 then printf(false,"\\dfrac{d\\,}{d{~a}}{~a}",tex1(X),tex1(Y)) else printf(false,"\\dfrac{d^{~a}\\,}{d{~a}^{~a}}{~a}",n,tex1(X),n,tex1(Y))))) ;
+texput('diff, lambda([expr],block([Y,X,n], [Y,X,n] : args(expr), if n=1 then printf(false,"\\dfrac{d\\,}{d{~a}}{~a}",tex1(X),tex1(Y)) else printf(false,"\\dfrac{d^{~a}\\,}{d{~a}^{~a}}{~a}",n,tex1(X),n,tex1(Y))))) ;
 tex_exp(expr) := block([b,e],
   [b,e] : args(expr),
   if e=-1 then printf(false,"\\dfrac{1}{~a} ",tex1(b))
