@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" media="all" href="style.css">
+  <script type="text/javascript" src="yamwi.js"></script>
   <title>Maxima on line</title>
 </head>
 
