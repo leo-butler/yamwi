@@ -27,6 +27,22 @@
 
 require 'yamwi-conf.php';
 
+
+/////////////
+// Workers //
+/////////////
+
+function b64toa($b64) {
+    $trans = array('=' => '-', '+' => '_', '/' => '~');
+    return strtr($b64,$trans);
+}
+function atob64($str) {
+    $trans = array('-' => '=', '_' => '+', '~' => '/');
+    return strtr($str,$trans);
+}
+function atou($str) {return base64_decode(atob64($str));}
+function utoa($str) {return b64toa(base64_encode(urlencode($str)));}
+
 //////////////////////
 // Global variables //
 //////////////////////
@@ -34,7 +50,7 @@ require 'yamwi-conf.php';
 
 $key = $_GET["c"] ?? "" ;
 $nproc = $_GET["n"] ?? null;
-$input = trim(($_POST["max"] ?? base64_decode($_GET["max"] ?? "")) ?? "");
+$input = trim(($_POST["max"] ?? atou($_GET["max"] ?? "")) ?? "");
 $mode = $_GET["mode"] ?? $mode;
 if ($mode == 1 && $mode1is4 == true) { $mode = 4; }
 $apache_user_name = shell_exec('whoami');
@@ -233,13 +249,13 @@ function graphics() {
 function write_form() {
     global $key, $nproc, $input, $submit_button, $clear_button, $mode;
   echo '<form id="maxform" method="post" action="'.
-       $_SERVER["SCRIPT_NAME"] .'?c=' . $key . '&n=' . $nproc. '&mode=' . $mode . "&max=" . base64_encode($input) . "\">\n".
+       $_SERVER["SCRIPT_NAME"] .'?c=' . $key . '&n=' . $nproc. '&mode=' . $mode . "&max=" . utoa($input) . "\">\n".
        "<textarea name=\"max\" rows=\"10\">\n".
        $input.
        "</textarea><br>\n".
        "<input type=\"button\" value=\"".
             $submit_button.
-            "\" onClick=\"this.form.action=this.form.action.replace(/&max=[^&]*/,'&max='+btoa(this.form.max.value)); location.href=this.form.action;\">\n".
+            "\" onClick=\"this.form.action=this.form.action.replace(/&max=[^&]*/,'&max='+utoa(this.form.max.value)); location.href=this.form.action;\">\n".
        "<input type=\"button\" value=\"".
             $clear_button.
             "\" onClick=\"this.form.max.value=''; return false\">\n".
