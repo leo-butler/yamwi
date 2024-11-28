@@ -1,6 +1,9 @@
 // https://stackoverflow.com/questions/1144783/how-do-i-replace-all-occurrences-of-a-string-in-javascript
-function replaceIt(str,find,replace) {return str.replace(new RegExp(find,'g'), replace);}
+function replaceIt(str,find,replace) {
+    if(str === null) {return "";}
+    else {return str.replace(new RegExp(find,'g'), replace);}}
 // convert base64 encoded string to a URL-safe string
+// See page 7 of https://www.rfc-editor.org/rfc/rfc4648.txt
 function b64toa(b64) {return replaceIt(replaceIt(replaceIt(b64,'=','-'),'\\+','_'),'\\/','~');}
 // convert string to base64
 function atob64(str) {return replaceIt(replaceIt(replaceIt(str,'-','='),'_','+'),'~','/');}
@@ -15,6 +18,17 @@ function utoa(str) {return b64toa(btoa(unescape(encodeURIComponent(str))));}
 // atou("eCA6IM_AK86xL~CdkIE7"); // "x : π+α/𝐁;"
 // utoa("x : π+α/𝐁; "); // "eCA6IM_AK86xL~CdkIE7IA--"
 // atou("eCA6IM_AK86xL~CdkIE7IA--"); // "x : π+α/𝐁;"
+
+/////////////////////////
+// Update the textarea //
+/////////////////////////
+function updateTextArea(ta) {
+    var txta = document.getElementById(ta);
+    const thisurl = new URL(location.href);
+    const max = thisurl.searchParams.get('max');
+    if (max === null) {} else {txta.value = atou(thisurl.searchParams.get('max'));}
+}
+document.addEventListener("DOMContentLoaded", () => {updateTextArea('max');});
 
 //////////////////////////////////////////////////////////////////////
 // HIGHLIGHT.JS                                                     //
