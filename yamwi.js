@@ -16,3 +16,9 @@ function utoa(str) {return b64toa(btoa(unescape(encodeURIComponent(str))));}
 // utoa("x : π+α/𝐁; "); // "eCA6IM_AK86xL~CdkIE7IA--"
 // atou("eCA6IM_AK86xL~CdkIE7IA--"); // "x : π+α/𝐁;"
 
+//////////////////////////////////////////////////////////////////////
+// HIGHLIGHT.JS                                                     //
+// https://highlightjs.readthedocs.io/en/latest/readme.html         //
+//////////////////////////////////////////////////////////////////////
+document.addEventListener('DOMContentLoaded', (event) => {
+  document.querySelectorAll('pre.inputcode').forEach((el) => {hljs.highlightElement(el);});});
