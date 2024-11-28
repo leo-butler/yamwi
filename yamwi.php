@@ -41,7 +41,6 @@ function atob64($str) {
     return strtr($str,$trans);
 }
 function atou($str) {return base64_decode(atob64($str));}
-function utoa($str) {return b64toa(base64_encode(urlencode($str)));}
 
 //////////////////////
 // Global variables //
@@ -249,8 +248,8 @@ function graphics() {
 function write_form() {
     global $key, $nproc, $input, $submit_button, $clear_button, $mode;
   echo '<form id="maxform" method="post" action="'.
-       $_SERVER["SCRIPT_NAME"] .'?c=' . $key . '&n=' . $nproc. '&mode=' . $mode . "&max=" . utoa($input) . "\">\n".
-       "<textarea name=\"max\" rows=\"10\">\n".
+       $_SERVER["SCRIPT_NAME"] .'?c=' . $key . '&n=' . $nproc. '&mode=' . $mode . "&max=''\">\n".
+       "<textarea id=\"max\" name=\"max\" rows=\"10\">\n".
        $input.
        "</textarea><br>\n".
        "<input type=\"button\" value=\"".
