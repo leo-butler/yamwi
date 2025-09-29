@@ -323,7 +323,7 @@ function prepare_enhanced_ascii_output($out, $sentences) {
     $result = $result .
               '<tr>' .
               '<td><pre class="input">' . '(%i' . $i . ')' . "</pre></td>\n" .
-              '<td><pre class="inputcode">' . trim($sentences[$i]) . "</pre>\n".
+              '<td><pre class="inputcode">' . re_process(trim($sentences[$i])) . "</pre>\n".
               $print_code[$i-1] .
               "</td>\n" .
               "</tr>\n" .
@@ -422,7 +422,7 @@ function prepare_tex_output($out, $sentences) {
     $result = $result .
               '<tr>' .
               '<td><br><pre class="input">' . '(%i' . $i . ')' . "</pre></td>\n" .
-              '<td><br><pre class="inputcode">' . trim($sentences[$i]) . "</pre>\n" .
+              '<td><br><pre class="inputcode">' . re_process(trim($sentences[$i])) . "</pre>\n" .
               $print_code[$i-1] .
               "</td>\n" .
               "</tr>\n" .
@@ -460,12 +460,20 @@ function error_detected ($out) {
 
 
 function pre_process ($str) {
-   $tmp = str_replace("\\", "" , $str);
+   $tmp = str_replace(array("\\\\","\\",""), array("","","\\\\\\\\"), $str);
    $tmp = str_replace(array("wxdraw3d", "draw3d"), "Draw3d", $tmp);
    $tmp = str_replace(array("wxdraw2d", "draw2d"), "Draw2d", $tmp);
    $tmp = str_replace(array("wxdraw", "draw"), "Draw", $tmp);
    $tmp = str_replace(array("wxplot3d", "plot3d"), "Plot3d", $tmp);
    $tmp = str_replace(array("wxplot2d", "plot2d"), "Plot2d", $tmp);
+   return $tmp;}
+function  re_process ($str) {
+   $tmp = str_replace("\\\\","\\", $str);
+   $tmp = str_replace("Draw3d","draw3d",  $tmp);
+   $tmp = str_replace("Draw2d","draw2d",  $tmp);
+   $tmp = str_replace("Draw",  "draw",    $tmp);
+   $tmp = str_replace("Plot3d","plot3d",  $tmp);
+   $tmp = str_replace("Plot2d","plot2d",  $tmp);
    return $tmp;}
 
 
@@ -487,8 +495,7 @@ function calculate () {
          'load("'.$yamwi_path.'/yamwi.lisp"),' .
          $display2d .
          "\"%%%\")\$\n" . 
-         $input;
-  $val = pre_process ($val);
+         pre_process($input);
 
   // in TeX or enhanced ASCII mode, isolate sentences.
   if ($mode == 1 || $mode == 2 || $mode == 3 || $mode == 4) {
