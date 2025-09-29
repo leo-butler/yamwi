@@ -24,6 +24,11 @@ Yamwi.
 The original author of this software is Mario Rodríguez Riotorto. The
 current maintainer is Leo Butler. See [[*Contact][contact information]].
 
+* Screenshot
+Here is a screenshot of *Yamwi* with output.
+
+[[file:htdocs/yamwi-in-browser.png]]
+
 * Requirements
 The operating system to install Yamwi is Linux.
 
