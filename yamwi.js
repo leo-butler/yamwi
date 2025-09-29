@@ -36,3 +36,5 @@ document.addEventListener("DOMContentLoaded", () => {updateTextArea('max');});
 //////////////////////////////////////////////////////////////////////
 document.addEventListener('DOMContentLoaded', (event) => {
   document.querySelectorAll('pre.inputcode').forEach((el) => {hljs.highlightElement(el);});});
+document.addEventListener('DOMContentLoaded', (event) => {
+  document.querySelectorAll('pre.output').forEach((el) => {hljs.highlightElement(el);});});
