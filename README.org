@@ -118,3 +118,38 @@ License). For more information, read file LICENSE.
 
 For bug reports, suggestions or collaboration, feel free to contact me at
 [[https://github.com/leo-butler/yamwi/issues]].
+
+* Installing on a VM                                               :noexport:
+Let's set up a virtual machine (VM) to run =yamwi= in. I chose Debian,
+because that is the Linux distribution that I have used for almost 20
+years.
+
+** A VM image
+I got the latest debian image, the =sha512= sums, and then did a check:
+
+#+begin_src sh :exports code :eval no-export
+  wget https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-nocloud-amd64.qcow2
+  wget https://cloud.debian.org/images/cloud/bookworm/20241004-1890/SHA512SUMS
+  ln -s debian-12-nocloud-amd64.qcow2 debian-12-nocloud-amd64-20241004-1890.qcow2
+  sha512sum -c SHA512SUMS
+#+end_src
+
+** A QEMU script
+The =qemu= system must be installed. I installed the =qemu-system= package from Debian testing.
+I have a script lying around:
+
+#+begin_src sh :tangle ./yamwi-vm.sh :exports code :eval no-export
+  #!/bin/bash
+  set -aex
+
+  # for monitor info, see https://superuser.com/questions/1087859/how-to-quit-the-qemu-monitor-when-not-using-a-gui
+
+  DISPLAY=:0.0 qemu-system-x86_64 --enable-kvm -m 12G -boot menu=on,splash-time=10000 \
+  	    -hda ./debian-12-nocloud-amd64.qcow2 \
+  	    -monitor telnet::5557,server,nowait -serial mon:stdio \
+  	    -device e1000,netdev=net0 -netdev user,id=net0,hostfwd=tcp::6555-:22,\
+  	    hostfwd=tcp::5913-:5913,hostfwd=tcp::9580-:80,hostfwd=tcp::9943-:443 \
+  	    -monitor none -vnc 127.0.0.1:11,password=off \
+              -virtfs local,path=/etc,mount_tag=host0,security_model=passthrough,id=host0,readonly \
+  	    #-runas qemu
+#+end_src
