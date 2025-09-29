@@ -6,7 +6,7 @@ $mode = 2; // 0 -> ASCII-Art output,
            // 4 -> Remote TeX + MathJax
 	       // 5 -> MathML
 
-$mode1is4 = true;  // Set to true to dis-able Binary TeX output
+$mode1is4 = false;  // Set to true to dis-able Binary TeX output
 
 $max_file_time = 1;
 
