@@ -372,7 +372,7 @@ function prepare_tex_output($out, $sentences) {
   // read and clean Maxima output
   $subout = trim($out);
   $subout = substr($subout,31+strpos($subout,"start_maxima_output_tex_code:"));
-  $subout=str_replace("\begin{verbatim}", "$$", str_replace("\end{verbatim}", "$$", $subout));
+  $subout=str_replace("\\begin{verbatim}", "$$", str_replace("\\end{verbatim}", "$$", $subout));
 
   // scan Maxima output
   while (strlen($subout) > 0) {
