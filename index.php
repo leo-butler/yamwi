@@ -182,40 +182,6 @@ document.getElementById("saveBatchBtn").addEventListener("click", function() {
 
 <button onclick="window.scrollTo({top: 0, behavior: 'smooth'});">Back to top</button>
 
-<script src="com01.js"></script>
-<script src="com02.js"></script>
-<script src="com03.js"></script>
-<script src="com04.js"></script>
-<script src="com05.js"></script>
-<script src="com06.js"></script>
-<script src="com07.js"></script>
-<script src="com08.js"></script>
-<script src="com09.js"></script>
-<script src="com10.js"></script>
-<script src="com11.js"></script>
-<script src="com12.js"></script>
-<script src="com13.js"></script>
-<script src="com14.js"></script>
-<script src="com15.js"></script>
-<script src="com16.js"></script>
-<script src="com17.js"></script>
-<script src="com18.js"></script>
-<script src="com19.js"></script>
-<script src="com20.js"></script>
-<script src="com21.js"></script>
-<script src="com22.js"></script>
-<script src="com23.js"></script>
-<script src="com24.js"></script>
-<script src="com25.js"></script>
-<script src="com26.js"></script>
-<script src="com27.js"></script>
-<script src="com28.js"></script>
-<script src="com29.js"></script>
-<script src="com30.js"></script>
-<script src="com31.js"></script>
-<script src="com32.js"></script>
-<script src="com33.js"></script>
-
 <p class="small-left"><a href="https://github.com/leo-butler/yamwi/" target = "_blank">Yamwi Source</a></p>
 
 
