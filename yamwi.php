@@ -510,17 +510,16 @@ function calculate () {
   fclose($fich);
 
   // call Maxima in batch mode
+  $maxima_command = $maxima_binary . ' ' . $maxima_args . ' -b "'.$yamwi_path.'/tmp/'.$key.'.mac"';
+  if ($show_info) {echo '<u>Maxima command</u>: <pre>' . $maxima_command . '</pre><br/>';}
   // timelimit
   if (preg_match('/timelimit/',$timelimit_binary) == 1) {
       echo $timelimit_binary;
-    $out = shell_exec($timelimit_binary . ' -t ' .
-                      $max_process_time .
-    		      ' -T 5 ' . $maxima_binary . ' ' . $maxima_args . ' -b "'.$yamwi_path.'/tmp/'.$key.'.mac"');
-		      } else {
+      $out = shell_exec($timelimit_binary . ' -t ' . $max_process_time . ' -T 5 ' . $maxima_command);
+  } else {
   // timeout
-    $out = shell_exec($timelimit_binary . ' --signal=TERM --kill-after=5 ' .
-                      $max_process_time . ' ' .
-                      $maxima_binary . ' ' . $maxima_args . ' -b "'.$yamwi_path.'/tmp/'.$key.'.mac"');}
+      $out = shell_exec($timelimit_binary . ' --signal=TERM --kill-after=5 ' . $max_process_time . ' ' . $maxima_command);
+  }
 
   if ($show_info){
     echo '<u>Complete Maxima input</u>: '.'<pre>'.$val.'</pre><br>';
