@@ -1,3 +1,6 @@
+/* set output line length */
+linel : slength(concat(maxima_tempdir,"/",%codigo_usuario%,".mac")) + 10;
+
 /* texput */
 texput(matrix,lambda([expr], printf(false,"\\begin{bmatrix}~%~{~{~a~^&~}~^\\\\~}~%\\end{bmatrix}",map(lambda([row],map(tex1,row)),args(expr)))));
 texput(?rat,lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
