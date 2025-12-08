@@ -524,9 +524,10 @@ function calculate () {
     echo '<u>Complete Maxima input</u>: '.'<pre>'.$val.'</pre><br>';
     echo '<u>Complete Maxima output</u>: '.'<pre>'.$out.'</pre><br>';}
 
-  // Checks wether the last line returned by the shell call
+  // Checks whether the last line returned by the shell call
   // contains the path to the Maxima script; if not, it
   // means that the process has been interrupted by timelimit.
+  // Note: this check is only valid if linel is large enough to avoid splitting the string.
   if (str_contains(substr($out,strrpos(trim($out), "\n", -1)), $yamwi_path.'/tmp/'.$key.'.mac')) {
     $out = substr($out,strpos($out, "%%%") + 4);
     $out = rtrim(str_replace($yamwi_path.'/tmp/'.$key.'.mac','', $out));
