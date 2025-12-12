@@ -265,7 +265,6 @@ function write_form() {
        '   <option value=2 '. ($mode == 2 ? "selected=\"selected\"" : "") . ">2 - Enhanced ASCII-Art output</option>\n".
        '   <option value=3 '. ($mode == 3 ? "selected=\"selected\"" : "") . ">3 - Syntactic output</option>\n".
        '   <option value=4 '. ($mode == 4 ? "selected=\"selected\"" : "") . ">4 - Remote TeX + MathJax</option>\n".
-       '   <option value=4 '. ($mode == 5 ? "selected=\"selected\"" : "") . ">5 - MathML (not implemented)</option>\n".
        "</select>\n".
        "</form>\n".
        "<hr>\n\n" ; }
