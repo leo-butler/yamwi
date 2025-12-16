@@ -1,1 +1,33 @@
+*******************************************
+***Readme for the Yamwi launcher        ***
+***launch-yamwi : binary for Linux      ***
+***source Python script : launch-yamwi.py**
+***Author : Michel Gosse                ***
+***mail : mgosse3@gmail.com             ***
+***december 2025                        ***
+*******************************************
 
+These files are distributed under the terms of the GPL (General Public License).
+
+Yamwi can be launched on Linux using only php (assuming a localhost is up and running).
+After copying the Yamwi files in a user directory named yamwi (for example)
+The commands used are :
+cd $yamwi
+mkdir tmp (if tmp not exist in the yamwi directory)
+php -S localhost:8080
+then open your brower at the address  : localhost:8080
+
+The Yamwi launcher is a little utility which graphically execute these various commands.
+You can use :
+* the python script launch-yamwi by the command (python3  launch-yamwi.py)
+* or directly double-clic on the linux binary : launch-yamwi
+After launching the software:
+1) Choose the folder with the Yamwi files
+2) Click 'Launch Maxima Online'
+and the brower will open with a Yamwi session ready.
+To quit, close the browser tab, click on Shutdown Maxima Online.
+Of course, click on Quit to exit the program.
+
+IMPORTANT NOTE : these files are not necessary for the Yamwi software.
+You do not need to copy them to the server or the Yamwi files folder.
+Just copy the launch-yamwi binary wherever you prefer in your user directory.
