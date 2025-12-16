@@ -29,43 +29,64 @@
 <a href="help/help_gl.html" target="_blank">Galego</a>
 </p>
 
-<button id="expand-btn">Expand</button>
-<button id="factoriser">Factor</button>
-<button id="simplifier1">Simplify fraction</button>
-<button id="simplifier2">Simplify trigonometry</button>
-<button id="simplifier3">Simplify roots/logarithms</button>
-<button id="simplifier4">Expand trigonometry</button>
-<button id="simplifier5">Fully simplify fraction</button>
-<button id="simplifier6">Numerator of fraction</button>
-<button id="simplifier7">Denominator of fraction</button>
-<br>
-<button id="resoudre1">Solve equation</button> 
-<button id="resoudre2">Numerically solve</button> 
-<button id="resoudre3">Real roots of polynomial</button> 
-<button id="resoudre4">Roots of polynomial</button> 
-<button id="resoudre5">Solve linear system</button> 
-<button id="resoudre6">Solve system </button> 
-<button id="resoudre7">Substitution </button> 
-<br>
-<button id="derive1">Derivative</button> 
-<button id="derive2">n-th Derivative</button> 
-<button id="derive3">Integral</button> 
-<button id="derive4">Definite Integral</button> 
-<button id="derive5"> Risch Integration</button> 
-<button id="derive6">Romberg Integration</button>
-<button id="derive7">Define function f(x)</button>
-<br>
-<button id="ana1">Limit</button>
-<button id="ana2">Sum</button>
-<button id="ana3">Product</button>
-<button id="ana4">Partial fraction decomposition</button>
-<button id="ana5">Taylor series</button>
-<button id="ana6">GCD (Greatest Common Divisor)</button>
-<br>
-<button id="plot1">2D Cartesian curve</button>
-<button id="plot2">2D parametric curve</button>
-<button id="plot3">2D implicit curve</button>
-<button id="plot4">3D Surface </button>
+<div class="menu-row">
+
+<select id="menu-simplify" class="cmd-menu">
+<option value="">Simplify...</option>
+<option value="expand((x+1)^2);">Expand</option>
+<option value="factor(x^3-1);">Factor</option>
+<option value="ratsimp((x^2-1)/(x-1));">Simplify fraction</option>
+<option value="trigsimp(cos(x)^2+sin(x)^2);">Simplify trig</option>
+<option value="radcan(sqrt(8)+log(16));">Simplify log/roots</option>
+<option value="trigexpand(sin(x+y));">Expand trig</option>
+<option value="fullratsimp((x^3-1)/(x^2-1));">Full simplify</option>
+<option value="num((x^2-1)/(x+1));">Numerator</option>
+<option value="denom((x^2-1)/(x+1));">Denominator</option>
+</select>
+
+<select id="menu-solve" class="cmd-menu">
+<option value="">Solve...</option>
+<option value="solve(x^2-4=0,x);">Solve equation</option>
+<option value="find_root(sin(x),x,3,4);">Num. solve</option>
+<option value="realroots(x^3-x-1);">Real roots poly</option>
+<option value="allroots(x^3-1);">All roots poly</option>
+<option value="linsolve([x+y=5,3*x-y=1],[x,y]);">Linear system</option>
+<option value="algsys([x^2+y=5,x*y=2],[x,y]);">Solve system</option>
+<option value="subst(a+b,x,x^2);">Substitution</option>
+</select>
+
+<select id="menu-deriv" class="cmd-menu">
+<option value="">Calculus...</option>
+<option value="diff(x^3+2*x,x);">Derivative</option>
+<option value="diff(x^2*exp(-x),x,3);">n-th Derivative</option>
+<option value="integrate(x^2+log(x),x);">Integral</option>
+<option value="integrate((x^2-3*x+1)/(x^2+1),x,0,1);">Definite Integral</option>
+<option value="risch(x^2*exp(x^2),x);">Risch</option>
+<option value="romberg(sin(x)+x^2,x,0,%pi);">Romberg</option>
+<option value="f(x):=x+sin(x);">Define f(x)</option>
+</select>
+
+
+<select id="menu-ana" class="cmd-menu">
+<option value="">Analysis...</option>
+<option value="limit(sin(x)/x,x,0);">Limit</option>
+<option value="sum(1/i^2,i,1,inf),simpsum;">Sum</option>
+<option value="product(k/(k^2+1),k,1,10);">Product</option>
+<option value="partfrac((x^3+5*x-5)/(x^2-1),x);">Partial fractions</option>
+<option value="taylor(log(1+x),x,0,5);">Taylor series</option>
+<option value="gcd(2356,128);">GCD</option>
+</select>
+
+
+<select id="menu-plot" class="cmd-menu">
+<option value="">Plot...</option>
+<option value="draw2d(grid=true,xaxis=true,yaxis=true,xrange=[-5,5],yrange=[-2,12],color=black,line_width=1,explicit(sin(x)*x^3,x,-5,5));">2D curve</option>
+<option value="draw2d(parametric(cos(t),sin(t),t,0,2*%pi),xrange=[-1.5,1.5],yrange=[-1.5,1.5],grid=true,xaxis=true,yaxis=true,line_width=1);">2D parametric</option>
+<option value="draw2d(grid=true,line_width=2,color=red,implicit(x^3-3*x*y^2-1=0,x,-2,2,y,-2,2),grid=true,xaxis=true,yaxis=true);">2D implicit</option>
+<option value="draw3d(surface_hide=true,palette=[blue,cyan,green,yellow,orange,red],explicit(sin(sqrt(x^2+y^2))/(sqrt(x^2+y^2)),x,-6,6,y,-6,6));">3D surface</option>
+</select>
+
+</div>
 
 <hr>
 

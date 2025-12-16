@@ -41,3 +41,55 @@ td{
   vertical-align: top;}
 textarea{
   width:          100%;}
+.maxima-output{
+    display:		flex;
+    justify-content:	center;
+    align-items:	center;
+    margin:		auto;}
+
+/* CORRECTION : Séparer les règles */
+.menu-row {
+    display:	flex;
+    gap:	10px;
+    margin:	10px 0;
+    flex-wrap:	wrap;
+}
+
+.cmd-menu {
+    padding:		8px 12px;
+    font-size:		14px;
+    border:		1px solid #ccc;
+    border-radius:	4px;
+    background:	        white;
+    min-width:		180px;
+}
+
+.cmd-menu:focus {
+    outline:		2px solid #007cba;
+    border-color:	#007cba;
+}
+
+/* Titres de menu en bleu clair/gras */
+.cmd-menu option:first-child {
+    background-color:	#f0f8ff;  /* Bleu très clair */
+    color:		#1e40af;  /* Bleu moyen */
+    font-weight:	600;
+    font-style:		italic;
+}
+
+/* Effet survol pour tous les titres */
+.cmd-menu option:first-child:hover {
+    background-color:	#dbeafe;
+    color:		#1d4ed8;
+}
+
+/* Séparateur visuel pour les autres options */
+.cmd-menu option:not(:first-child) {
+    font-weight:	normal;
+}
+
+.small-right {
+    float:	right !important;
+    font-size:	75% !important;
+    margin-top: -40px !important;
+}
