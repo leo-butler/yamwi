@@ -88,7 +88,7 @@ Assuming that ~php~ is installed, the following launches Yamwi:
 #+header: :var yamwi="."
 #+begin_src shell :exports
   cd $yamwi
-  mdkir tmp
+  mkdir tmp
   php -S localhost:8080
 #+end_src
 
