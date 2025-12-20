@@ -494,19 +494,26 @@ function  re_process ($str) {
 // run Maxima and output results
 function calculate () {
   global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info,
-      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary;
+      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $mode, $movie_muxer, $movie_is_embedded, $ffmpeg_bin, $base64_cmd;
   $nproc = $nproc + 1;
   $display2d = "";
   if ($mode == 3) $display2d = "display2d: false,";
 
   // build Maxima program
+  // maxima_tempdir is hard-coded to be ./tmp
   $val = '(maxima_tempdir: "'.$yamwi_path.'/tmp",' .
          '%codigo_usuario%: "'.$key.'",' .
          '%num_proceso%: "'.$nproc.'",' .
          '%dir_sources%: "'.$yamwi_path.'/packages",' .
+         '%movie_muxer%: "'.$movie_muxer.'",'.
+         '%movie_is_embedded%: '.$movie_is_embedded.','.
+         '%ffmpeg_bin%: "'.$ffmpeg_bin.'",'.
+         '%base64_cmd%: "'.$base64_cmd.'",'.
          'load("'.$yamwi_path.'/yamwi.mac"),' .
          'load("'.$yamwi_path.'/yamwi.lisp"),' .
          $display2d .
+         'output_mode:' . $mode . ',' .
+         'linenum:0,' .
          "\"%%%\")\$\n" . 
          pre_process($input);
 
