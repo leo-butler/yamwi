@@ -28,68 +28,78 @@ file_search_lisp:
 
 %num_sentence%: 0$
 %num_grafico%: 0$
+%num_movie%: 0$
+%movie_term%: 'pngcairo$
+
+/* Movie making */
+gplt_fn_seed:random(10^8);
+gplt_fn() := (gplt_fn_seed:random(10^8), printf(false,"~a-maxout-~8,'0d.gnuplot",%codigo_usuario%,gplt_fn_seed));
+data_fn() := printf(false,"~a-data-~8,'0d.gnuplot",%codigo_usuario%,gplt_fn_seed);
+
+draw_multiple_plots(drawer,fname,term,lst,[opts]) := block([file,files,n:length(lst),i:0,optsf],
+  files:[],
+  for p in lst do (
+    i:i+1,file:printf(false,"~a~8,'0d",fname,i),
+    files:append(files,[file]),
+    optsf:append(opts,[terminal=term,file_name=file,gnuplot_file_name=gplt_fn(),data_file_name=data_fn()]),
+    apply(drawer,[p,optsf])),
+  map(lambda([x],concat(x,".",term)),files));
+
+/* see https://trac.ffmpeg.org/wiki/Slideshow */
+Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,output_file,linel:linel],
+  if ffmpeg_options=[] then ffmpeg_options:["-vf framerate=fps=30:interp_start=64:interp_end=192:scene=100"],
+  drawer:subst([Draw2d=draw2d,Draw3d=draw3d,Draw=draw],drawer),
+  term:'png,
+  /* in yamwi.php, maxima_tempdir is hard-coded to be ./tmp */
+  fname:concat("tmp/movie-still-",%codigo_usuario%,"-",%num_proceso%,"-",%num_movie%,"-"),
+  output_file:concat(fname,"0.",%movie_muxer%),
+  files:draw_multiple_plots(drawer,fname,%movie_term%,paramlist),
+  /* ffmpeg hangs if STDIN != /dev/null */
+  cmd:if %movie_is_embedded%=1 then printf(false,"/bin/sh -c '~a -y -framerate 30 -f image2 -i ~a%08d.~a ~{~a ~} -f ~a - | ~a' < /dev/null",%ffmpeg_bin%,fname,term,ffmpeg_options,%movie_muxer%,%base64_cmd%)
+    else printf(false,"/bin/sh -c '~a -y -framerate 30 -f image2 -i ~a%08d.~a ~{~a ~} ~a' < /dev/null",%ffmpeg_bin%,fname,term,ffmpeg_options,output_file),
+  print(concat("@@@video_",%movie_muxer%,"@@@")),
+  system(cmd),
+  if %movie_is_embedded%=1 then print("@@@/video@@@") else (linel:slength(output_file)+13, print(concat(output_file,"@@@/video@@@"))),
+  [op(__)]);
+
+alias(draw_movie,Draw_movie) $
 
 /* Code for draw */
+/*
+Supported terminal types:
+png pngcairo gif animated_gif jpg svg (default: svg)
+*/
 
-mwdrawxd(func, descgraf):=
-  block([haiterm: false, formato],
+output2stdout : user_preamble = printf(false,"base64out='|~a';~%if (GPVAL_OUTPUT ne base64out) {~%unset output;~%set output '|~a';~%};",%base64_cmd%,%base64_cmd%);
+
+mwdrawxd(func, descgraf, mutate):=
+  block([formato, result, unsafe_options],
     if not get('draw,'version) then load("draw"),
+    /* each unsafe option gives an attacker an opportunity to gain free access to gnuplot--hence a shell--via a trick like that below, so filter them out */
+    unsafe_options: '[user_preamble,gnuplot_file_name,data_file_name],
+    descgraf:sublist(descgraf,lambda([x], not(is(not(atom(x)) and op(x)="=" and member(lhs(x),unsafe_options))))),
     descgraf: append([dimensions=[400,300],
-                      gnuplot_file_name = concat(%codigo_usuario%,".gnuplot"),
-                      data_file_name = concat(%codigo_usuario%,".data"),
-                      file_name  = concat(maxima_tempdir,
-                                          "/",
-                                          %codigo_usuario%,
-                                          ".g.",
-                                          %num_proceso%,
-                                          ".",
-                                          %num_sentence%,
-                                          ".",
-                                          %num_grafico%) ],
-                     descgraf),
+                      /* pipe the gnuplot output through base64 */
+                      file_name = concat("|",%base64_cmd%,"' # "),
+                      gnuplot_file_name = gplt_fn(),
+                      data_file_name = data_fn()],
+                      descgraf),
+    /* get the terminal passed by command, if any */
+    for r in descgraf do
+    if not(atom(r)) and op(r)="=" and lhs(r)='terminal then formato:rhs(r),
     /* If terminal is not specified, force svg */
-    for elem in descgraf do
-       if part(elem,1) = 'terminal and 
-          member(part(elem,2), ['png, 'gif, 'animated_gif, 'jpg, 'svg])
-         then (haiterm: true,
-               if part(elem,2) = 'png
-                 then formato: "png"
-               elseif part(elem,2) = 'jpg
-                 then formato: "jpg"
-               elseif member(part(elem,2), ['gif, 'animated_gif])
-                 then formato: "gif"
-               elseif part(elem,2) = 'svg
-                 then formato: "svg",
-               return()),
-    if not haiterm
-       then (formato: "svg",
-             descgraf: endcons(terminal = 'svg,
-               descgraf)),
-    with_stdout(
-      concat(maxima_tempdir,
-             "/",
-             %codigo_usuario%,
-             ".gr.",
-             %num_proceso%,
-             ".",
-             %num_sentence%,
-             ".txt"), 
-      print(concat("tmp/",
-                   %codigo_usuario%,
-                   ".g.",
-                   %num_proceso%,
-                   ".",
-                   %num_sentence%,
-                   ".",
-                   %num_grafico%,
-                   ".",
-                   formato))),
+    if member(formato,'[png,gif,jpg,svg]) then 'done
+    else if formato = 'animated_gif then formato:'gif
+    else if formato = 'pngcairo then formato:'png
+    else (formato : 'svg, descgraf : endcons(terminal = 'svg, descgraf)),
+    print(concat("@@@draw_",formato,"@@@")),
     %num_grafico%: %num_grafico% + 1,
-    apply(func,descgraf))$
+    result : apply(func,descgraf),
+    print("@@@/draw@@@"), result)$
 
-Draw2d([descgraf]):= mwdrawxd('draw2d, descgraf) $
-Draw3d([descgraf]):= mwdrawxd('draw3d, descgraf) $
-Draw([descgraf])  := mwdrawxd('draw, descgraf) $
+Draw2d([descgraf]):= mwdrawxd('draw2d, descgraf, false) $
+Draw3d([descgraf]):= mwdrawxd('draw3d, descgraf, false) $
+Draw([descgraf])  := mwdrawxd('draw, descgraf, true) $
 
 /* Code for plot */
 /* 
