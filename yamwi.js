@@ -68,3 +68,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
     make_menu_action("menu-ana");
     make_menu_action("menu-plot");
 });
+
+//////////////////////////////////////////////////////////////////////
+// Automatically resize the input textarea                          //
+//////////////////////////////////////////////////////////////////////
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.querySelectorAll("textarea").forEach(function(textarea) {
+	textarea.style.height = textarea.scrollHeight + "px";
+	textarea.style.overflowY = "hidden";
+
+	textarea.addEventListener("input", function() {
+	    this.style.height = "auto";
+	    this.style.height = this.scrollHeight + "px";
+	});
+    })});
