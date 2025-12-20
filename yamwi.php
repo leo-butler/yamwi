@@ -465,6 +465,13 @@ function pre_process ($str) {
    $tmp = str_replace(array("wxdraw", "draw"), "Draw", $tmp);
    $tmp = str_replace(array("wxplot3d", "plot3d"), "Plot3d", $tmp);
    $tmp = str_replace(array("wxplot2d", "plot2d"), "Plot2d", $tmp);
+   $tmp = str_replace("scatterplot" , "Scatterplot", $tmp);
+   $tmp = str_replace("histogram"   , "Histogram", $tmp);
+   $tmp = str_replace("barsplot"    , "Barsplot", $tmp);
+   $tmp = str_replace("piechart"    , "Piechart", $tmp);
+   $tmp = str_replace("boxplot"     , "Boxplot", $tmp);
+   $tmp = str_replace("starplot"    , "Starplot", $tmp);
+   $tmp = str_replace("drawdf"      , "Drawdf", $tmp);
    return $tmp;}
 function  re_process ($str) {
    $tmp = str_replace("\\\\","\\", $str);
@@ -473,6 +480,13 @@ function  re_process ($str) {
    $tmp = str_replace("Draw",  "draw",    $tmp);
    $tmp = str_replace("Plot3d","plot3d",  $tmp);
    $tmp = str_replace("Plot2d","plot2d",  $tmp);
+   $tmp = str_replace("Scatterplot" , "scatterplot" , $tmp);
+   $tmp = str_replace("Histogram"   , "histogram"   , $tmp);
+   $tmp = str_replace("Barsplot"    , "barsplot"    , $tmp);
+   $tmp = str_replace("Piechart"    , "piechart"    , $tmp);
+   $tmp = str_replace("Boxplot"     , "boxplot"     , $tmp);
+   $tmp = str_replace("Starplot"    , "starplot"    , $tmp);
+   $tmp = str_replace("Drawdf"      , "drawdf"      , $tmp);
    return $tmp;}
 
 
