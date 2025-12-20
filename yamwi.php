@@ -27,7 +27,6 @@
 
 require 'yamwi-conf.php';
 
-
 /////////////
 // Workers //
 /////////////
@@ -227,24 +226,6 @@ function list_of_sentences ($sentences) {
 
 
 
-// returns the necessary code to add all
-// the requested graphics when working in ASCII mode.
-function graphics() {
-   global $key, $nproc;
-  $result = "";
-  $file = 'tmp/' . $key . '.gr.' . $nproc . '.0.txt';
-  if (file_exists($file)) {
-    $fh = fopen($file, 'r');
-    $theData = trim(fread($fh, filesize($file)));
-    fclose($fh); 
-    $out = explode("\n", $theData);
-    foreach ($out as $file_name)
-      $result = $result .
-                '<img src=' . $file_name . ' alt="gr"><br>'; }
-  return $result; }
-
-
-
 function write_form() {
     global $key, $nproc, $input, $submit_button, $clear_button, $mode;
   echo '<form id="maxform" method="post" action="'.
@@ -282,11 +263,30 @@ function gtlt ($str) {
 
 
 function prepare_ascii_output($out) {
+  global $movie_muxer, $movie_is_embedded;
   write_form();
-  write_results('<pre>' .
-                gtlt(substr($out, strpos($out, "(%i3)"))) .
-                '</pre>' .
-                graphics());}
+  $prefix = '</pre></td></tr><tr><td><img src="data:image/';
+  $suffix = ';charset=us-ascii;base64,';
+  $draw_svg = $prefix . 'svg+xml' . $suffix;
+  $draw_png = $prefix . 'png' . $suffix;
+  $draw_gif = $prefix . 'gif' . $suffix;
+  $draw_jpg = $prefix . 'jpg' . $suffix;
+  $result = gtlt(substr($out, strpos($out, "(%i1)")));
+  $result = str_replace('@@@draw_svg@@@',$draw_svg,$result);
+  $result = str_replace('@@@draw_png@@@',$draw_png,$result);
+  $result = str_replace('@@@draw_gif@@@',$draw_gif,$result);
+  $result = str_replace('@@@draw_jpg@@@',$draw_jpg,$result);
+  $result = str_replace('@@@/draw@@@','"/></tr></td><tr><td><pre id="ascii-output">',$result);
+  if ($movie_is_embedded) {
+      $prefix = '</pre></td></tr><tr><td><video controls autoplay width="100%" loop=true><source type="video/webm" src="data:video/' . $movie_muxer . ';charset=us-ascii;base64,';
+  } else {
+      $prefix = '</pre></td></tr><tr><td><video controls autoplay width="100%" loop=true><source type="video/webm" src="';
+  }
+  $result = str_replace('@@@video_'.$movie_muxer.'@@@',$prefix,$result);
+  $result = str_replace('@@@/video@@@','"/>Your browser does not support HTML video.</video></tr></td><tr><td><pre id="ascii-output">',$result);
+  write_results('<div class="maxima-output"><table><tr><td><pre id="ascii-output">' . "\n" .
+                $result . "\n" .
+                '</pre></td></tr></table></div>');}
 
 
 
