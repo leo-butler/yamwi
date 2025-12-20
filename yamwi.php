@@ -312,7 +312,7 @@ function prepare_enhanced_ascii_output($out, $sentences) {
 
   // write html code
   write_form();
-  $result = "<table>\n";
+  $result = '<table id="enhanced-ascii-output" class="maxima-output">' . "\n";
   for($i = 1 ; $i <= $out_counter ; $i++) {
     $this_result1 = '';  // the output label
     $this_result2 = '';  // the mathematical result
@@ -408,7 +408,7 @@ function prepare_tex_output($out, $sentences) {
   else {
     $result = '';}
   write_form();
-  $result = $result . "<table>\n";
+  $result = $result . '<table id="tex-output-' . $mode . '" class="maxima-output">' . "\n";
   for($i = 1 ; $i <= $out_counter ; $i++) {
     $this_result1 = '';  // the output label
     $this_result2 = '';  // the mathematical result
