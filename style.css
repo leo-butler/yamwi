@@ -32,6 +32,7 @@ pre{
 .output{
   background-color: lightgray;
   color:          blue;
+  font-weight:    bold;
   font-size:      100%;}
 .print{
   font-size:      75%;
