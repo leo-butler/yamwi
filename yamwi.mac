@@ -82,7 +82,7 @@ png pngcairo gif animated_gif jpg svg (default: svg)
 output2stdout : user_preamble = printf(false,"base64out='|~a';~%if (GPVAL_OUTPUT ne base64out) {~%unset output;~%set output '|~a';~%};",%base64_cmd%,%base64_cmd%);
 
 mwdrawxd(func, descgraf, mutate):=
-  block([formato, result, unsafe_options],
+  block([formato, formatohtml, result, unsafe_options],
     if not get('draw,'version) then load("draw"),
     /* each unsafe option gives an attacker an opportunity to gain free access to gnuplot--hence a shell--via a trick like that below, so filter them out */
     unsafe_options: '[user_preamble,gnuplot_file_name,data_file_name],
@@ -97,14 +97,15 @@ mwdrawxd(func, descgraf, mutate):=
     for r in descgraf do
     if not(atom(r)) and op(r)="=" and lhs(r)='terminal then formato:rhs(r),
     /* If terminal is not specified, force svg */
-    if member(formato,'[png,gif,jpg,svg]) then 'done
-    else if formato = 'animated_gif then formato:'gif
-    else if formato = 'pngcairo then formato:'png
-    else (formato : 'svg, descgraf : endcons(terminal = 'svg, descgraf)),
-    print(concat("@@@draw_",formato,"@@@")),
+    if member(formato,'[png,gif,jpg]) then formatohtml:formato
+    else if formato = 'animated_gif then formato:formatohtml:'gif
+    else if formato = 'pngcairo then formato:formatohtml:'png
+    else (formato : 'svg, formatohtml:"svg+xml", descgraf : endcons(terminal = 'svg, descgraf)),
+    printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,",formatohtml),
     %num_grafico%: %num_grafico% + 1,
     result : apply(func,descgraf),
-    print("@@@/draw@@@"), result)$
+    print("\">"),
+    result)$
 
 Draw2d([descgraf]):= mwdrawxd('draw2d, descgraf, false) $
 Draw3d([descgraf]):= mwdrawxd('draw3d, descgraf, false) $
