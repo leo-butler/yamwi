@@ -187,46 +187,6 @@ function too_many_processes() {
 ////////////////////
 
 
-
-// separates individual sentences from Maxima script
-function input_sentences ($val) {
-  $anchor = 0;
-  $sentence_counter = 0;
-  $comment_level = 0;
-  for($i = 0 ; $i < strlen($val) ; $i++) {
-    if ($val[$i] == "/" && $val[$i+1] == "*") 
-      $comment_level = $comment_level + 1;
-    if ($val[$i] == "*" && $val[$i+1] == "/") 
-      $comment_level = $comment_level - 1;
-    if ($comment_level == 0 &&
-        ($val[$i] == ";" || $val[$i] == "$")) {
-      $sentences[$sentence_counter]= substr($val, $anchor, $i - $anchor + 1);
-      $sentence_counter = $sentence_counter + 1;
-      $anchor = $i+1;} }
-  return $sentences; }
-
-
-
-// Builds Maxima list of sentences
-function list_of_sentences ($sentences) {
-  global $mode;
-  $sentence_counter = count($sentences);
-  $lista = "";
-  for($i = 1 ; $i < $sentence_counter ; $i++){
-    $lista = $lista . 
-             "\"" .
-             str_replace("\"", "\\\"" , $sentences[$i]) .
-             "\"";
-  if ($i < $sentence_counter-1)
-    $lista = $lista.",";}
-  if ($mode == 1 || $mode == 4)
-    $lista = $sentences[0]."\ntranslate_into_tex([".$lista."])$";
-  else
-    $lista = $sentences[0]."\ntranslate_into_print([".$lista."])$";
-  return $lista;}
-
-
-
 function write_form() {
     global $key, $nproc, $input, $submit_button, $clear_button, $mode;
   echo '<form id="maxform" method="post" action="'.
