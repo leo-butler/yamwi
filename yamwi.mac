@@ -61,9 +61,14 @@ Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,out
   /* ffmpeg hangs if STDIN != /dev/null */
   cmd:if %movie_is_embedded%=1 then printf(false,"/bin/sh -c '~a -y -framerate 30 -f image2 -i ~a%08d.~a ~{~a ~} -f ~a - | ~a' < /dev/null",%ffmpeg_bin%,fname,term,ffmpeg_options,%movie_muxer%,%base64_cmd%)
     else printf(false,"/bin/sh -c '~a -y -framerate 30 -f image2 -i ~a%08d.~a ~{~a ~} ~a' < /dev/null",%ffmpeg_bin%,fname,term,ffmpeg_options,output_file),
-  print(concat("@@@video_",%movie_muxer%,"@@@")),
-  system(cmd),
-  if %movie_is_embedded%=1 then print("@@@/video@@@") else (linel:slength(output_file)+13, print(concat(output_file,"@@@/video@@@"))),
+  if %movie_is_embedded%=1 then (
+    printf(true,"</pre></td></tr><tr><td></td><td><video controls autoplay width=\"100%\" loop=true><source type=\"video/webm\" src=\"data:video/~a;charset=us-ascii;base64,",%movie_muxer%),
+    system(cmd),
+    printf(true,"\"/>Your browser does not support HTML video.</video></td></tr>"))
+  else (
+    printf(true,"</pre></td></tr><tr><td></td><td><video controls autoplay width=\"100%\" loop=true><source type=\"video/webm\" src=\"~a\"/>",output_file),
+    system(cmd),
+    printf(true,"Your browser does not support HTML video.</video></tr></td>")),
   [op(__)]);
 
 alias(draw_movie,Draw_movie) $
