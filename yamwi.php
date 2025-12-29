@@ -328,29 +328,29 @@ function calculate () {
 
   if ($show_info){
     echo '<u>Complete Maxima input</u>: '.'<pre>'.$val.'</pre><br>';
-    echo '<u>Complete Maxima output</u>: '.'<pre>'.$out.'</pre><br>';}
+    echo '<u>Complete Maxima output</u>: '.'<pre>'.str_replace('<','〈',str_replace('>','〉',$out)).'</pre><br>';}
 
   // Checks whether the last line returned by the shell call
   // contains the path to the Maxima script; if not, it
   // means that the process has been interrupted by timelimit.
   // Note: this check is only valid if linel is large enough to avoid splitting the string.
-  if (str_contains(substr($out,strrpos(trim($out), "\n", -1)), $yamwi_path.'/tmp/'.$key.'.mac')) {
-    $out = substr($out,strpos($out, "%%%") + 4);
-    $out = rtrim(str_replace($yamwi_path.'/tmp/'.$key.'.mac','', $out));
-    $out = substr($out,0, strlen($out) - strlen(strrchr($out,"%")) - 1);
-    $input = str_replace("\\", "" , $input);
+  $end_needle="</span></td><td><span class='inputcode'></span></td></tr>";
+  $end=strpos(trim($out),$end_needle,0);
+  if (! $end === false) {
+    $out = substr($out,0,$end);
+    if ($show_info) {
+        echo '<u>end:</u>: '.$end.'<br/>';}
+    $end = strrpos($out,'<tr><td>');
+    if (! $end === false) { $out=substr($out,0,$end); };
+    $out = substr($out,strrpos($out, '%%%)')+5);
 
     // write results
     $an_error = error_detected($out);
     if (! $an_error === false) {
       write_form();
       alert ($an_error);}
-    elseif ($mode == 0)  // ASCII mode
-      prepare_ascii_output($out);
-    elseif ($mode == 1 || $mode == 4) // TeX or MathJax mode
-      prepare_tex_output($out, $sentences);
-    else  // Enhanced ASCII and syntactic modes
-      prepare_enhanced_ascii_output($out, $sentences);
+    else
+      prepare_output($out, $val);
 
     // cleaning old files
     remove_old_files ();}
