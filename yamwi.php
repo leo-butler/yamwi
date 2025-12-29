@@ -290,8 +290,6 @@ function calculate () {
   global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info,
       $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $mode, $movie_muxer, $movie_is_embedded, $ffmpeg_bin, $base64_cmd;
   $nproc = $nproc + 1;
-  $display2d = "";
-  if ($mode == 3) $display2d = "display2d: false,";
 
   // build Maxima program
   // maxima_tempdir is hard-coded to be ./tmp
