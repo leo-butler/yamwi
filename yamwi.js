@@ -81,3 +81,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	    this.style.height = this.scrollHeight + "px";
 	});
     })});
+
+//////////////////////////////////////////////////////////////////////
+// Toggle output format                                             //
+//////////////////////////////////////////////////////////////////////
+function show_output(n) {
+    // see yawmi_display in yamwi.mac
+    var types = ["ascii", "ascii-art", "enhanced-ascii-art", "mathml", "tex-mathjax"];
+    var type = (n >= 0 && n < types.length) ? types[n] : types[0];
+    var turn_on_off = function (t) {
+	var stle = (type == t) ? "flex" : "none";
+	var e = document.getElementsByClassName("output "+t);
+	for (i=0; i<e.length; i++) {
+	    e[i].style.display = stle;
+	}};
+    types.map(turn_on_off);
+};
