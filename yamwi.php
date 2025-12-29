@@ -305,18 +305,11 @@ function calculate () {
          '%base64_cmd%: "'.$base64_cmd.'",'.
          'load("'.$yamwi_path.'/yamwi.mac"),' .
          'load("'.$yamwi_path.'/yamwi.lisp"),' .
-         $display2d .
-         'output_mode:' . $mode . ',' .
+         '%output_mode%:' . $mode . ',' .
          'linenum:0,' .
-         "\"%%%\")\$\n" . 
-         pre_process($input);
-
-  // in TeX or enhanced ASCII mode, isolate sentences.
-  if ($mode == 1 || $mode == 2 || $mode == 3 || $mode == 4) {
-    // 1. make array of input sentences
-    $sentences = input_sentences($val);
-    // 2. build the Maxima list with sentences as strings
-    $val = list_of_sentences($sentences); }
+         'printf(true,"<!--HERE-->~%<tr><td><span class=\'input\'>(~a~a) </span></td><td><span class=\'inputcode\'>",inchar,linenum+1),'.
+         '%%%)$' . "\n" .
+      pre_process($input);
 
   // create batch file
   $fich = fopen($yamwi_path.'/tmp/'.$key.'.mac', 'w');
