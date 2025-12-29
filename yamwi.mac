@@ -119,7 +119,6 @@ Draw([descgraf])  := mwdrawxd('draw, descgraf, true) $
 
 mwplotxd(func, descgraf):=
 block([term_cmd:"set term pngcairo size 600,500", cleandescgraf:[], result, unsafe_options],
-    print("@@@draw_png@@@"),
     /* each unsafe option gives an attacker an opportunity to gain free access to gnuplot--hence a shell--via a trick like that below, so filter them out */
     unsafe_options: '[png_file, svg_file, pdf_file, ps_file, gnuplot_term, gnuplot_out_file, run_viewer, gnuplot_preamble, gnuplot_postamble],
     cleandescgraf:sublist(descgraf,lambda([x], not(is(not(atom(x)) and op(x)="=" and member(lhs(x),unsafe_options))))),
@@ -128,8 +127,9 @@ block([term_cmd:"set term pngcairo size 600,500", cleandescgraf:[], result, unsa
                           [[gnuplot_script_file, gplt_fn()],
                           [gnuplot_postamble, concat(term_cmd,"; ",rhs(output2stdout))]]), /* output is printed to STDOUT */
     %num_grafico%: %num_grafico% + 1,
+    printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,",'png),
     result : apply(func,cleandescgraf),
-    print("@@@/draw@@@"),
+    print("\">"),
     result) $
 
 Plot2d([descgraf]):= (mwplotxd('plot2d, descgraf), 'plot2d) $
