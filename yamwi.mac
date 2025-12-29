@@ -148,25 +148,37 @@ Starplot([desc]) := Draw2d(apply(starplot_description, desc)) $
 
 Drawdf([params]) := Draw(apply('df_graphics, params))$
 
-/* output formats */
-
-translate_into_tex(sentencias) :=
-  block(
-    print("start_maxima_output_tex_code:"),
-    map(lambda([%%lambda_argument%%],
-               %num_sentence%: %num_sentence% + 1,
-               %num_grafico%: 1,
-               tex(eval_string(%%lambda_argument%%))),
-        sentencias)) $
-
-translate_into_print(sentencias) :=
-  block([res],
-    print("start_maxima_output_print_code:"),
-    map(lambda([%%lambda_argument%%],
-               %num_sentence%: %num_sentence% + 1,
-               %num_grafico%: 1,
-               res: eval_string(%%lambda_argument%%),
-               print("%%%"),
-               print(res),
-               print("%%%")),
-        sentencias)) $
+/* alt-display */
+load("alt-display.mac") $
+/* The prompt/label display inside CONTINUE does not use this (but it should):*/
+/* alt_format_prompt:lambda([destination,formstring,arguments],printf(destination,"<tr><td class='input'><pre class='input-label'>(~a~a)</td><td><pre class='inputcode'>",inchar,linenum)) $ */
+/*
+set_prompt(
+  'general,"</span></td>",
+  'prefix,"<td><span class='input'>",
+  'suffix,"</span></td><td><span class='inputcode'>") $
+*/
+?\*display\-labels\-p\*:false $
+define_alt_display(yamwi_display(x),
+  block([?\*display\-labels\-p\*:false, nodisplay:" style='display:none;'"],
+    /* the opening delimiters are first emitted by a printf statement in calculate (yamwi.php) */
+    printf(true,"</span></td></tr>~%"),
+    printf(true,"<tr><td class='output'><span class='output-label'>(~a~a)</span></td>~%",outchar,linenum),
+    printf(true,"<td class='output ascii'~a><pre class='ascii'>",if %output_mode%=0 then "" else nodisplay),
+    oned_display(x),
+    printf(true,"</pre></td>~%"),
+    printf(true,"<td class='output ascii-art'~a><pre class='ascii-art'>",if %output_mode%=1 then "" else nodisplay),
+    twod_display(x),
+    printf(true,"</pre></td>~%"),
+    printf(true,"<td class='output enhanced-ascii-art'~a><pre class='enhanced-ascii-art'>~%",if %output_mode%=2 then "" else nodisplay),
+    twod_display(x),
+    printf(true,"</pre></td>~%"),
+    printf(true,"<td class='output mathml'~a><span class='mathml'>",if %output_mode%=3 then "" else nodisplay),
+    mathml(second(x)),
+    printf(true,"</span></td>~%"),
+    printf(true,"<td class='output tex-mathjax'~a><span class='tex-mathjax'>~%",if %output_mode%=4 then "" else nodisplay),
+    tex(second(x)),
+    printf(true,"</span></td></tr>~%"),
+    printf(true,"<tr><td><span class='input'>(~a~a) </span></td><td><span class='inputcode'>",inchar,linenum+1)
+    ))$
+set_alt_display(2,yamwi_display)$
