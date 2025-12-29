@@ -51,4 +51,4 @@
 ;; to be translated into \lt and \gt, respectively.
 (defprop mlessp ("\\lt ") texsym)
 (defprop mgreaterp ("\\gt ") texsym)
-
+(setf (get '|$$| 'mheader) '(displayinput))
