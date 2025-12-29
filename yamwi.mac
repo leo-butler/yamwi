@@ -1,3 +1,7 @@
+/* set defaults */
+%codigo_usuario%: if %codigo_usuario%='%codigo_usuario% then "abcdefghijklmnopqrstuvwxyz" else %codigo_usuario% $
+%dir_sources%: if %dir_sources%='%dir_sources% then "./packages" else %dir_sources% $
+
 /* set output line length */
 linel : slength(concat(maxima_tempdir,"/",%codigo_usuario%,".mac")) + 10;
 
