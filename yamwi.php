@@ -200,205 +200,38 @@ function write_form() {
        "<input type=\"button\" value=\"".
             $clear_button.
             "\" onClick=\"this.form.max.value=''; return false\">\n".
-       "<select name=\"modeselect\" id=\"modeselect\" class=\"modeselect\" onchange=\"this.form.action=this.form.action.replace(/&mode=[0-9]/,'&mode='+this.form.getElementsByTagName('select')[0].value); this.form.getElementsByTagName('input')[0].click(); return true;\">\n".
+       "<select name=\"modeselect\" id=\"modeselect\" class=\"modeselect\" onchange=\"this.form.action=this.form.action.replace(/&mode=[0-9]/,'&mode='+this.form.getElementsByTagName('select')[0].value); show_output(this.form.getElementsByTagName('select')[0].value); return true;\">\n".
        '   <option value="" disabled>Select Print Mode and Submit</option>'.
-       '   <option value=0 '. ($mode == 0 ? "selected=\"selected\"" : "") . ">0 - ASCII-Art output</option>\n".
-       '   <option value=1 '. ($mode == 1 ? "selected=\"selected\"" : "") . ">1 - Binary TeX output</option>\n".
-       '   <option value=2 '. ($mode == 2 ? "selected=\"selected\"" : "") . ">2 - Enhanced ASCII-Art output</option>\n".
-       '   <option value=3 '. ($mode == 3 ? "selected=\"selected\"" : "") . ">3 - Syntactic output</option>\n".
-       '   <option value=4 '. ($mode == 4 ? "selected=\"selected\"" : "") . ">4 - Remote TeX + MathJax</option>\n".
+       '   <option value=0 '. ($mode == 0 ? "selected=\"selected\"" : "") . ">0 - Syntactic output</option>\n".            # ascii
+       '   <option value=1 '. ($mode == 1 ? "selected=\"selected\"" : "") . ">1 - Ascii-Art output</option>\n".            # ascii-art
+       '   <option value=2 '. ($mode == 2 ? "selected=\"selected\"" : "") . ">2 - Enhanced ASCII-Art output</option>\n".   # enhanced-ascii-art
+       '   <option value=3 '. ($mode == 3 ? "selected=\"selected\"" : "") . ">3 - MathML</option>\n".                      # mathml
+       '   <option value=4 '. ($mode == 4 ? "selected=\"selected\"" : "") . ">4 - Remote TeX + MathJax</option>\n".        # tex-mathjax
        "</select>\n".
        "</form>\n".
        "<hr>\n\n" ; }
 
 
-
 function write_results ($val) {
   echo $val;}
-
-
 
 function gtlt ($str) {
   return str_replace(">", "&gt;", str_replace("<", "&lt;", $str));}
 
-
-
-function prepare_ascii_output($out) {
-  global $movie_muxer, $movie_is_embedded;
-  write_form();
-  $prefix = '</pre></td></tr><tr><td><img src="data:image/';
-  $suffix = ';charset=us-ascii;base64,';
-  $draw_svg = $prefix . 'svg+xml' . $suffix;
-  $draw_png = $prefix . 'png' . $suffix;
-  $draw_gif = $prefix . 'gif' . $suffix;
-  $draw_jpg = $prefix . 'jpg' . $suffix;
-  $result = gtlt(substr($out, strpos($out, "(%i1)")));
-  $result = str_replace('@@@draw_svg@@@',$draw_svg,$result);
-  $result = str_replace('@@@draw_png@@@',$draw_png,$result);
-  $result = str_replace('@@@draw_gif@@@',$draw_gif,$result);
-  $result = str_replace('@@@draw_jpg@@@',$draw_jpg,$result);
-  $result = str_replace('@@@/draw@@@','"/></tr></td><tr><td><pre id="ascii-output">',$result);
-  if ($movie_is_embedded) {
-      $prefix = '</pre></td></tr><tr><td><video controls autoplay width="100%" loop=true><source type="video/webm" src="data:video/' . $movie_muxer . ';charset=us-ascii;base64,';
-  } else {
-      $prefix = '</pre></td></tr><tr><td><video controls autoplay width="100%" loop=true><source type="video/webm" src="';
-  }
-  $result = str_replace('@@@video_'.$movie_muxer.'@@@',$prefix,$result);
-  $result = str_replace('@@@/video@@@','"/>Your browser does not support HTML video.</video></tr></td><tr><td><pre id="ascii-output">',$result);
-  write_results('<div class="maxima-output"><table><tr><td><pre id="ascii-output">' . "\n" .
-                $result . "\n" .
-                '</pre></td></tr></table></div>');}
-
-
-
-function prepare_enhanced_ascii_output($out, $sentences) {
+// prepare output
+function prepare_output($out, $sentences) {
   global $key, $nproc;
-  $out_counter = 0;
-
   // read and clean Maxima output
   $subout = trim($out);
-  $subout = substr($subout,31+strpos($subout,"start_maxima_output_print_code:"));
-
-  // scan Maxima output
-  while (strlen($subout) > 0) {
-    $text_code_ini = strpos($subout,"%%%");
-    $print_code[$out_counter] = substr($subout,0,$text_code_ini);
-    if ($print_code[$out_counter] != '')
-      $print_code[$out_counter] = '<pre class="print">' . gtlt($print_code[$out_counter]) . '</pre>';
-    $image_code[$out_counter] = search_images($out_counter);
-    $text_code_end = strpos(substr($subout,$text_code_ini+3),"%%%");
-    $text_code[$out_counter] = trim(substr($subout, $text_code_ini, $text_code_end+6), "%");
-    $subout = substr($subout, $text_code_ini+$text_code_end+6);
-    $out_counter = $out_counter + 1; }
-
   // write html code
   write_form();
-  $result = '<table id="enhanced-ascii-output" class="maxima-output">' . "\n";
-  for($i = 1 ; $i <= $out_counter ; $i++) {
-    $this_result1 = '';  // the output label
-    $this_result2 = '';  // the mathematical result
-    if (substr($sentences[$i], -1) === ";") {
-      $this_result1 = '(%o' . $i . ')';
-      $this_result2 = '<pre class="output">' . $text_code[$i-1] . '</pre>'; }
-    $result = $result .
-              '<tr>' .
-              '<td><pre class="input">' . '(%i' . $i . ')' . "</pre></td>\n" .
-              '<td><pre class="inputcode">' . re_process(trim($sentences[$i])) . "</pre>\n".
-              $print_code[$i-1] .
-              "</td>\n" .
-              "</tr>\n" .
-              '<tr>' .
-              '<td><pre class="output">' . $this_result1 . "</pre></td>\n" .
-              '<td>' . $image_code[$i-1] . $this_result2 . "<br></td>\n" .
-              "</tr>\n";}
-  $result = $result . "</table>\n\n";
+  $result = '<table id="maxima-output" class="maxima-output">' . "\n" . $subout . "</table>\n\n";
   write_results($result); }
-
-
-
-// search for images returned by sentence number $sn
-// and write the corresponding html code
-function search_images ($sn) {
-  global $key, $nproc;
-  $result = "";
-  $sen = $sn + 1;
-  $file = 'tmp/' . $key . '.gr.' . $nproc .  '.' . $sen . '.txt';
-  if (file_exists($file)) {
-    $fh = fopen($file, 'r');
-    $theData = trim(fread($fh, filesize($file)));
-    fclose($fh); 
-    $out = explode("\n", $theData);
-    foreach ($out as $file_name) {}
-      while (! file_exists($file_name)) {};
-      $result = $result . '<img src = "' . $file_name .'" alt="gr"><br>';}
-  return $result; }
-
-
-
-function latex_template ($tex) {
-  return "\documentclass{article}\n" .
-         "\usepackage{amsmath,amssymb}\n".
-         "\pagestyle{empty}\n" .
-         "\begin{document}\n" .
-         $tex .
-         "\n\\end{document}\n" ;}
-
-
-
-function prepare_tex_output($out, $sentences) {
-  global $key, $nproc, $yamwi_path, $mode;
-  $out_counter = 0;
-
-  // read and clean Maxima output
-  $subout = trim($out);
-  $subout = substr($subout,31+strpos($subout,"start_maxima_output_tex_code:"));
-  $subout=str_replace("\\begin{verbatim}", "$$", str_replace("\\end{verbatim}", "$$", $subout));
-
-  // scan Maxima output
-  while (strlen($subout) > 0) {
-    $tex_code_ini = strpos($subout,"$$");
-    $print_code[$out_counter] = substr($subout,0,$tex_code_ini);
-    if ($print_code[$out_counter] != '')
-      $print_code[$out_counter] = '<pre class="print">' .
-                                  gtlt($print_code[$out_counter]) .
-                                  '</pre>';
-    $image_code[$out_counter] = search_images($out_counter);
-    $tex_code_end = strpos(substr($subout,$tex_code_ini+2),"$$");
-    $tex_code[$out_counter] = substr($subout, $tex_code_ini, $tex_code_end+4);
-    $subout = substr($subout, $tex_code_ini+$tex_code_end+4);
-    $out_counter = $out_counter + 1; }
-
-  if ($mode == 1) {
-    // save LaTex files
-    for($i = 1 ; $i <= $out_counter ; $i++){
-      if (substr($sentences[$i], -1) === ";") {
-        // write latex file
-        $fich = fopen($yamwi_path . '/tmp/' . $key . '-' . $nproc . '-' . $i . '.tex', 'w');
-        fwrite($fich, latex_template($tex_code[$i-1]));
-        fclose($fich);
-        // compile latex source
-        shell_exec(
-          'cd ' . $yamwi_path . '/tmp/' . ';' .
-          'texi2dvi ' . $key . '-' . $nproc . '-' . $i . '.tex ;' .
-          'dvips -E ' . $key . '-' . $nproc . '-' . $i . '.dvi ;' .
-          'convert -density 150x150 '. $key . '-' . $nproc . '-' . $i .'.ps '.$key.'.'.$nproc.'.'.$i.'.png'); } }}
-
-  // write html code
-  if ($mode == 4) {
-    $result = '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>' . "\n\n";}
-  else {
-    $result = '';}
-  write_form();
-  $result = $result . '<table id="tex-output-' . $mode . '" class="maxima-output">' . "\n";
-  for($i = 1 ; $i <= $out_counter ; $i++) {
-    $this_result1 = '';  // the output label
-    $this_result2 = '';  // the mathematical result
-    if (substr($sentences[$i], -1) === ";") {
-      $this_result1 = '(%o' . $i . ')';
-      if ($mode == 1) {
-        $this_result2 = '<img src='.'tmp/'.$key.'.'.$nproc.'.'.$i.'.png'.' alt="eq">';}
-      else {
-        $this_result2 = '\(' . trim($tex_code[$i-1],"$") . '\)';} }
-    $result = $result .
-              '<tr>' .
-              '<td><br><pre class="input">' . '(%i' . $i . ')' . "</pre></td>\n" .
-              '<td><br><pre class="inputcode">' . re_process(trim($sentences[$i])) . "</pre>\n" .
-              $print_code[$i-1] .
-              "</td>\n" .
-              "</tr>\n" .
-              '<tr>' .
-              '<td class="output">' . $this_result1 . "</td>\n" .
-              '<td class="output">' . $image_code[$i-1] . $this_result2 . "</td>\n" .
-              "</tr>\n"; }
-  $result = $result . "</table>\n\n";
-  write_results($result); }
-
 
 
 // returns an alert message if something was wrong
 function alert ($message) {
   write_results('<p class="error">' . $message . '</p>');}
-
 
 
 function error_detected ($out) {
