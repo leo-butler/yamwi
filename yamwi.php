@@ -305,7 +305,6 @@ function calculate () {
          'load("'.$yamwi_path.'/yamwi.lisp"),' .
          '%output_mode%:' . $mode . ',' .
          'linenum:0,' .
-         'printf(true,"<!--HERE-->~%<tr><td><span class=\'input\'>(~a~a) </span></td><td><span class=\'inputcode\'>",inchar,linenum+1),'.
          '%%%)$' . "\n" .
       pre_process($input);
 
