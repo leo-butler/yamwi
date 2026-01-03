@@ -21,7 +21,7 @@ p{
   font-size:      75%; }
 pre{
   font-family:    Courier, monospace;}
-.input{
+.input-label{
   color:          darkred;
   font-size:      100%;
   font-weight:    bold;}
@@ -50,6 +50,10 @@ textarea{
 .mathml{
     font-size: large;
     color:     black;}
+.output-label::before, .input-label::before{
+    content:"[";}
+.output-label::after, .input-label::after{
+    content:"] ";}
 
 /* CORRECTION : Séparer les règles */
 .menu-row {
