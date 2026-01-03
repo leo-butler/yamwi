@@ -333,13 +333,13 @@ function calculate () {
   // contains the path to the Maxima script; if not, it
   // means that the process has been interrupted by timelimit.
   // Note: this check is only valid if linel is large enough to avoid splitting the string.
-  $end_needle="</span></td><td><span class='inputcode'></span></td></tr>";
-  $end=strpos(trim($out),$end_needle,0);
+  $end_needle='"'.$yamwi_path . '/tmp/' . $key . '.mac"';
+  $end=strrpos(trim($out),$end_needle,0);
   if (! $end === false) {
     $out = substr($out,0,$end);
     if ($show_info) {
         echo '<u>end:</u>: '.$end.'<br/>';}
-    $end = strrpos($out,'<tr><td>');
+    $end = strrpos($out,'<tr><td class=');
     if (! $end === false) { $out=substr($out,0,$end); };
     $out = substr($out,strrpos($out, '%%%)')+5);
 
