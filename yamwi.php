@@ -222,7 +222,7 @@ function gtlt ($str) {
 function prepare_output($out, $sentences) {
   global $key, $nproc;
   // read and clean Maxima output
-  $subout = trim($out);
+  $subout = re_process(trim($out));
   // write html code
   write_form();
   $result = '<table id="maxima-output" class="maxima-output">' . "\n" . $subout . "</table>\n\n";
