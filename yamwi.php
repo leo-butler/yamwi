@@ -93,6 +93,7 @@ $dangerous_words =
    // Prevent access to functions/variables in yamwi.mac
    'file_search_maxima','file_search_lisp','%num_sentence%','%num_grafico%','mwdrawxd','Draw2d','Draw3d','Draw','mwplotxd','Plot2d','Plot3d','Scatterplot','Histogram','Barsplot','Piechart','Boxplot','Starplot','Drawdf','translate_into_tex','translate_into_print','yamwi_display','oned_display','twod_display','mathml','set_alt_display','set_prompt','reset_displays',
    'maxima_tempdir', 'maxima_userdir', '%num_proceso%', '%codigo_usuario%', '%dir_sources%', '%movie_muxer%', '%movie_is_embedded%', '%ffmpeg_bin%', '%base64_cmd%', '%output_mode%',
+   'gnuplot_command',
    // not available
    'plotdf', 'showtime', 'julia', 'mandelbrot'
    );
@@ -288,12 +289,13 @@ function  re_process ($str) {
 // run Maxima and output results
 function calculate () {
   global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info,
-      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $mode, $movie_muxer, $movie_is_embedded, $ffmpeg_bin, $base64_cmd;
+      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $gnuplot_command, $mode, $movie_muxer, $movie_is_embedded, $ffmpeg_bin, $base64_cmd;
   $nproc = $nproc + 1;
 
   // build Maxima program
   // maxima_tempdir is hard-coded to be ./tmp
   $val = '(maxima_tempdir: "'.$yamwi_path.'/tmp",' .
+         'gnuplot_command: "'.$gnuplot_command.'",'.
          '%codigo_usuario%: "'.$key.'",' .
          '%num_proceso%: "'.$nproc.'",' .
          '%dir_sources%: "'.$yamwi_path.'/packages",' .
