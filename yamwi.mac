@@ -31,7 +31,6 @@ file_search_lisp:
 /* Global variables */
 
 %num_sentence%: 0$
-%num_grafico%: 0$
 %num_movie%: 0$
 %movie_term%: 'pngcairo$
 
@@ -102,7 +101,6 @@ mwdrawxd(func, descgraf, mutate):=
     else if formato = 'pngcairo then formato:formatohtml:'png
     else (formato : 'svg, formatohtml:"svg+xml", descgraf : endcons(terminal = 'svg, descgraf)),
     printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,",formatohtml),
-    %num_grafico%: %num_grafico% + 1,
     result : apply(func,descgraf),
     print("\">"),
     result)$
@@ -126,7 +124,6 @@ block([term_cmd:"set term pngcairo size 600,500", cleandescgraf:[], result, unsa
     cleandescgraf: append(cleandescgraf,
                           [[gnuplot_script_file, gplt_fn()],
                           [gnuplot_postamble, concat(term_cmd,"; ",rhs(output2stdout))]]), /* output is printed to STDOUT */
-    %num_grafico%: %num_grafico% + 1,
     printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,",'png),
     result : apply(func,cleandescgraf),
     print("\">"),
