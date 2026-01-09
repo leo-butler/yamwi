@@ -167,7 +167,7 @@ define_alt_display(yamwi_display2d(x),
     printf(true,"</span></td></tr>~%")
     ))$
 define_alt_display(yamwi_display1d(x),
-  block([],
-    printf(true,"<tr><td><span class='input-label'>~a~a</span></td><td><span class='inputcode'>~%~a~%</span></td></tr>~%",inchar,linenum,__)))$
+  (printf(true,"<tr><td><span class='input-label'>~a~a</span></td>~%<td class='inputcode interpreted'><pre class='interpreted'>~a</pre></td>~%",inchar,linenum,second(x)),
+    printf(true,"<td class='inputcode verbatim'><pre class='verbatim'>~a</pre></td></tr>~%",literal_input(x))))$
 set_alt_display(2,yamwi_display2d)$
 set_alt_display(1,yamwi_display1d)$
