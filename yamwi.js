@@ -35,7 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {updateTextArea('max');});
 // https://highlightjs.readthedocs.io/en/latest/readme.html         //
 //////////////////////////////////////////////////////////////////////
 document.addEventListener('DOMContentLoaded', (event) => {
-    document.querySelectorAll('span.inputcode').forEach((el) => {hljs.highlightElement(el);});
+    document.querySelectorAll('pre.interpreted').forEach((el) => {hljs.highlightElement(el);});
+    document.querySelectorAll('pre.verbatim').forEach((el) => {hljs.highlightElement(el);});
     document.querySelectorAll('pre.enhanced-ascii-art').forEach((el) => {hljs.highlightElement(el);});});
 
 
