@@ -54,6 +54,16 @@ textarea{
     content:"[";}
 .output-label::after, .input-label::after{
     content:"] ";}
+tr.retrieve{
+    background-color: lightpink;
+    color:            black;}
+span.retrieve{
+    white-space:	pre;
+    font-family:	monospace;
+    display:		block;
+    margin:		25px;
+    font-weight:	bold;
+    font-style:		oblique;}
 
 /* CORRECTION : Séparer les règles */
 .menu-row {
