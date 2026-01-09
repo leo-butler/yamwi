@@ -299,21 +299,20 @@ function calculate () {
 
   // build Maxima program
   // maxima_tempdir is hard-coded to be ./tmp
+  // Set-up code is written to a different file, so snoopers cannot access it via _
   $val = '(maxima_tempdir: "'.$yamwi_path.'/tmp",' .
-         'gnuplot_command: "'.$gnuplot_command.'",'.
-         '%codigo_usuario%: "'.$key.'",' .
-         '%num_proceso%: "'.$nproc.'",' .
-         '%dir_sources%: "'.$yamwi_path.'/packages",' .
-         '%movie_muxer%: "'.$movie_muxer.'",'.
-         '%movie_is_embedded%: '.$movie_is_embedded.','.
-         '%ffmpeg_bin%: "'.$ffmpeg_bin.'",'.
-         '%base64_cmd%: "'.$base64_cmd.'",'.
-         'load("'.$yamwi_path.'/yamwi.mac"),' .
-         'load("'.$yamwi_path.'/yamwi.lisp"),' .
-         '%output_mode%:' . $mode . ',' .
-         'linenum:0,' .
-         '%%%)$' . "\n" .
-      pre_process($input);
+      'gnuplot_command: "'.$gnuplot_command.'",'.
+      '%codigo_usuario%: "'.$key.'",' .
+      '%num_proceso%: "'.$nproc.'",' .
+      '%dir_sources%: "'.$yamwi_path.'/packages",' .
+      '%movie_muxer%: "'.$movie_muxer.'",'.
+      '%movie_is_embedded%: '.$movie_is_embedded.','.
+      '%ffmpeg_bin%: "'.$ffmpeg_bin.'",'.
+      '%base64_cmd%: "'.$base64_cmd.'",'.
+      'load("'.$yamwi_path.'/yamwi.mac"),' .
+      'load("'.$yamwi_path.'/yamwi.lisp"),' .
+      '%output_mode%:' . $mode . ')$' . "\n" .
+      '(linenum:0,kill(labels),%%%)$' . "\n" . pre_process($input);
 
   // create batch file
   $fich = fopen($yamwi_path.'/tmp/'.$key.'.mac', 'w');
@@ -346,9 +345,11 @@ function calculate () {
     $out = substr($out,0,$end);
     if ($show_info) {
         echo '<u>end:</u>: '.$end.'<br/>';}
+    // The markers are dependent on output produced by yamwi_display*d
     $end = strrpos($out,'<tr><td class=');
     if (! $end === false) { $out=substr($out,0,$end); };
-    $out = substr($out,strrpos($out, '%%%)')+5);
+    $start_needle='%%%)$</pre></td></tr>';
+    $out = substr($out,strrpos($out,$start_needle)+strlen($start_needle));
 
     // write results
     $an_error = error_detected($out);
