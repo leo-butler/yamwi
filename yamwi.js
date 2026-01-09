@@ -85,15 +85,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
 //////////////////////////////////////////////////////////////////////
 // Toggle output format                                             //
 //////////////////////////////////////////////////////////////////////
-function show_output(n) {
-    // see yawmi_display in yamwi.mac
-    var types = ["ascii", "ascii-art", "enhanced-ascii-art", "mathml", "tex-mathjax"];
+function show_in_output(n,types,inout) {
     var type = (n >= 0 && n < types.length) ? types[n] : types[0];
     var turn_on_off = function (t) {
 	var stle = (type == t) ? "flex" : "none";
-	var e = document.getElementsByClassName("output "+t);
+	var e = document.getElementsByClassName(inout+t);
 	for (i=0; i<e.length; i++) {
 	    e[i].style.display = stle;
 	}};
     types.map(turn_on_off);
 };
+
+// see yawmi_display2d in yamwi.mac
+function show_output(n) {show_in_output(n,["ascii", "ascii-art", "enhanced-ascii-art", "mathml", "tex-mathjax"],"output ");};
+// see yawmi_display1d in yamwi.mac
+function show_input(n) {show_in_output(n,["interpreted", "verbatim"],"inputcode ");};
+document.addEventListener('DOMContentLoaded', (event) => {show_input(1);});
