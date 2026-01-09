@@ -42,3 +42,66 @@
 	  $input_char_stream  '())
     (coerce (get 'vinput c-tag) 'string)))
 
+
+;; patches to lurkmathml
+;; `mfenced' is an unsupported mathml element
+;; It is recommended to use `mrow' + `mo'
+;; https://developer.mozilla.org/en-US/docs/Web/MathML/Reference/Element/mfenced
+(defprop mlist (("<mrow><mo>[</mo>")"<mo>]</mo></mrow> ") mathmlsym)
+(defprop mabs (("<mo>|</mo>")"<mo>|</mo> ") mathmlsym)
+(defprop mprogn (("<mo>(</mo>") "<mo>)</mo> ") mathmlsym)
+
+(defun mathml-matrix(x l r) ;;matrix looks like ((mmatrix)((mlist) a b) ...)
+  (append l `("<mrow><mo>(</mo><mtable>")
+	  (mapcan #'(lambda(y)
+		      (mathml-list (cdr y) (list "<mtr><mtd>") (list "</mtd></mtr> ") "</mtd><mtd>"))
+		  (cdr x))
+	  '("</mtable><mo>)</mo></mrow> ") r))
+
+(defun mathml-paren (x l r)
+  (mathml x (append l '("<mrow>")) (cons "</mrow> " r) 'mparen 'mparen))
+
+(defun mathml1 (mexplabel &optional filename ) ;; mexplabel, and optional filename
+  (prog (mexp  texport $gcprint ccol x y)
+     ;; $gcprint = nil turns gc messages off
+     (setq ccol 1)
+     (cond ((null mexplabel)
+	    (displa " No eqn given to MathML")
+	    (return nil)))
+     ;; collect the file-name, if any, and open a port if needed
+     (setq texport (cond((null filename) *standard-output* ); t= output to terminal
+			(t
+			 (open (string (stripdollar filename))
+			       :direction :output
+			       :if-exists :append
+			       :if-does-not-exist :create))))
+     ;; go back and analyze the first arg more thoroughly now.
+     ;; do a normal evaluation of the expression in macsyma
+     (setq mexp (meval mexplabel))
+     (cond ((member mexplabel $labels :test #'eq); leave it if it is a label
+	    (setq mexplabel (intern (format nil "(~a)" (stripdollar mexplabel)))))
+	   (t (setq mexplabel nil)));flush it otherwise
+
+     ;; maybe it is a function?
+     (cond((symbolp (setq x mexp)) ;;exclude strings, numbers
+	   (setq x ($verbify x))
+	   (cond ((setq y (mget x 'mexpr))
+		  (setq mexp (list '(mdefine) (cons (list x) (cdadr y)) (caddr y))))
+		 ((setq y (mget x 'mmacro))
+		  (setq mexp (list '(mdefmacro) (cons (list x) (cdadr y)) (caddr y))))
+		 ((setq y (mget x 'aexpr))
+		  (setq mexp (list '(mdefine) (cons (list x 'array) (cdadr y)) (caddr y)))))))
+
+     ;; display the expression for MathML now:
+     (myprinc "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"> " texport)
+     (mapc #'(lambda (x) (myprinc x texport))
+	   ;;initially the left and right contexts are
+	   ;; empty lists, and there are implicit parens
+	   ;; around the whole expression
+	   (mathml mexp nil nil 'mparen 'mparen))
+     (cond (mexplabel
+	    (format texport "<mspace width=\"verythickmathspace\"/> <mtext>~a</mtext> " mexplabel)))
+     (format texport "</math>")
+     (cond(filename(terpri texport); and drain port if not terminal
+		   (close texport)))
+     (return mexplabel)))
