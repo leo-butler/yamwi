@@ -17,3 +17,5 @@
 ;; to be translated into \lt and \gt, respectively.
 (defprop mlessp ("\\lt ") texsym)
 (defprop mgreaterp ("\\gt ") texsym)
+(defprop mlessp (#\  #\& #\l #\t #\; #\ ) dissym)
+(defprop mgreaterp (#\  #\& #\g #\t #\; #\ ) dissym)
