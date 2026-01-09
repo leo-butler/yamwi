@@ -201,13 +201,18 @@ function write_form() {
        "<input type=\"button\" value=\"".
             $clear_button.
             "\" onClick=\"this.form.max.value=''; return false\">\n".
-       "<select name=\"modeselect\" id=\"modeselect\" class=\"modeselect\" onchange=\"this.form.action=this.form.action.replace(/&mode=[0-9]/,'&mode='+this.form.getElementsByTagName('select')[0].value); show_output(this.form.getElementsByTagName('select')[0].value); return true;\">\n".
-       '   <option value="" disabled>Select Print Mode and Submit</option>'.
+       "<select name=\"modeselect\" id=\"modeselect\" class=\"modeselect\" onchange=\"this.form.action=this.form.action.replace(/&mode=[0-9]/,'&mode='+document.getElementById('modeselect').value); show_output(this.form.getElementById('modeselect').value); return true;\">\n".
+       '   <option value="" disabled>Select Print Mode</option>'.
        '   <option value=0 '. ($mode == 0 ? "selected=\"selected\"" : "") . ">0 - Syntactic output</option>\n".            # ascii
        '   <option value=1 '. ($mode == 1 ? "selected=\"selected\"" : "") . ">1 - Ascii-Art output</option>\n".            # ascii-art
        '   <option value=2 '. ($mode == 2 ? "selected=\"selected\"" : "") . ">2 - Enhanced ASCII-Art output</option>\n".   # enhanced-ascii-art
        '   <option value=3 '. ($mode == 3 ? "selected=\"selected\"" : "") . ">3 - MathML</option>\n".                      # mathml
        '   <option value=4 '. ($mode == 4 ? "selected=\"selected\"" : "") . ">4 - Remote TeX + MathJax</option>\n".        # tex-mathjax
+       "</select>\n".
+       "<select name=\"inmodeselect\" id=\"inmodeselect\" class=\"modeselect\" onchange=\"show_input(document.getElementById('inmodeselect').value); return true;\">\n".
+       '   <option value="" disabled>Select Input Mode</option>'.
+       '   <option value=0>                    0 - Interpreted input</option>'.
+       '   <option value=1 selected="selected">1 - Verbatim input</option>'.
        "</select>\n".
        "</form>\n".
        "<hr>\n\n" ; }
