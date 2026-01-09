@@ -244,7 +244,7 @@ function error_detected ($out) {
   global $message_prog_error;
   $yamwi1a_pos = strpos($out, "yamwi1a");
   if (! $yamwi1a_pos === false)
-    return "Not enough information on some of: " . 
+    return "Not enough information to compute: " .
            substr($out,
                   $yamwi1a_pos + 7,
                   strpos($out, "yamwi1b") - $yamwi1a_pos - 7) .
