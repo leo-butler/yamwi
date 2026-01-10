@@ -242,19 +242,12 @@ function alert ($message) {
 
 function error_detected ($out) {
   global $message_prog_error;
-  $yamwi1a_pos = strpos($out, "yamwi1a");
-  if (! $yamwi1a_pos === false)
-    return "Not enough information to compute: " .
-           substr($out,
-                  $yamwi1a_pos + 7,
-                  strpos($out, "yamwi1b") - $yamwi1a_pos - 7) .
-           ".<br>You may try 'assume'." ;
-  elseif (! strpos($out, "Maxima encountered a Lisp error:") === false ||
-          ! strpos($out, "incorrect syntax:") === false ||
-          ! strpos($out, "-- an error. To debug this try: debugmode(true);") === false)
-    return $message_prog_error;
+  if (! strpos($out, "Maxima encountered a Lisp error:") === false ||
+      ! strpos($out, "incorrect syntax:") === false ||
+      ! strpos($out, "-- an error. To debug this try: debugmode(true);") === false)
+      return $message_prog_error;
   else
-    return false;}
+      return false;}
 
 
 
