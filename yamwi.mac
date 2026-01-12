@@ -58,8 +58,8 @@ Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,out
   output_file:concat(fname,"0.",%movie_muxer%),
   files:draw_multiple_plots(drawer,fname,%movie_term%,paramlist),
   /* ffmpeg hangs if STDIN != /dev/null */
-  cmd:if %movie_is_embedded%=1 then printf(false,"/bin/sh -c '~a -y -framerate 30 -f image2 -i ~a%08d.~a ~{~a ~} -f ~a - | ~a' < /dev/null",%ffmpeg_bin%,fname,term,ffmpeg_options,%movie_muxer%,%base64_cmd%)
-    else printf(false,"/bin/sh -c '~a -y -framerate 30 -f image2 -i ~a%08d.~a ~{~a ~} ~a' < /dev/null",%ffmpeg_bin%,fname,term,ffmpeg_options,output_file),
+  cmd:if %movie_is_embedded%=1 then printf(false,"/bin/sh -c '~a -y -framerate 30 -f image2 -i ~a%08d.~a ~{~a ~} -f ~a - | ~a' < /dev/null",%ffmpeg_binary%,fname,term,ffmpeg_options,%movie_muxer%,%base64_cmd%)
+    else printf(false,"/bin/sh -c '~a -y -framerate 30 -f image2 -i ~a%08d.~a ~{~a ~} ~a' < /dev/null",%ffmpeg_binary%,fname,term,ffmpeg_options,output_file),
   if %movie_is_embedded%=1 then (
     printf(true,"</pre></td></tr><tr><td></td><td><video controls autoplay width=\"100%\" loop=true><source type=\"video/~a\" src=\"data:video/~:*~a;charset=us-ascii;base64,",%movie_muxer%),
     system(cmd),

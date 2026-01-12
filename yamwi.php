@@ -92,7 +92,7 @@ $dangerous_words =
    'make_string_input_stream','make_string_output_stream','get_output_stream_string',
    // Prevent access to functions/variables in yamwi.mac
    'file_search_maxima','file_search_lisp','%num_sentence%','%num_grafico%','mwdrawxd','Draw2d','Draw3d','Draw','mwplotxd','Plot2d','Plot3d','Scatterplot','Histogram','Barsplot','Piechart','Boxplot','Starplot','Drawdf','translate_into_tex','translate_into_print','yamwi_display','oned_display','twod_display','mathml','set_alt_display','set_prompt','reset_displays',
-   'maxima_tempdir', 'maxima_userdir', '%num_proceso%', '%codigo_usuario%', '%dir_sources%', '%movie_muxer%', '%movie_is_embedded%', '%ffmpeg_bin%', '%base64_cmd%', '%output_mode%',
+   'maxima_tempdir', 'maxima_userdir', '%num_proceso%', '%codigo_usuario%', '%dir_sources%', '%movie_muxer%', '%movie_is_embedded%', '%ffmpeg_binary%', '%base64_cmd%', '%output_mode%',
    'gnuplot_command',
    // not available
    'plotdf', 'showtime', 'julia', 'mandelbrot'
@@ -201,7 +201,7 @@ function write_form() {
        "<input type=\"button\" value=\"".
             $clear_button.
             "\" onClick=\"this.form.max.value=''; return false\">\n".
-       "<select name=\"modeselect\" id=\"modeselect\" class=\"modeselect\" onchange=\"this.form.action=this.form.action.replace(/&mode=[0-9]/,'&mode='+document.getElementById('modeselect').value); show_output(this.form.getElementById('modeselect').value); return true;\">\n".
+       "<select name=\"modeselect\" id=\"modeselect\" class=\"modeselect\" onchange=\"this.form.action=this.form.action.replace(/&mode=[0-9]/,'&mode='+document.getElementById('modeselect').value); show_output(document.getElementById('modeselect').value); return true;\">\n".
        '   <option value="" disabled>Select Print Mode</option>'.
        '   <option value=0 '. ($mode == 0 ? "selected=\"selected\"" : "") . ">0 - Syntactic output</option>\n".            # ascii
        '   <option value=1 '. ($mode == 1 ? "selected=\"selected\"" : "") . ">1 - Ascii-Art output</option>\n".            # ascii-art
@@ -287,7 +287,7 @@ function  re_process ($str) {
 // run Maxima and output results
 function calculate () {
   global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info,
-      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $gnuplot_command, $mode, $movie_muxer, $movie_is_embedded, $ffmpeg_bin, $base64_cmd;
+      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $gnuplot_command, $mode, $movie_muxer, $movie_is_embedded, $ffmpeg_binary, $base64_cmd;
   $nproc = $nproc + 1;
 
   // build Maxima program
@@ -300,7 +300,7 @@ function calculate () {
       '%dir_sources%: "'.$yamwi_path.'/packages",' .
       '%movie_muxer%: "'.$movie_muxer.'",'.
       '%movie_is_embedded%: '.$movie_is_embedded.','.
-      '%ffmpeg_bin%: "'.$ffmpeg_bin.'",'.
+      '%ffmpeg_binary%: "'.$ffmpeg_binary.'",'.
       '%base64_cmd%: "'.$base64_cmd.'",'.
       'load("'.$yamwi_path.'/yamwi.mac"),' .
       'load("'.$yamwi_path.'/yamwi.lisp"),' .

@@ -25,7 +25,7 @@ $movie_muxer = 'webm'; // needs to be one of webm, mp4 (ogg does not work)
 
 $movie_is_embedded = 0; // webm can be 0 or 1; mp4 must be 0.
 
-$ffmpeg_bin = '/usr/bin/ffmpeg';
+$ffmpeg_binary = '/usr/bin/ffmpeg';
 
 $base64_cmd = '/usr/bin/base64 -w 0';
 
