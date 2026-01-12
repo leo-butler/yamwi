@@ -1,12 +1,9 @@
 <?php
-$mode = 2; // 0 -> ASCII-Art output,
-           // 1 -> Binary TeX output,
+$mode = 2; // 0 -> Syntactic output,
+           // 1 -> ASCII-Art output,
            // 2 -> Enhanced ASCII-Art output,
-           // 3 -> Syntactic output
+           // 3 -> MathML,
            // 4 -> Remote TeX + MathJax
-	       // 5 -> MathML
-
-$mode1is4 = false;  // Set to true to dis-able Binary TeX output
 
 $max_file_time = 1;
 
