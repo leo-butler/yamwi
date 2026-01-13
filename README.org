@@ -36,17 +36,21 @@ Software requirements on the server side:
 
 - Apache :: (https://www.apache.org/). (Ver. >= 2).
 - Php :: (https://www.php.net/). (Ver. >= 5).
-- Gnuplot :: (http://www.gnuplot.info/). This is the program used by Maxima for rendering graphics. (Ver. >= 4.2).
 - Maxima :: (https://maxima.sourceforge.io/). This is the mathematical engine. (Ver. >= 5.20).
 - timelimit/timeout :: (https://devel.ringlet.net/sysutils/timelimit/ / https://www.gnu.org/software/coreutils/). Bound Maxima's computation time to a fixed limit.
 
-In case the administrator wants to render results in binary TeX
-format, the following packages must be also installed (see
-configuration variable =$mode= below):
+** Recommended
+Yamwi can be extended by installing the following software:
 
-- dvips (from LaTeX)
-- texi2dvi (from texinfo)
-- convert (from ImageMagick)
+- Gnuplot :: (https://www.gnuplot.info/). This is the program used by Maxima for rendering graphics. (Ver. >= 4.2).
+- FFmpeg :: (https://ffmpeg.org/). With -Gnuplot~, this program is used by Maxima to create animations. (Ver. >= 5.0).
+
+To enable ~Gnuplot~ (respectively, ~Gnuplot+FFmpeg~) is simple: the
+administrator sets ~$gnuplot_binary~ to the pathname of the ~gnuplot~
+program (respectively, sets both ~$gnuplot_binary~ and
+~$ffmpeg_binary~ to point to the relevant programs). If Yamwi cannot
+find ~gnuplot~, all plotting is disabled; if it cannot find ~ffmpeg~,
+animations are disabled.
 
 * Installation
 Once the above-mentioned programs are installed, Yamwi's installation
