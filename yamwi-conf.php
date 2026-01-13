@@ -17,7 +17,9 @@ $maxima_binary = '/usr/bin/maxima';
 
 $maxima_args = "";
 
-$gnuplot_command = '/usr/bin/gnuplot';
+$gnuplot_binary = '/usr/bin/gnuplot';
+
+$gnuplot_args = "";
 
 $magic_key = "1dc53ea6b0ae1e618fc4e123238192b"; // CHANGE THIS!!
 

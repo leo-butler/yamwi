@@ -48,10 +48,11 @@ function check_ffmpeg() {
 }
 
 function check_gnuplot() {
-    global $gnuplot_command;
-    if (! file_exists($gnuplot_command) ) {
-        echo '<pre class="continuable-error">Gnuplot command not found: plotting is disabled.</pre>';
-        $gnuplot_command=0;
+    global $gnuplot_binary, $gnuplot_args;
+    if (! file_exists($gnuplot_binary) ) {
+        echo '<pre class="continuable-error">Gnuplot binary not found: plotting is disabled.</pre>';
+        $gnuplot_binary=0;
+        $gnuplot_args="";
     }
 }
 
@@ -315,7 +316,7 @@ function  re_process ($str) {
 // run Maxima and output results
 function calculate () {
   global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info,
-      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $gnuplot_command, $mode, $movie_muxer, $movie_is_embedded, $ffmpeg_binary, $base64_cmd;
+      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $gnuplot_binary, $gnuplot_args, $mode, $movie_muxer, $movie_is_embedded, $ffmpeg_binary, $base64_cmd;
   $nproc = $nproc + 1;
   check_maxima();
   check_ffmpeg();
@@ -325,7 +326,7 @@ function calculate () {
   // maxima_tempdir is hard-coded to be ./tmp
   // Set-up code is written to a different file, so snoopers cannot access it via _
   $val = '(maxima_tempdir: "'.$yamwi_path.'/tmp",' .
-      'gnuplot_command: "'.$gnuplot_command.'",'.
+      'gnuplot_command: "'.$gnuplot_binary.($gnuplot_args=="" ? "" : ' '.$gnuplot_args).'",'.
       '%codigo_usuario%: "'.$key.'",' .
       '%num_proceso%: "'.$nproc.'",' .
       '%dir_sources%: "'.$yamwi_path.'/packages",' .
