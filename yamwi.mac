@@ -148,6 +148,13 @@ Starplot([desc]) := Draw2d(apply(starplot_description, desc)) $
 
 Drawdf([params]) := Draw(apply('df_graphics, params))$
 
+/* Sanity */
+if gnuplot_command = "0" then (
+  mwdrawxd([rst]) := printf(false,"Draw is disabled."),
+  Plot2d([rst]) :=  printf(false,"plot is disabled."),
+  Plot3d([rst]) :=  printf(false,"plot is disabled."),
+  mwplotxd([rst]) := printf(false,"plot is disabled.")) $
+
 /* alt-display */
 load("alt-display.mac") $
 define_alt_display(yamwi_display2d(x),
