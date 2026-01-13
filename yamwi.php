@@ -27,6 +27,34 @@
 
 require 'yamwi-conf.php';
 
+///////////////////
+// Sanity checks //
+///////////////////
+
+function check_maxima() {
+    global $maxima_binary;
+    if (! file_exists($maxima_binary) ) {
+        echo '<pre class="fatal-error">Maxima binary not found. Halt.</pre>';
+        exit();
+    }
+}
+
+function check_ffmpeg() {
+    global $ffmpeg_binary;
+    if (! file_exists($ffmpeg_binary) ) {
+        echo '<pre class="continuable-error">Ffmpeg binary not found: `draw_movie` disabled.</pre>';
+        $ffmpeg_binary=0;
+    }
+}
+
+function check_gnuplot() {
+    global $gnuplot_command;
+    if (! file_exists($gnuplot_command) ) {
+        echo '<pre class="continuable-error">Gnuplot command not found: plotting is disabled.</pre>';
+        $gnuplot_command=0;
+    }
+}
+
 /////////////
 // Workers //
 /////////////
@@ -289,6 +317,9 @@ function calculate () {
   global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info,
       $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $gnuplot_command, $mode, $movie_muxer, $movie_is_embedded, $ffmpeg_binary, $base64_cmd;
   $nproc = $nproc + 1;
+  check_maxima();
+  check_ffmpeg();
+  check_gnuplot();
 
   // build Maxima program
   // maxima_tempdir is hard-coded to be ./tmp
