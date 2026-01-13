@@ -39,6 +39,10 @@ gplt_fn_seed:random(10^8);
 gplt_fn() := (gplt_fn_seed:random(10^8), printf(false,"~a-maxout-~8,'0d.gnuplot",%codigo_usuario%,gplt_fn_seed));
 data_fn() := printf(false,"~a-data-~8,'0d.gnuplot",%codigo_usuario%,gplt_fn_seed);
 
+if %ffmpeg_binary% = "0" or gnuplot_command = "0" then (
+  draw_multiple_plots(drawer,fname,term,lst,[opts]) := printf(false,"<pre class='warning'>draw_multiple_plots is disabled.</pre>"),
+  Draw_movie(drawer,paramlist,[ffmpeg_options]) := printf(false,"<pre class='warning'>draw_movie is disabled.</pre>"))
+else (
 draw_multiple_plots(drawer,fname,term,lst,[opts]) := block([file,files,n:length(lst),i:0,optsf],
   files:[],
   for p in lst do (
@@ -46,8 +50,7 @@ draw_multiple_plots(drawer,fname,term,lst,[opts]) := block([file,files,n:length(
     files:append(files,[file]),
     optsf:append(opts,[terminal=term,file_name=file,gnuplot_file_name=gplt_fn(),data_file_name=data_fn()]),
     apply(drawer,[p,optsf])),
-  map(lambda([x],concat(x,".",term)),files));
-
+  map(lambda([x],concat(x,".",term)),files)),
 /* see https://trac.ffmpeg.org/wiki/Slideshow */
 Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,output_file,linel:linel],
   if ffmpeg_options=[] then ffmpeg_options:["-vf framerate=fps=30:interp_start=64:interp_end=192:scene=100"],
@@ -68,7 +71,7 @@ Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,out
     printf(true,"</pre></td></tr><tr><td></td><td><video controls autoplay width=\"100%\" loop=true><source type=\"video/~a\" src=\"~a\"/>",%movie_muxer%,output_file),
     system(cmd),
     printf(true,"Your browser does not support HTML video.</video></tr></td>")),
-  [op(__)]);
+  [op(__)]));
 
 alias(draw_movie,Draw_movie) $
 
