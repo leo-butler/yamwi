@@ -155,6 +155,10 @@ if gnuplot_command = "0" then (
   Plot3d([rst]) :=  printf(false,"plot is disabled."),
   mwplotxd([rst]) := printf(false,"plot is disabled.")) $
 
+/* defun and defmacro are tex-ed in `verbatim' environment, which is not understood by MathJaX */
+yamwi_tex(sx) := if atom(sx) or not(member(op(sx),{":=","::="})) then tex(sx)
+  else printf(true,"$$~a ~a ~a$$",tex1(lhs(sx)),tex1(op(sx)),tex1(rhs(sx))) $
+
 /* alt-display */
 load("alt-display.mac") $
 define_alt_display(yamwi_display2d(x),
@@ -173,7 +177,7 @@ define_alt_display(yamwi_display2d(x),
     mathml(second(x)),
     printf(true,"</span></td>~%"),
     printf(true,"<td class='output tex-mathjax'~a><span class='tex-mathjax'>~%",if %output_mode%=4 then "" else nodisplay),
-    tex(second(x)),
+    yamwi_tex(second(x)),
     printf(true,"</span></td></tr>~%")
     ))$
 define_alt_display(yamwi_display1d(x),
