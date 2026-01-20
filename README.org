@@ -43,7 +43,7 @@ Software requirements on the server side:
 Yamwi can be extended by installing the following software:
 
 - Gnuplot :: (https://www.gnuplot.info/). This is the program used by Maxima for rendering graphics. (Ver. >= 4.2).
-- FFmpeg :: (https://ffmpeg.org/). With -Gnuplot~, this program is used by Maxima to create animations. (Ver. >= 5.0).
+- FFmpeg :: (https://ffmpeg.org/). This program is used with ~Gnuplot~ by Maxima to create animations. (Ver. >= 5.0).
 
 To enable ~Gnuplot~ (respectively, ~Gnuplot+FFmpeg~) is simple: the
 administrator sets ~$gnuplot_binary~ to the pathname of the ~gnuplot~
