@@ -35,9 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {updateTextArea('max');});
 // https://highlightjs.readthedocs.io/en/latest/readme.html         //
 //////////////////////////////////////////////////////////////////////
 document.addEventListener('DOMContentLoaded', (event) => {
-  document.querySelectorAll('pre.inputcode').forEach((el) => {hljs.highlightElement(el);});});
-document.addEventListener('DOMContentLoaded', (event) => {
-  document.querySelectorAll('pre.output').forEach((el) => {hljs.highlightElement(el);});});
+    document.querySelectorAll('pre.interpreted').forEach((el) => {hljs.highlightElement(el);});
+    document.querySelectorAll('pre.verbatim').forEach((el) => {hljs.highlightElement(el);});
+    document.querySelectorAll('pre.enhanced-ascii-art').forEach((el) => {hljs.highlightElement(el);});});
 
 
 //////////////////////////////////////////////////////////////////////
@@ -68,3 +68,37 @@ document.addEventListener('DOMContentLoaded', (event) => {
     make_menu_action("menu-ana");
     make_menu_action("menu-plot");
 });
+
+//////////////////////////////////////////////////////////////////////
+// Automatically resize the input textarea                          //
+//////////////////////////////////////////////////////////////////////
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.querySelectorAll("textarea").forEach(function(textarea) {
+	textarea.style.height = textarea.scrollHeight + "px";
+	textarea.style.overflowY = "hidden";
+
+	textarea.addEventListener("input", function() {
+	    this.style.height = "auto";
+	    this.style.height = this.scrollHeight + "px";
+	});
+    })});
+
+//////////////////////////////////////////////////////////////////////
+// Toggle output format                                             //
+//////////////////////////////////////////////////////////////////////
+function show_in_output(n,types,inout) {
+    var type = (n >= 0 && n < types.length) ? types[n] : types[0];
+    var turn_on_off = function (t) {
+	var stle = (type == t) ? "flex" : "none";
+	var e = document.getElementsByClassName(inout+t);
+	for (i=0; i<e.length; i++) {
+	    e[i].style.display = stle;
+	}};
+    types.map(turn_on_off);
+};
+
+// see yawmi_display2d in yamwi.mac
+function show_output(n) {show_in_output(n,["ascii", "ascii-art", "enhanced-ascii-art", "mathml", "tex-mathjax"],"output ");};
+// see yawmi_display1d in yamwi.mac
+function show_input(n) {show_in_output(n,["interpreted", "verbatim"],"inputcode ");};
+document.addEventListener('DOMContentLoaded', (event) => {show_input(1);});

@@ -36,17 +36,21 @@ Software requirements on the server side:
 
 - Apache :: (https://www.apache.org/). (Ver. >= 2).
 - Php :: (https://www.php.net/). (Ver. >= 5).
-- Gnuplot :: (http://www.gnuplot.info/). This is the program used by Maxima for rendering graphics. (Ver. >= 4.2).
 - Maxima :: (https://maxima.sourceforge.io/). This is the mathematical engine. (Ver. >= 5.20).
 - timelimit/timeout :: (https://devel.ringlet.net/sysutils/timelimit/ / https://www.gnu.org/software/coreutils/). Bound Maxima's computation time to a fixed limit.
 
-In case the administrator wants to render results in binary TeX
-format, the following packages must be also installed (see
-configuration variable =$mode= below):
+** Recommended
+Yamwi can be extended by installing the following software:
 
-- dvips (from LaTeX)
-- texi2dvi (from texinfo)
-- convert (from ImageMagick)
+- Gnuplot :: (https://www.gnuplot.info/). This is the program used by Maxima for rendering graphics. (Ver. >= 4.2).
+- FFmpeg :: (https://ffmpeg.org/). With -Gnuplot~, this program is used by Maxima to create animations. (Ver. >= 5.0).
+
+To enable ~Gnuplot~ (respectively, ~Gnuplot+FFmpeg~) is simple: the
+administrator sets ~$gnuplot_binary~ to the pathname of the ~gnuplot~
+program (respectively, sets both ~$gnuplot_binary~ and
+~$ffmpeg_binary~ to point to the relevant programs). If Yamwi cannot
+find ~gnuplot~, all plotting is disabled; if it cannot find ~ffmpeg~,
+animations are disabled.
 
 * Installation
 Once the above-mentioned programs are installed, Yamwi's installation
@@ -95,32 +99,44 @@ Assuming that ~php~ is installed, the following launches Yamwi:
 * Configuration
 The file =yamwi-conf.php= contains much of the configuration options for Yamwi.
 
-- =$mode= ::  Can be one of 0, 1, 2, 3 or 4. These options are:
-  0. [@0] When 0, Yamwi output is rendered in ASCII Art style without any additional processing (in command-line ~maxima~, this is called ~2d~ output);
-  1. when 1, results are rendered in binary files containing TeX output (be sure the programs ~texi2dvi~, ~dvips~ and ~convert~ are installed);
+- ~mode~ ::  Can be one of 0, 1, 2, 3 or 4. These options are:
+  0. [@0] When 0, output is returned as a syntactical Maxima expression (in command-line ~maxima~, this is called ~1d~ output);
+  1. when 1, Yamwi output is rendered in ASCII-Art style without any additional processing (in command-line ~maxima~, this is called ~2d~ output);
   2. when 2, results are rendered in enhanced ASCII-Art style, with syntax highlighting and other features that make it easier to read than mode 0 (in command-line ~maxima~, this is ~2d~ output);
-  3. when 3, output is returned as a syntactical Maxima expression (in command-line ~maxima~, this is called ~1d~ output);
+  3. when 3, results are rendered using Maxima's =MathML= processor;
   4. when 4, results are based on the nice-looking MathJax (http://www.mathjax.org) system.
-  Defaults to 2. Response times are shorter in ASCII Art modes.
+  Defaults to 2. The user may select the mode.
 
-- =$max_file_time= ::  Yamwi creates some files which are stored in
+- ~max_file_time~ ::  Yamwi creates some files which are stored in
   its ~tmp~ folder. Every time a user asks for a calculation, Yamwi
   removes those files older, in minutes, than the quantitity indicated
   by this variable. Defaults to 1.
 
-- =$max_process_time= ::  maximum execution time, in seconds, allowed
+- ~max_process_time~ ::  maximum execution time, in seconds, allowed
   for each Maxima process. Default value is 120 seconds.
 
-- =$max_num_processes= ::  maximum number of Maxima processes
+- ~max_num_processes~ ::  maximum number of Maxima processes
   simultaneously running on the server. Default value is 30.
 
-- =$timelimit_binary= :: Name of the ~timelimit~ binary. Defaults to ~/usr/bin/timeout~.
+- ~timelimit_binary~ :: Name of the ~timelimit~ binary. Defaults to ~/usr/bin/timeout~.
 
-- =$maxima_binary= :: Name of the ~maxima~ binary. Defaults to ~/usr/bin/maxima~.
+- ~maxima_binary~ :: Name of the ~maxima~ binary. Defaults to ~/usr/bin/maxima~.
 
-- =$maxima_args= :: A string of optional arguments supplied to the ~maxima~ binary. Defaults to ~""~.
+- ~maxima_args~ :: A string of optional arguments supplied to the ~maxima~ binary. Defaults to ~""~.
 
-- =$magic_key= :: A key that, when passed as part of the URL, causes Yamwi to return diagnostic information along with the normal output. This should be set by the system administrator.
+- ~gnuplot_binary~ :: Name of the ~gnuplot~ binary. Defaults to ~/usr/bin/gnuplot~.
+
+- ~gnuplot_args~ :: A string of optional arguments supplied to the ~gnuplot~ binary.. Defaults to ~""~.
+
+- ~magic_key~ :: A key that, when passed as part of the URL, causes Yamwi to return diagnostic information along with the normal output. This should be set by the system administrator.
+
+- ~$movie_muxer~ :: The name of the container used by ~ffmpeg~ to produce a video, shown in a =<video>= element. Must by either =webm= or =mp4=. Defaults to =webm=.
+
+- ~$movie_is_embedded~ :: If ~1~, the video made by ~ffmpeg~ is base-64 encoded and embedded in HTML; otherwise, the video is saved to file and the file-name is embedded in HTML.
+
+- ~$ffmpeg_binary~ :: The name of the ~ffmpeg~ binary. Defaults to ~/usr/bin/ffmpeg~.
+
+- ~$base64_cmd~ :: The command used to encode images and videos to base-64 encoding. Defaults to ~/usr/bin/base64 -w 0~.
 
 * User Packages
 Yamwi gives access to all standard Maxima packages. Custom packages can be placed in the =packages=. The file extension should be =.mac= if the package is written in Maxima code, or =.lisp= if it is written in Common Lisp. Yamwi user can =load=

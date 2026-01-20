@@ -27,6 +27,34 @@
 
 require 'yamwi-conf.php';
 
+///////////////////
+// Sanity checks //
+///////////////////
+
+function check_maxima() {
+    global $maxima_binary;
+    if (! file_exists($maxima_binary) ) {
+        echo '<pre class="fatal-error">Maxima binary not found. Halt.</pre>';
+        exit();
+    }
+}
+
+function check_ffmpeg() {
+    global $ffmpeg_binary;
+    if (! file_exists($ffmpeg_binary) ) {
+        echo '<pre class="continuable-error">Ffmpeg binary not found: `draw_movie` disabled.</pre>';
+        $ffmpeg_binary=0;
+    }
+}
+
+function check_gnuplot() {
+    global $gnuplot_binary, $gnuplot_args;
+    if (! file_exists($gnuplot_binary) ) {
+        echo '<pre class="continuable-error">Gnuplot binary not found: plotting is disabled.</pre>';
+        $gnuplot_binary=0;
+        $gnuplot_args="";
+    }
+}
 
 /////////////
 // Workers //
@@ -92,9 +120,11 @@ $dangerous_words =
    'concat','sconcat','printf','string','readbyte','readchar','readline','writebyte',
    'make_string_input_stream','make_string_output_stream','get_output_stream_string',
    // Prevent access to functions/variables in yamwi.mac
-   'file_search_maxima','file_search_lisp','%num_sentence%','%num_grafico%','mwdrawxd','Draw2d','Draw3d','Draw','mwplotxd','Plot2d','Plot3d','Scatterplot','Histogram','Barsplot','Piechart','Boxplot','Starplot','Drawdf','translate_into_tex','translate_into_print',
+   'file_search_maxima','file_search_lisp','%num_sentence%','%num_grafico%','mwdrawxd','Draw2d','Draw3d','Draw','mwplotxd','Plot2d','Plot3d','Scatterplot','Histogram','Barsplot','Piechart','Boxplot','Starplot','Drawdf','translate_into_tex','translate_into_print','yamwi_display','oned_display','twod_display','mathml','set_alt_display','set_prompt','reset_displays',
+   'maxima_tempdir', 'maxima_userdir', '%num_proceso%', '%codigo_usuario%', '%dir_sources%', '%movie_muxer%', '%movie_is_embedded%', '%ffmpeg_binary%', '%base64_cmd%', '%output_mode%',
+   'gnuplot_command',
    // not available
-   'plotdf'
+   'plotdf', 'showtime', 'julia', 'mandelbrot'
    );
 
 
@@ -187,64 +217,6 @@ function too_many_processes() {
 ////////////////////
 
 
-
-// separates individual sentences from Maxima script
-function input_sentences ($val) {
-  $anchor = 0;
-  $sentence_counter = 0;
-  $comment_level = 0;
-  for($i = 0 ; $i < strlen($val) ; $i++) {
-    if ($val[$i] == "/" && $val[$i+1] == "*") 
-      $comment_level = $comment_level + 1;
-    if ($val[$i] == "*" && $val[$i+1] == "/") 
-      $comment_level = $comment_level - 1;
-    if ($comment_level == 0 &&
-        ($val[$i] == ";" || $val[$i] == "$")) {
-      $sentences[$sentence_counter]= substr($val, $anchor, $i - $anchor + 1);
-      $sentence_counter = $sentence_counter + 1;
-      $anchor = $i+1;} }
-  return $sentences; }
-
-
-
-// Builds Maxima list of sentences
-function list_of_sentences ($sentences) {
-  global $mode;
-  $sentence_counter = count($sentences);
-  $lista = "";
-  for($i = 1 ; $i < $sentence_counter ; $i++){
-    $lista = $lista . 
-             "\"" .
-             str_replace("\"", "\\\"" , $sentences[$i]) .
-             "\"";
-  if ($i < $sentence_counter-1)
-    $lista = $lista.",";}
-  if ($mode == 1 || $mode == 4)
-    $lista = $sentences[0]."\ntranslate_into_tex([".$lista."])$";
-  else
-    $lista = $sentences[0]."\ntranslate_into_print([".$lista."])$";
-  return $lista;}
-
-
-
-// returns the necessary code to add all
-// the requested graphics when working in ASCII mode.
-function graphics() {
-   global $key, $nproc;
-  $result = "";
-  $file = 'tmp/' . $key . '.gr.' . $nproc . '.0.txt';
-  if (file_exists($file)) {
-    $fh = fopen($file, 'r');
-    $theData = trim(fread($fh, filesize($file)));
-    fclose($fh); 
-    $out = explode("\n", $theData);
-    foreach ($out as $file_name)
-      $result = $result .
-                '<img src=' . $file_name . ' alt="gr"><br>'; }
-  return $result; }
-
-
-
 function write_form() {
     global $key, $nproc, $input, $submit_button, $clear_button, $mode;
   echo '<form id="maxform" method="post" action="'.
@@ -258,180 +230,38 @@ function write_form() {
        "<input type=\"button\" value=\"".
             $clear_button.
             "\" onClick=\"this.form.max.value=''; return false\">\n".
-       "<select name=\"modeselect\" id=\"modeselect\" class=\"modeselect\" onchange=\"this.form.action=this.form.action.replace(/&mode=[0-9]/,'&mode='+this.form.getElementsByTagName('select')[0].value); this.form.getElementsByTagName('input')[0].click(); return true;\">\n".
-       '   <option value="" disabled>Select Print Mode and Submit</option>'.
-       '   <option value=0 '. ($mode == 0 ? "selected=\"selected\"" : "") . ">0 - ASCII-Art output</option>\n".
-       '   <option value=1 '. ($mode == 1 ? "selected=\"selected\"" : "") . ">1 - Binary TeX output</option>\n".
-       '   <option value=2 '. ($mode == 2 ? "selected=\"selected\"" : "") . ">2 - Enhanced ASCII-Art output</option>\n".
-       '   <option value=3 '. ($mode == 3 ? "selected=\"selected\"" : "") . ">3 - Syntactic output</option>\n".
-       '   <option value=4 '. ($mode == 4 ? "selected=\"selected\"" : "") . ">4 - Remote TeX + MathJax</option>\n".
+       "<select name=\"modeselect\" id=\"modeselect\" class=\"modeselect\" onchange=\"this.form.action=this.form.action.replace(/&mode=[0-9]/,'&mode='+document.getElementById('modeselect').value); show_output(document.getElementById('modeselect').value); return true;\">\n".
+       '   <option value="" disabled>Select Print Mode</option>'.
+       '   <option value=0 '. ($mode == 0 ? "selected=\"selected\"" : "") . ">0 - Syntactic output</option>\n".            # ascii
+       '   <option value=1 '. ($mode == 1 ? "selected=\"selected\"" : "") . ">1 - Ascii-Art output</option>\n".            # ascii-art
+       '   <option value=2 '. ($mode == 2 ? "selected=\"selected\"" : "") . ">2 - Enhanced ASCII-Art output</option>\n".   # enhanced-ascii-art
+       '   <option value=3 '. ($mode == 3 ? "selected=\"selected\"" : "") . ">3 - MathML</option>\n".                      # mathml
+       '   <option value=4 '. ($mode == 4 ? "selected=\"selected\"" : "") . ">4 - Remote TeX + MathJax</option>\n".        # tex-mathjax
+       "</select>\n".
+       "<select name=\"inmodeselect\" id=\"inmodeselect\" class=\"modeselect\" onchange=\"show_input(document.getElementById('inmodeselect').value); return true;\">\n".
+       '   <option value="" disabled>Select Input Mode</option>'.
+       '   <option value=0>                    0 - Interpreted input</option>'.
+       '   <option value=1 selected="selected">1 - Verbatim input</option>'.
        "</select>\n".
        "</form>\n".
        "<hr>\n\n" ; }
 
 
-
 function write_results ($val) {
   echo $val;}
-
-
 
 function gtlt ($str) {
   return str_replace(">", "&gt;", str_replace("<", "&lt;", $str));}
 
-
-
-function prepare_ascii_output($out) {
-  write_form();
-  write_results('<pre>' .
-                gtlt(substr($out, strpos($out, "(%i3)"))) .
-                '</pre>' .
-                graphics());}
-
-
-
-function prepare_enhanced_ascii_output($out, $sentences) {
+// prepare output
+function prepare_output($out, $sentences) {
   global $key, $nproc;
-  $out_counter = 0;
-
   // read and clean Maxima output
-  $subout = trim($out);
-  $subout = substr($subout,31+strpos($subout,"start_maxima_output_print_code:"));
-
-  // scan Maxima output
-  while (strlen($subout) > 0) {
-    $text_code_ini = strpos($subout,"%%%");
-    $print_code[$out_counter] = substr($subout,0,$text_code_ini);
-    if ($print_code[$out_counter] != '')
-      $print_code[$out_counter] = '<pre class="print">' . gtlt($print_code[$out_counter]) . '</pre>';
-    $image_code[$out_counter] = search_images($out_counter);
-    $text_code_end = strpos(substr($subout,$text_code_ini+3),"%%%");
-    $text_code[$out_counter] = trim(substr($subout, $text_code_ini, $text_code_end+6), "%");
-    $subout = substr($subout, $text_code_ini+$text_code_end+6);
-    $out_counter = $out_counter + 1; }
-
+  $subout = re_process(trim($out));
   // write html code
   write_form();
-  $result = "<table>\n";
-  for($i = 1 ; $i <= $out_counter ; $i++) {
-    $this_result1 = '';  // the output label
-    $this_result2 = '';  // the mathematical result
-    if (substr($sentences[$i], -1) === ";") {
-      $this_result1 = '(%o' . $i . ')';
-      $this_result2 = '<pre class="output">' . $text_code[$i-1] . '</pre>'; }
-    $result = $result .
-              '<tr>' .
-              '<td><pre class="input">' . '(%i' . $i . ')' . "</pre></td>\n" .
-              '<td><pre class="inputcode">' . re_process(trim($sentences[$i])) . "</pre>\n".
-              $print_code[$i-1] .
-              "</td>\n" .
-              "</tr>\n" .
-              '<tr>' .
-              '<td><pre class="output">' . $this_result1 . "</pre></td>\n" .
-              '<td>' . $image_code[$i-1] . $this_result2 . "<br></td>\n" .
-              "</tr>\n";}
-  $result = $result . "</table>\n\n";
+  $result = '<table id="maxima-output" class="maxima-output">' . "\n" . $subout . "</table>\n\n";
   write_results($result); }
-
-
-
-// search for images returned by sentence number $sn
-// and write the corresponding html code
-function search_images ($sn) {
-  global $key, $nproc;
-  $result = "";
-  $sen = $sn + 1;
-  $file = 'tmp/' . $key . '.gr.' . $nproc .  '.' . $sen . '.txt';
-  if (file_exists($file)) {
-    $fh = fopen($file, 'r');
-    $theData = trim(fread($fh, filesize($file)));
-    fclose($fh); 
-    $out = explode("\n", $theData);
-    foreach ($out as $file_name) {}
-      while (! file_exists($file_name)) {};
-      $result = $result . '<img src = "' . $file_name .'" alt="gr"><br>';}
-  return $result; }
-
-
-
-function latex_template ($tex) {
-  return "\documentclass{article}\n" .
-         "\usepackage{amsmath,amssymb}\n".
-         "\pagestyle{empty}\n" .
-         "\begin{document}\n" .
-         $tex .
-         "\n\\end{document}\n" ;}
-
-
-
-function prepare_tex_output($out, $sentences) {
-  global $key, $nproc, $yamwi_path, $mode;
-  $out_counter = 0;
-
-  // read and clean Maxima output
-  $subout = trim($out);
-  $subout = substr($subout,31+strpos($subout,"start_maxima_output_tex_code:"));
-  $subout=str_replace("\\begin{verbatim}", "$$", str_replace("\\end{verbatim}", "$$", $subout));
-
-  // scan Maxima output
-  while (strlen($subout) > 0) {
-    $tex_code_ini = strpos($subout,"$$");
-    $print_code[$out_counter] = substr($subout,0,$tex_code_ini);
-    if ($print_code[$out_counter] != '')
-      $print_code[$out_counter] = '<pre class="print">' .
-                                  gtlt($print_code[$out_counter]) .
-                                  '</pre>';
-    $image_code[$out_counter] = search_images($out_counter);
-    $tex_code_end = strpos(substr($subout,$tex_code_ini+2),"$$");
-    $tex_code[$out_counter] = substr($subout, $tex_code_ini, $tex_code_end+4);
-    $subout = substr($subout, $tex_code_ini+$tex_code_end+4);
-    $out_counter = $out_counter + 1; }
-
-  if ($mode == 1) {
-    // save LaTex files
-    for($i = 1 ; $i <= $out_counter ; $i++){
-      if (substr($sentences[$i], -1) === ";") {
-        // write latex file
-        $fich = fopen($yamwi_path . '/tmp/' . $key . '-' . $nproc . '-' . $i . '.tex', 'w');
-        fwrite($fich, latex_template($tex_code[$i-1]));
-        fclose($fich);
-        // compile latex source
-        shell_exec(
-          'cd ' . $yamwi_path . '/tmp/' . ';' .
-          'texi2dvi ' . $key . '-' . $nproc . '-' . $i . '.tex ;' .
-          'dvips -E ' . $key . '-' . $nproc . '-' . $i . '.dvi ;' .
-          'convert -density 150x150 '. $key . '-' . $nproc . '-' . $i .'.ps '.$key.'.'.$nproc.'.'.$i.'.png'); } }}
-
-  // write html code
-  if ($mode == 4) {
-    $result = '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>' . "\n\n";}
-  else {
-    $result = '';}
-  write_form();
-  $result = $result . "<table>\n";
-  for($i = 1 ; $i <= $out_counter ; $i++) {
-    $this_result1 = '';  // the output label
-    $this_result2 = '';  // the mathematical result
-    if (substr($sentences[$i], -1) === ";") {
-      $this_result1 = '(%o' . $i . ')';
-      if ($mode == 1) {
-        $this_result2 = '<img src='.'tmp/'.$key.'.'.$nproc.'.'.$i.'.png'.' alt="eq">';}
-      else {
-        $this_result2 = '\(' . trim($tex_code[$i-1],"$") . '\)';} }
-    $result = $result .
-              '<tr>' .
-              '<td><br><pre class="input">' . '(%i' . $i . ')' . "</pre></td>\n" .
-              '<td><br><pre class="inputcode">' . re_process(trim($sentences[$i])) . "</pre>\n" .
-              $print_code[$i-1] .
-              "</td>\n" .
-              "</tr>\n" .
-              '<tr>' .
-              '<td class="output">' . $this_result1 . "</td>\n" .
-              '<td class="output">' . $image_code[$i-1] . $this_result2 . "</td>\n" .
-              "</tr>\n"; }
-  $result = $result . "</table>\n\n";
-  write_results($result); }
-
 
 
 // returns an alert message if something was wrong
@@ -439,22 +269,14 @@ function alert ($message) {
   write_results('<p class="error">' . $message . '</p>');}
 
 
-
 function error_detected ($out) {
   global $message_prog_error;
-  $yamwi1a_pos = strpos($out, "yamwi1a");
-  if (! $yamwi1a_pos === false)
-    return "Not enough information on some of: " . 
-           substr($out,
-                  $yamwi1a_pos + 7,
-                  strpos($out, "yamwi1b") - $yamwi1a_pos - 7) .
-           ".<br>You may try 'assume'." ;
-  elseif (! strpos($out, "Maxima encountered a Lisp error:") === false ||
-          ! strpos($out, "incorrect syntax:") === false ||
-          ! strpos($out, "-- an error. To debug this try: debugmode(true);") === false)
-    return $message_prog_error;
+  if (! strpos($out, "Maxima encountered a Lisp error:") === false ||
+      ! strpos($out, "incorrect syntax:") === false ||
+      ! strpos($out, "-- an error. To debug this try: debugmode(true);") === false)
+      return $message_prog_error;
   else
-    return false;}
+      return false;}
 
 
 
@@ -465,6 +287,13 @@ function pre_process ($str) {
    $tmp = str_replace(array("wxdraw", "draw"), "Draw", $tmp);
    $tmp = str_replace(array("wxplot3d", "plot3d"), "Plot3d", $tmp);
    $tmp = str_replace(array("wxplot2d", "plot2d"), "Plot2d", $tmp);
+   $tmp = str_replace("scatterplot" , "Scatterplot", $tmp);
+   $tmp = str_replace("histogram"   , "Histogram", $tmp);
+   $tmp = str_replace("barsplot"    , "Barsplot", $tmp);
+   $tmp = str_replace("piechart"    , "Piechart", $tmp);
+   $tmp = str_replace("boxplot"     , "Boxplot", $tmp);
+   $tmp = str_replace("starplot"    , "Starplot", $tmp);
+   $tmp = str_replace("drawdf"      , "Drawdf", $tmp);
    return $tmp;}
 function  re_process ($str) {
    $tmp = str_replace("\\\\","\\", $str);
@@ -473,6 +302,13 @@ function  re_process ($str) {
    $tmp = str_replace("Draw",  "draw",    $tmp);
    $tmp = str_replace("Plot3d","plot3d",  $tmp);
    $tmp = str_replace("Plot2d","plot2d",  $tmp);
+   $tmp = str_replace("Scatterplot" , "scatterplot" , $tmp);
+   $tmp = str_replace("Histogram"   , "histogram"   , $tmp);
+   $tmp = str_replace("Barsplot"    , "barsplot"    , $tmp);
+   $tmp = str_replace("Piechart"    , "piechart"    , $tmp);
+   $tmp = str_replace("Boxplot"     , "boxplot"     , $tmp);
+   $tmp = str_replace("Starplot"    , "starplot"    , $tmp);
+   $tmp = str_replace("Drawdf"      , "drawdf"      , $tmp);
    return $tmp;}
 
 
@@ -480,28 +316,28 @@ function  re_process ($str) {
 // run Maxima and output results
 function calculate () {
   global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info,
-      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary;
+      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $gnuplot_binary, $gnuplot_args, $mode, $movie_muxer, $movie_is_embedded, $ffmpeg_binary, $base64_cmd;
   $nproc = $nproc + 1;
-  $display2d = "";
-  if ($mode == 3) $display2d = "display2d: false,";
+  check_maxima();
+  check_ffmpeg();
+  check_gnuplot();
 
   // build Maxima program
+  // maxima_tempdir is hard-coded to be ./tmp
+  // Set-up code is written to a different file, so snoopers cannot access it via _
   $val = '(maxima_tempdir: "'.$yamwi_path.'/tmp",' .
-         '%codigo_usuario%: "'.$key.'",' .
-         '%num_proceso%: "'.$nproc.'",' .
-         '%dir_sources%: "'.$yamwi_path.'/packages",' .
-         'load("'.$yamwi_path.'/yamwi.mac"),' .
-         'load("'.$yamwi_path.'/yamwi.lisp"),' .
-         $display2d .
-         "\"%%%\")\$\n" . 
-         pre_process($input);
-
-  // in TeX or enhanced ASCII mode, isolate sentences.
-  if ($mode == 1 || $mode == 2 || $mode == 3 || $mode == 4) {
-    // 1. make array of input sentences
-    $sentences = input_sentences($val);
-    // 2. build the Maxima list with sentences as strings
-    $val = list_of_sentences($sentences); }
+      'gnuplot_command: "'.$gnuplot_binary.($gnuplot_args=="" ? "" : ' '.$gnuplot_args).'",'.
+      '%codigo_usuario%: "'.$key.'",' .
+      '%num_proceso%: "'.$nproc.'",' .
+      '%dir_sources%: "'.$yamwi_path.'/packages",' .
+      '%movie_muxer%: "'.$movie_muxer.'",'.
+      '%movie_is_embedded%: '.$movie_is_embedded.','.
+      '%ffmpeg_binary%: "'.$ffmpeg_binary.'",'.
+      '%base64_cmd%: "'.$base64_cmd.'",'.
+      'load("'.$yamwi_path.'/yamwi.mac"),' .
+      'load("'.$yamwi_path.'/yamwi.lisp"),' .
+      '%output_mode%:' . $mode . ')$' . "\n" .
+      '(linenum:0,kill(labels),%%%)$' . "\n" . pre_process($input);
 
   // create batch file
   $fich = fopen($yamwi_path.'/tmp/'.$key.'.mac', 'w');
@@ -522,29 +358,31 @@ function calculate () {
 
   if ($show_info){
     echo '<u>Complete Maxima input</u>: '.'<pre>'.$val.'</pre><br>';
-    echo '<u>Complete Maxima output</u>: '.'<pre>'.$out.'</pre><br>';}
+    echo '<u>Complete Maxima output</u>: '.'<pre>'.str_replace('<','〈',str_replace('>','〉',$out)).'</pre><br>';}
 
   // Checks whether the last line returned by the shell call
   // contains the path to the Maxima script; if not, it
   // means that the process has been interrupted by timelimit.
   // Note: this check is only valid if linel is large enough to avoid splitting the string.
-  if (str_contains(substr($out,strrpos(trim($out), "\n", -1)), $yamwi_path.'/tmp/'.$key.'.mac')) {
-    $out = substr($out,strpos($out, "%%%") + 4);
-    $out = rtrim(str_replace($yamwi_path.'/tmp/'.$key.'.mac','', $out));
-    $out = substr($out,0, strlen($out) - strlen(strrchr($out,"%")) - 1);
-    $input = str_replace("\\", "" , $input);
+  $end_needle='"'.$yamwi_path . '/tmp/' . $key . '.mac"';
+  $end=strrpos(trim($out),$end_needle,0);
+  if (! $end === false) {
+    $out = substr($out,0,$end);
+    if ($show_info) {
+        echo '<u>end:</u>: '.$end.'<br/>';}
+    // The markers are dependent on output produced by yamwi_display*d
+    $end = strrpos($out,'<tr><td class=');
+    if (! $end === false) { $out=substr($out,0,$end); };
+    $start_needle='%%%)$</pre></td></tr>';
+    $out = substr($out,strrpos($out,$start_needle)+strlen($start_needle));
 
     // write results
     $an_error = error_detected($out);
     if (! $an_error === false) {
       write_form();
       alert ($an_error);}
-    elseif ($mode == 0)  // ASCII mode
-      prepare_ascii_output($out);
-    elseif ($mode == 1 || $mode == 4) // TeX or MathJax mode
-      prepare_tex_output($out, $sentences);
-    else  // Enhanced ASCII and syntactic modes
-      prepare_enhanced_ascii_output($out, $sentences);
+    else
+      prepare_output($out, $val);
 
     // cleaning old files
     remove_old_files ();}

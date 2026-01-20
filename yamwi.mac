@@ -1,8 +1,12 @@
+/* set defaults */
+%codigo_usuario%: if %codigo_usuario%='%codigo_usuario% then "abcdefghijklmnopqrstuvwxyz" else %codigo_usuario% $
+%dir_sources%: if %dir_sources%='%dir_sources% then "./packages" else %dir_sources% $
+
 /* set output line length */
 linel : slength(concat(maxima_tempdir,"/",%codigo_usuario%,".mac")) + 10;
 
 /* texput */
-texput(matrix,lambda([expr], printf(false,"\\begin{bmatrix}~%~{~{~a~^&~}~^\\\\~}~%\\end{bmatrix}",map(lambda([row],map(tex1,row)),args(expr)))));
+texput(matrix,lambda([expr], printf(false,"\\begin{bmatrix}~%~{~{~a~^&~}~^\\cr~}~%\\end{bmatrix}",map(lambda([row],map(tex1,row)),args(expr)))));
 texput(?rat,lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
 texput("/",lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
 texput(nounify(diff), lambda([expr],block([Y,X,n], [Y,X,n] : args(expr), if n=1 then printf(false,"\\dfrac{d\\,}{d{~a}}{~a}",tex1(X),tex1(Y)) else printf(false,"\\dfrac{d^{~a}\\,}{d{~a}^{~a}}{~a}",n,tex1(X),n,tex1(Y))))) ;
@@ -27,69 +31,86 @@ file_search_lisp:
 /* Global variables */
 
 %num_sentence%: 0$
-%num_grafico%: 0$
+%num_movie%: 0$
+%movie_term%: 'pngcairo$
+
+/* Movie making */
+gplt_fn_seed:random(10^8);
+gplt_fn() := (gplt_fn_seed:random(10^8), printf(false,"~a-maxout-~8,'0d.gnuplot",%codigo_usuario%,gplt_fn_seed));
+data_fn() := printf(false,"~a-data-~8,'0d.gnuplot",%codigo_usuario%,gplt_fn_seed);
+
+if %ffmpeg_binary% = "0" or gnuplot_command = "0" then (
+  draw_multiple_plots(drawer,fname,term,lst,[opts]) := printf(false,"<pre class='warning'>draw_multiple_plots is disabled.</pre>"),
+  Draw_movie(drawer,paramlist,[ffmpeg_options]) := printf(false,"<pre class='warning'>draw_movie is disabled.</pre>"))
+else (
+draw_multiple_plots(drawer,fname,term,lst,[opts]) := block([file,files,n:length(lst),i:0,optsf],
+  files:[],
+  for p in lst do (
+    i:i+1,file:printf(false,"~a~8,'0d",fname,i),
+    files:append(files,[file]),
+    optsf:append(opts,[terminal=term,file_name=file,gnuplot_file_name=gplt_fn(),data_file_name=data_fn()]),
+    apply(drawer,[p,optsf])),
+  map(lambda([x],concat(x,".",term)),files)),
+/* see https://trac.ffmpeg.org/wiki/Slideshow */
+Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,output_file,linel:linel],
+  if ffmpeg_options=[] then ffmpeg_options:["-vf framerate=fps=30:interp_start=64:interp_end=192:scene=100"],
+  drawer:subst([Draw2d=draw2d,Draw3d=draw3d,Draw=draw],drawer),
+  term:'png,
+  /* in yamwi.php, maxima_tempdir is hard-coded to be ./tmp */
+  fname:concat("tmp/movie-still-",%codigo_usuario%,"-",%num_proceso%,"-",%num_movie%,"-"),
+  output_file:concat(fname,"0.",%movie_muxer%),
+  files:draw_multiple_plots(drawer,fname,%movie_term%,paramlist),
+  /* ffmpeg hangs if STDIN != /dev/null */
+  cmd:if %movie_is_embedded%=1 then printf(false,"/bin/sh -c '~a -y -framerate 30 -f image2 -i ~a%08d.~a ~{~a ~} -f ~a - | ~a' < /dev/null",%ffmpeg_binary%,fname,term,ffmpeg_options,%movie_muxer%,%base64_cmd%)
+    else printf(false,"/bin/sh -c '~a -y -framerate 30 -f image2 -i ~a%08d.~a ~{~a ~} ~a' < /dev/null",%ffmpeg_binary%,fname,term,ffmpeg_options,output_file),
+  if %movie_is_embedded%=1 then (
+    printf(true,"</pre></td></tr><tr><td></td><td><video controls autoplay width=\"100%\" loop=true><source type=\"video/~a\" src=\"data:video/~:*~a;charset=us-ascii;base64,",%movie_muxer%),
+    system(cmd),
+    printf(true,"\"/>Your browser does not support HTML video.</video></td></tr>"))
+  else (
+    printf(true,"</pre></td></tr><tr><td></td><td><video controls autoplay width=\"100%\" loop=true><source type=\"video/~a\" src=\"~a\"/>",%movie_muxer%,output_file),
+    system(cmd),
+    printf(true,"Your browser does not support HTML video.</video></tr></td>")),
+  [op(__)]));
+
+alias(draw_movie,Draw_movie) $
 
 /* Code for draw */
+/*
+Supported terminal types:
+png pngcairo gif animated_gif jpg svg (default: svg)
+*/
 
-mwdrawxd(func, descgraf):=
-  block([haiterm: false, formato],
+output2stdout : user_preamble = printf(false,"base64out='|~a';~%if (GPVAL_OUTPUT ne base64out) {~%unset output;~%set output '|~a';~%};",%base64_cmd%,%base64_cmd%);
+
+mwdrawxd(func, descgraf, mutate):=
+  block([formato, formatohtml, result, unsafe_options],
     if not get('draw,'version) then load("draw"),
+    /* each unsafe option gives an attacker an opportunity to gain free access to gnuplot--hence a shell--via a trick like that below, so filter them out */
+    unsafe_options: '[user_preamble,gnuplot_file_name,data_file_name],
+    descgraf:sublist(descgraf,lambda([x], not(is(not(atom(x)) and op(x)="=" and member(lhs(x),unsafe_options))))),
     descgraf: append([dimensions=[400,300],
-                      gnuplot_file_name = concat(%codigo_usuario%,".gnuplot"),
-                      data_file_name = concat(%codigo_usuario%,".data"),
-                      file_name  = concat(maxima_tempdir,
-                                          "/",
-                                          %codigo_usuario%,
-                                          ".g.",
-                                          %num_proceso%,
-                                          ".",
-                                          %num_sentence%,
-                                          ".",
-                                          %num_grafico%) ],
-                     descgraf),
+                      /* pipe the gnuplot output through base64 */
+                      file_name = concat("|",%base64_cmd%,"' # "),
+                      gnuplot_file_name = gplt_fn(),
+                      data_file_name = data_fn()],
+                      descgraf),
+    /* get the terminal passed by command, if any */
+    for r in descgraf do
+    if not(atom(r)) and op(r)="=" and lhs(r)='terminal then formato:rhs(r),
     /* If terminal is not specified, force svg */
-    for elem in descgraf do
-       if part(elem,1) = 'terminal and 
-          member(part(elem,2), ['png, 'gif, 'animated_gif, 'jpg, 'svg])
-         then (haiterm: true,
-               if part(elem,2) = 'png
-                 then formato: "png"
-               elseif part(elem,2) = 'jpg
-                 then formato: "jpg"
-               elseif member(part(elem,2), ['gif, 'animated_gif])
-                 then formato: "gif"
-               elseif part(elem,2) = 'svg
-                 then formato: "svg",
-               return()),
-    if not haiterm
-       then (formato: "svg",
-             descgraf: endcons(terminal = 'svg,
-               descgraf)),
-    with_stdout(
-      concat(maxima_tempdir,
-             "/",
-             %codigo_usuario%,
-             ".gr.",
-             %num_proceso%,
-             ".",
-             %num_sentence%,
-             ".txt"), 
-      print(concat("tmp/",
-                   %codigo_usuario%,
-                   ".g.",
-                   %num_proceso%,
-                   ".",
-                   %num_sentence%,
-                   ".",
-                   %num_grafico%,
-                   ".",
-                   formato))),
-    %num_grafico%: %num_grafico% + 1,
-    apply(func,descgraf))$
+    if member(formato,'[png,gif,jpg]) then formatohtml:formato
+    else if formato = 'animated_gif then formato:formatohtml:'gif
+    else if formato = 'pngcairo then formato:formatohtml:'png
+    else (formato : 'svg, formatohtml:"svg+xml", descgraf : endcons(terminal = 'svg, descgraf)),
+    printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,",formatohtml),
+    result : apply(func,descgraf),
+    print("\">"),
+    result)$
 
-Draw2d([descgraf]):= mwdrawxd('draw2d, descgraf) $
-Draw3d([descgraf]):= mwdrawxd('draw3d, descgraf) $
-Draw([descgraf])  := mwdrawxd('draw, descgraf) $
+Draw2d([descgraf]):= mwdrawxd('draw2d, descgraf, false) $
+Draw3d([descgraf]):= mwdrawxd('draw3d, descgraf, false) $
+Draw([descgraf])  := mwdrawxd('draw, descgraf, true) $
 
 /* Code for plot */
 /* 
@@ -98,50 +119,18 @@ Draw([descgraf])  := mwdrawxd('draw, descgraf) $
 */
 
 mwplotxd(func, descgraf):=
-  block([gptc: false, formato:"svg", cleandescgraf:[]],
-    for k in descgraf do
-      if not listp(k) or 
-         not member(first(k), ['png_file, 'svg_file, 'pdf_file, 'ps_file, 'gnuplot_term, 'gnuplot_out_file,
-                               'run_viewer ])
-        then (if not atom(k) and first(k)='gnuplot_png_term_command
-                then gptc:true,
-              cleandescgraf: endcons(k, cleandescgraf)),
+block([term_cmd:"set term pngcairo size 600,500", cleandescgraf:[], result, unsafe_options],
+    /* each unsafe option gives an attacker an opportunity to gain free access to gnuplot--hence a shell--via a trick like that below, so filter them out */
+    unsafe_options: '[png_file, svg_file, pdf_file, ps_file, gnuplot_term, gnuplot_out_file, run_viewer, gnuplot_preamble, gnuplot_postamble],
+    cleandescgraf:sublist(descgraf,lambda([x], not(is(not(atom(x)) and op(x)="[" and member(first(x),unsafe_options))))),
+    for k in descgraf do if not atom(k) and first(k)='gnuplot_png_term_command then term_cmd:second(k),
     cleandescgraf: append(cleandescgraf,
-                          [[gnuplot_out_file,  concat(%codigo_usuario%,".gnuplot")],
-                           [svg_file, concat(maxima_tempdir,
-                                             "/",
-                                             %codigo_usuario%,
-                                             ".g.",
-                                             %num_proceso%,
-                                             ".",
-                                             %num_sentence%,
-                                             ".",
-                                             %num_grafico%,
-                                             ".svg")] ] ),
-    if not gptc
-      then cleandescgraf: endcons([gnuplot_svg_term_command, "set term svg size 500,400"],
-                                  cleandescgraf),
-    with_stdout(
-      concat(maxima_tempdir,
-             "/",
-             %codigo_usuario%,
-             ".gr.",
-             %num_proceso%,
-             ".",
-             %num_sentence%,
-             ".txt"), 
-      print(concat("tmp/",
-                   %codigo_usuario%,
-                   ".g.",
-                   %num_proceso%,
-                   ".",
-                   %num_sentence%,
-                   ".",
-                   %num_grafico%,
-                   ".",
-                   formato))),
-    %num_grafico%: %num_grafico% + 1,
-    apply(func,cleandescgraf)  ) $
+                          [[gnuplot_script_file, gplt_fn()],
+                          [gnuplot_postamble, concat(term_cmd,"; ",rhs(output2stdout))]]), /* output is printed to STDOUT */
+    printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,",'png),
+    result : apply(func,cleandescgraf),
+    print("\">"),
+    result) $
 
 Plot2d([descgraf]):= (mwplotxd('plot2d, descgraf), 'plot2d) $
 Plot3d([descgraf]):= (mwplotxd('plot3d, descgraf), 'plot3d) $
@@ -159,25 +148,40 @@ Starplot([desc]) := Draw2d(apply(starplot_description, desc)) $
 
 Drawdf([params]) := Draw(apply('df_graphics, params))$
 
-/* output formats */
+/* Sanity */
+if gnuplot_command = "0" then (
+  mwdrawxd([rst]) := printf(false,"Draw is disabled."),
+  Plot2d([rst]) :=  printf(false,"plot is disabled."),
+  Plot3d([rst]) :=  printf(false,"plot is disabled."),
+  mwplotxd([rst]) := printf(false,"plot is disabled.")) $
 
-translate_into_tex(sentencias) :=
-  block(
-    print("start_maxima_output_tex_code:"),
-    map(lambda([%%lambda_argument%%],
-               %num_sentence%: %num_sentence% + 1,
-               %num_grafico%: 1,
-               tex(eval_string(%%lambda_argument%%))),
-        sentencias)) $
+/* defun and defmacro are tex-ed in `verbatim' environment, which is not understood by MathJaX */
+yamwi_tex(sx) := if atom(sx) or not(member(op(sx),{":=","::="})) then tex(sx)
+  else printf(true,"$$~a ~a ~a$$",tex1(lhs(sx)),tex1(op(sx)),tex1(rhs(sx))) $
 
-translate_into_print(sentencias) :=
-  block([res],
-    print("start_maxima_output_print_code:"),
-    map(lambda([%%lambda_argument%%],
-               %num_sentence%: %num_sentence% + 1,
-               %num_grafico%: 1,
-               res: eval_string(%%lambda_argument%%),
-               print("%%%"),
-               print(res),
-               print("%%%")),
-        sentencias)) $
+/* alt-display */
+load("alt-display.mac") $
+define_alt_display(yamwi_display2d(x),
+  block([?\*display\-labels\-p\*:false, nodisplay:" style='display:none;'"],
+    printf(true,"<tr><td class='output'><span class='output-label'>~a~a</span></td>~%",outchar,linenum),
+    printf(true,"<td class='output ascii'~a><pre class='ascii'>",if %output_mode%=0 then "" else nodisplay),
+    oned_display(x),
+    printf(true,"</pre></td>~%"),
+    printf(true,"<td class='output ascii-art'~a><pre class='ascii-art'>",if %output_mode%=1 then "" else nodisplay),
+    twod_display(x),
+    printf(true,"</pre></td>~%"),
+    printf(true,"<td class='output enhanced-ascii-art'~a><pre class='enhanced-ascii-art'>~%",if %output_mode%=2 then "" else nodisplay),
+    twod_display(x),
+    printf(true,"</pre></td>~%"),
+    printf(true,"<td class='output mathml'~a><span class='mathml'>",if %output_mode%=3 then "" else nodisplay),
+    mathml(second(x)),
+    printf(true,"</span></td>~%"),
+    printf(true,"<td class='output tex-mathjax'~a><span class='tex-mathjax'>~%",if %output_mode%=4 then "" else nodisplay),
+    yamwi_tex(second(x)),
+    printf(true,"</span></td></tr>~%")
+    ))$
+define_alt_display(yamwi_display1d(x),
+  (printf(true,"<tr><td><span class='input-label'>~a~a</span></td>~%<td class='inputcode interpreted'><pre class='interpreted'>~a</pre></td>~%",inchar,linenum,second(x)),
+    printf(true,"<td class='inputcode verbatim'><pre class='verbatim'>~a</pre></td></tr>~%",literal_input(x))))$
+set_alt_display(2,yamwi_display2d)$
+set_alt_display(1,yamwi_display1d)$

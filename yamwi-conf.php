@@ -1,12 +1,9 @@
 <?php
-$mode = 2; // 0 -> ASCII-Art output,
-           // 1 -> Binary TeX output,
+$mode = 2; // 0 -> Syntactic output,
+           // 1 -> ASCII-Art output,
            // 2 -> Enhanced ASCII-Art output,
-           // 3 -> Syntactic output
+           // 3 -> MathML,
            // 4 -> Remote TeX + MathJax
-	       // 5 -> MathML
-
-$mode1is4 = false;  // Set to true to dis-able Binary TeX output
 
 $max_file_time = 1;
 
@@ -20,7 +17,19 @@ $maxima_binary = '/usr/bin/maxima';
 
 $maxima_args = "";
 
+$gnuplot_binary = '/usr/bin/gnuplot';
+
+$gnuplot_args = "";
+
 $magic_key = "1dc53ea6b0ae1e618fc4e123238192b"; // CHANGE THIS!!
+
+$movie_muxer = 'webm'; // needs to be one of webm, mp4 (ogg does not work)
+
+$movie_is_embedded = 0; // webm can be 0 or 1; mp4 must be 0.
+
+$ffmpeg_binary = '/usr/bin/ffmpeg';
+
+$base64_cmd = '/usr/bin/base64 -w 0';
 
 //////////////
 // MESSAGES //

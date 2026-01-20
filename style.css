@@ -21,7 +21,7 @@ p{
   font-size:      75%; }
 pre{
   font-family:    Courier, monospace;}
-.input{
+.input-label{
   color:          darkred;
   font-size:      100%;
   font-weight:    bold;}
@@ -32,6 +32,7 @@ pre{
 .output{
   background-color: lightgray;
   color:          blue;
+  font-weight:    bold;
   font-size:      100%;}
 .print{
   font-size:      75%;
@@ -46,6 +47,23 @@ textarea{
     justify-content:	center;
     align-items:	center;
     margin:		auto;}
+.mathml{
+    font-size: large;
+    color:     black;}
+.output-label::before, .input-label::before{
+    content:"[";}
+.output-label::after, .input-label::after{
+    content:"] ";}
+tr.retrieve{
+    background-color: lightpink;
+    color:            black;}
+span.retrieve{
+    white-space:	pre;
+    font-family:	monospace;
+    display:		block;
+    margin:		25px;
+    font-weight:	bold;
+    font-style:		oblique;}
 
 /* CORRECTION : Séparer les règles */
 .menu-row {
