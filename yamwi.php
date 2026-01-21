@@ -254,7 +254,7 @@ function gtlt ($str) {
   return str_replace(">", "&gt;", str_replace("<", "&lt;", $str));}
 
 // prepare output
-function prepare_output($out, $sentences) {
+function prepare_output($out) {
   global $key, $nproc;
   // read and clean Maxima output
   $subout = re_process(trim($out));
@@ -382,7 +382,7 @@ function calculate () {
       write_form();
       alert ($an_error);}
     else
-      prepare_output($out, $val);
+      prepare_output($out);
 
     // cleaning old files
     remove_old_files ();}
