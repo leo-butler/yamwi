@@ -52,8 +52,11 @@ draw_multiple_plots(drawer,fname,term,lst,[opts]) := block([file,files,n:length(
     apply(drawer,[p,optsf])),
   map(lambda([x],concat(x,".",term)),files)),
 /* see https://trac.ffmpeg.org/wiki/Slideshow */
-Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,output_file,linel:linel],
-  if ffmpeg_options=[] then ffmpeg_options:["-vf framerate=fps=30:interp_start=64:interp_end=192:scene=100"],
+Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,output_file,linel:linel,ifr,ofr],
+  [ifr,ofr]:subst(ffmpeg_options,'[ifr,ofr]),
+  ifr:if numberp(ifr) and ifr>0 then ifr else 30,
+  ofr:if numberp(ofr) and ofr>0 then ofr else 30,
+  ffmpeg_options:[printf(false,"-vf framerate=fps=~a:interp_start=64:interp_end=192:scene=100",ofr)],
   drawer:subst([Draw2d=draw2d,Draw3d=draw3d,Draw=draw],drawer),
   term:'png,
   /* in yamwi.php, maxima_tempdir is hard-coded to be ./tmp */
