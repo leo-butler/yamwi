@@ -35,6 +35,7 @@
 <option value="">Simplify...</option>
 <option value="expand((x+1)^2);">Expand</option>
 <option value="factor(x^3-1);">Factor</option>
+<option value="gfactor(x^2+1);">Complex factorization </option>
 <option value="ratsimp((x^2-1)/(x-1));">Simplify fraction</option>
 <option value="trigsimp(cos(x)^2+sin(x)^2);">Simplify trig</option>
 <option value="radcan(sqrt(8)+log(16));">Simplify log/roots</option>
@@ -42,6 +43,8 @@
 <option value="fullratsimp((x^3-1)/(x^2-1));">Full simplify</option>
 <option value="num((x^2-1)/(x+1));">Numerator</option>
 <option value="denom((x^2-1)/(x+1));">Denominator</option>
+<option value="rectform(3*exp(%pi*%i/3));">Cartesian form</option>
+<option value="polarform(1+%i);">Polar form</option>
 </select>
 
 <select id="menu-solve" class="cmd-menu">
@@ -53,6 +56,10 @@
 <option value="linsolve([x+y=5,3*x-y=1],[x,y]);">Linear system</option>
 <option value="algsys([x^2+y=5,x*y=2],[x,y]);">Solve system</option>
 <option value="subst(a+b,x,x^2);">Substitution</option>
+<option value="ode2('diff(y,x)-y=x^2,y,x);">First-Order ODE</option>
+<option value="ic1(ode2('diff(y,x)-y=2,y,x),x=0,y=1);">First-Order ODE IVP</option>
+<option value="ode2('diff(y,x,2)+y=0,y,x);">Second-Order ODE</option>
+<option value="ic2(ode2('diff(y,x,2)+y=0,y,x),x=0,y=1,'diff(y,x)=1);">Second-Order ODE IVP</option>
 </select>
 
 <select id="menu-deriv" class="cmd-menu">
@@ -84,6 +91,22 @@
 <option value="draw2d(parametric(cos(t),sin(t),t,0,2*%pi),xrange=[-1.5,1.5],yrange=[-1.5,1.5],grid=true,xaxis=true,yaxis=true,line_width=1);">2D parametric</option>
 <option value="draw2d(grid=true,line_width=2,color=red,implicit(x^3-3*x*y^2-1=0,x,-2,2,y,-2,2),grid=true,xaxis=true,yaxis=true);">2D implicit</option>
 <option value="draw3d(surface_hide=true,palette=[blue,cyan,green,yellow,orange,red],explicit(sin(sqrt(x^2+y^2))/(sqrt(x^2+y^2)),x,-6,6,y,-6,6));">3D surface</option>
+<option value="draw3d(surface_hide=true,parametric_surface((2-0.2*cos(phi))*sin(theta),(2-0.2*cos(phi))*cos(theta),0.2*sin(phi),phi,0,2*%pi,theta,0,2*%pi));">3D parametric surface</option>
+<option value="draw3d(nticks=200,parametric((2-0.5*cos(t))*sin(t/4),(2-0.5*cos(t))*cos(t/4),0.5*sin(t),t,0,8*%pi)); ">3D parametric curve</option>
+<option value="draw2d(grid=true,xrange=[-10,10],yrange=[-5,10],point_type=7,points([[-3,1],[2,5]]));">Plot points</option>
+<option value="draw2d(xrange=[-10,10],yrange=[-5,10],point_type=5,points_joined = true,points([[-3,1],[2,5],[5,-2],[-3,1]]));">Plot lines</option>
+</select>
+
+<select id="menu-matrix" class="cmd-menu">
+<option value="">Matrix...</option>
+<option value="M:matrix([2,1,0],[1,0,1],[0,1,4]);">Define matrix</option>
+<option value="invert(matrix([2,1,0],[1,0,1],[0,1,4]));">Inverse</option>
+<option value="transpose(matrix([-2,1,5],[1,8,4],[0,1,4]));">Transpose</option>
+<option value="matrix([1,2],[3,4]).matrix([-1,5],[0,8]);">Multiply</option>
+<option value="determinant(matrix([2,1,0],[1,0,1],[0,1,4]));">Determinant</option>
+<option value="expand(charpoly(matrix([2,1,0],[1,0,1],[0,1,4]),x)); ">Characteristic Polynomial</option>
+<option value="eigenvalues(matrix([6,-11,6],[1,0,0],[0,1,0]));">Eigenvalues</option>
+<option value="eigenvectors(matrix([6,-11,6],[1,0,0],[0,1,0]));">Eigenvectors</option>
 </select>
 
 </div>

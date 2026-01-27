@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     make_menu_action("menu-deriv");
     make_menu_action("menu-ana");
     make_menu_action("menu-plot");
+    make_menu_action("menu-matrix");
 });
 
 //////////////////////////////////////////////////////////////////////
