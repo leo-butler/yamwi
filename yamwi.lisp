@@ -106,3 +106,45 @@
      (cond(filename(terpri texport); and drain port if not terminal
 		   (close texport)))
      (return mexplabel)))
+
+;; asdf
+(require 'asdf      #+clisp #P"/usr/lib/clisp-2.49.95+/asdf/asdf.lisp")
+;; cl-base64
+;; (require 'cl-base64 #+clisp #p"/usr/share/common-lisp/source/cl-base64/cl-base64.asd")
+;; (asdf:oos 'asdf:compile-op '#:cl-base64)
+;; (asdf:oos 'asdf:load-op    '#:cl-base64)
+
+;; over-write $system
+;; we assume args is a single string
+
+(defvar *system-fun* (symbol-function 'system-impl))
+
+(defmfun $system (&rest args)
+  (cond ((> (length args) 1)
+         ;;(apply *system-fun* args))
+         ($system (format nil "~{~a ~}" args)))
+        (t
+         #+gcl
+	 (let ((output (si::fp-output-stream (si:run-process (first args) (rest args)))))
+           (loop for c = (read-char-no-hang output nil)
+                 while c do
+		   (format t "~c" c)))
+         #+(or clisp ecl sbcl)
+	 (let ((args (remove-if #'(lambda(s) (or (string= s "-persist") (string= s ""))) (cdr ($split ($sremove "\"" (car args))))))
+	       (inlabel (makelabel $inchar)))
+	   ;; (unless (member (aref (car args) 0) '(#\/ #\.))
+	   ;;   (push "/usr/bin/env" args))
+	   (when (and (string= (car args) "/bin/sh") (string= (cadr args) "-c"))
+	     (setq args (list "/bin/sh" "-c" (format nil "~{~a~^ ~}" (cddr args)))))
+           (with-open-file (f #p"./tmp/run.log" :direction :output :if-exists :append :if-does-not-exist :create)
+             (format f "system: args = ~{'~a' ~}~%" args))
+	   (multiple-value-bind (output error code)
+	     (uiop/run-program:run-program args :output :string :error-output :string)
+	     ($put inlabel output '$system_output)
+	     ($put inlabel error  '$system_error )
+	     ($put inlabel code   '$system_code  )
+	     ))
+	 ;; #-(or clisp ecl sbcl gcl)
+	 ;; (merror "system is not implemented for this Lisp.")
+	 ))
+  '$done)
