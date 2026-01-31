@@ -118,13 +118,8 @@ Draw3d([descgraf]):= mwdrawxd('draw3d, descgraf, false) $
 Draw([descgraf])  := mwdrawxd('draw, descgraf, true) $
 
 /* Code for plot */
-/* 
-   Example controlling graphic dimensions:
-   plot2d (sin(x), [x, -%pi, %pi], [gnuplot_png_term_command, "set term pngcairo size 800,800"])$
-*/
-
 mwplotxd(func, descgraf):=
-block([term_cmd:"set term pngcairo size 600,500", cleandescgraf:[], result, unsafe_options, inputlabel:?makelabel(inchar)],
+block([term_cmd:"set term svg size 600,500", cleandescgraf:[], result, unsafe_options, inputlabel:?makelabel(inchar)],
     /* each unsafe option gives an attacker an opportunity to gain free access to gnuplot--hence a shell--via a trick like that below, so filter them out */
     unsafe_options: '[png_file, svg_file, pdf_file, ps_file, gnuplot_term, gnuplot_out_file, run_viewer, gnuplot_preamble, gnuplot_postamble],
     cleandescgraf:sublist(descgraf,lambda([x], not(is(not(atom(x)) and op(x)="[" and member(first(x),unsafe_options))))),
@@ -132,7 +127,7 @@ block([term_cmd:"set term pngcairo size 600,500", cleandescgraf:[], result, unsa
                           [[gnuplot_script_file, gplt_fn()],
                           [gnuplot_default_term_command,term_cmd],
                           [gnuplot_postamble, concat(term_cmd,"; ",rhs(output2stdout))]]), /* output is printed to STDOUT */
-    printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,",'png),
+    printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,","svg+xml"),
     result : apply(func,cleandescgraf),
     printf(true,"~a",get(inputlabel,'system_output)),
     print("\">"),
