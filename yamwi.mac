@@ -52,7 +52,7 @@ draw_multiple_plots(drawer,fname,term,lst,[opts]) := block([file,files,n:length(
     apply(drawer,[p,optsf])),
   map(lambda([x],concat(x,".",term)),files)),
 /* see https://trac.ffmpeg.org/wiki/Slideshow */
-Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,output_file,linel:linel,ifr,ofr],
+Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,output_file,linel:linel,ifr,ofr,inputlabel:?makelabel(inchar)],
   [ifr,ofr]:subst(ffmpeg_options,'[ifr,ofr]),
   ifr:if numberp(ifr) and ifr>0 then ifr else 30,
   ofr:if numberp(ofr) and ofr>0 then ofr else 30,
@@ -64,11 +64,12 @@ Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,out
   output_file:concat(fname,"0.",%movie_muxer%),
   files:draw_multiple_plots(drawer,fname,%movie_term%,paramlist),
   /* ffmpeg hangs if STDIN != /dev/null */
-  cmd:if %movie_is_embedded%=1 then printf(false,"/bin/sh -c '~a -y -framerate ~a -f image2 -i ~a%08d.~a ~{~a ~} -f ~a - | ~a' < /dev/null",%ffmpeg_binary%,ifr,fname,term,ffmpeg_options,%movie_muxer%,%base64_cmd%)
-    else printf(false,"/bin/sh -c '~a -y -framerate ~a -f image2 -i ~a%08d.~a ~{~a ~} ~a' < /dev/null",%ffmpeg_binary%,ifr,fname,term,ffmpeg_options,output_file),
+  cmd:if %movie_is_embedded%=1 then printf(false,"/bin/sh -c ~a -y -framerate ~a -f image2 -i ~a%08d.~a ~{~a ~} -f ~a - | ~a",%ffmpeg_binary%,ifr,fname,term,ffmpeg_options,%movie_muxer%,%base64_cmd%)
+    else printf(false,"~a -y -framerate ~a -f image2 -i ~a%08d.~a ~{~a ~} ~a",%ffmpeg_binary%,ifr,fname,term,ffmpeg_options,output_file),
   if %movie_is_embedded%=1 then (
     printf(true,"</pre></td></tr><tr><td></td><td><video controls autoplay width=\"100%\" loop=true><source type=\"video/~a\" src=\"data:video/~:*~a;charset=us-ascii;base64,",%movie_muxer%),
     system(cmd),
+    printf(true,"~a",get(inputlabel,'system_output)),
     printf(true,"\"/>Your browser does not support HTML video.</video></td></tr>"))
   else (
     printf(true,"</pre></td></tr><tr><td></td><td><video controls autoplay width=\"100%\" loop=true><source type=\"video/~a\" src=\"~a\"/>",%movie_muxer%,output_file),
@@ -87,7 +88,7 @@ png pngcairo gif animated_gif jpg svg (default: svg)
 output2stdout : user_preamble = printf(false,"base64out='|~a';~%if (GPVAL_OUTPUT ne base64out) {~%unset output;~%set output '|~a';~%};",%base64_cmd%,%base64_cmd%);
 
 mwdrawxd(func, descgraf, mutate):=
-  block([formato, formatohtml, result, unsafe_options],
+block([formato, formatohtml, result, unsafe_options, inputlabel:?makelabel(inchar)],
     if not get('draw,'version) then load("draw"),
     /* each unsafe option gives an attacker an opportunity to gain free access to gnuplot--hence a shell--via a trick like that below, so filter them out */
     unsafe_options: '[user_preamble,gnuplot_file_name,data_file_name],
@@ -108,6 +109,7 @@ mwdrawxd(func, descgraf, mutate):=
     else (formato : 'svg, formatohtml:"svg+xml", descgraf : endcons(terminal = 'svg, descgraf)),
     printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,",formatohtml),
     result : apply(func,descgraf),
+    printf(true,"~a",get(inputlabel,'system_output)),
     print("\">"),
     result)$
 
@@ -122,16 +124,17 @@ Draw([descgraf])  := mwdrawxd('draw, descgraf, true) $
 */
 
 mwplotxd(func, descgraf):=
-block([term_cmd:"set term pngcairo size 600,500", cleandescgraf:[], result, unsafe_options],
+block([term_cmd:"set term pngcairo size 600,500", cleandescgraf:[], result, unsafe_options, inputlabel:?makelabel(inchar)],
     /* each unsafe option gives an attacker an opportunity to gain free access to gnuplot--hence a shell--via a trick like that below, so filter them out */
     unsafe_options: '[png_file, svg_file, pdf_file, ps_file, gnuplot_term, gnuplot_out_file, run_viewer, gnuplot_preamble, gnuplot_postamble],
     cleandescgraf:sublist(descgraf,lambda([x], not(is(not(atom(x)) and op(x)="[" and member(first(x),unsafe_options))))),
-    for k in descgraf do if not atom(k) and first(k)='gnuplot_png_term_command then term_cmd:second(k),
     cleandescgraf: append(cleandescgraf,
                           [[gnuplot_script_file, gplt_fn()],
+                          [gnuplot_default_term_command,term_cmd],
                           [gnuplot_postamble, concat(term_cmd,"; ",rhs(output2stdout))]]), /* output is printed to STDOUT */
     printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,",'png),
     result : apply(func,cleandescgraf),
+    printf(true,"~a",get(inputlabel,'system_output)),
     print("\">"),
     result) $
 
@@ -165,7 +168,10 @@ yamwi_tex(sx) := if atom(sx) or not(member(op(sx),{":=","::="})) then tex(sx)
 /* alt-display */
 load("alt-display.mac") $
 define_alt_display(yamwi_display2d(x),
-  block([?\*display\-labels\-p\*:false, nodisplay:" style='display:none;'"],
+  block([?\*display\-labels\-p\*:false, nodisplay:" style='display:none;'",inputlabel:?makelabel(inchar),err],
+    err:get(inputlabel,system_error),
+    if is(err#false) then
+    printf(true,"<tr class='output system-error'><td><span class='output-label'>~a~a</span></td><td class='error'><span class='error-message'>System error message: ~a</span></td></tr>~%",outchar,linenum,err),
     printf(true,"<tr><td class='output'><span class='output-label'>~a~a</span></td>~%",outchar,linenum),
     printf(true,"<td class='output ascii'~a><pre class='ascii'>",if %output_mode%=0 then "" else nodisplay),
     oned_display(x),
