@@ -122,7 +122,8 @@ $dangerous_words =
    // Prevent access to functions/variables in yamwi.mac
    'file_search_maxima','file_search_lisp','%num_sentence%','%num_grafico%','mwdrawxd','Draw2d','Draw3d','Draw','mwplotxd','Plot2d','Plot3d','Scatterplot','Histogram','Barsplot','Piechart','Boxplot','Starplot','Drawdf','translate_into_tex','translate_into_print','yamwi_display','oned_display','twod_display','mathml','set_alt_display','set_prompt','reset_displays',
    'maxima_tempdir', 'maxima_userdir', '%num_proceso%', '%codigo_usuario%', '%dir_sources%', '%movie_muxer%', '%movie_is_embedded%', '%ffmpeg_binary%', '%base64_cmd%', '%output_mode%',
-   'gnuplot_command',
+   // Prevent access to gnuplot-related variables/settings
+   'gnuplot_',
    // not available
    'plotdf', 'showtime', 'julia', 'mandelbrot'
    );
