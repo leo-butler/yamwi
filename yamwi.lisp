@@ -31,17 +31,18 @@
 	  (t ;;consp
 	   (setq *parse-tyi* (cdr tem))
 	   (car tem)))))
-(defvar $input_char_stream '())
+(defvar *input-char-stream* '())
 (defun parse-tyi ()
   (let ((x (parse-tyi0)))
-    (if x (push x $input_char_stream))
+    (if x (push x *input-char-stream*))
     x))
 (defun $literal_input (x)
+  (declare (special *input-char-stream*))
   (let ((c-tag (cadr x)))
-    (setf (get 'vinput c-tag) (reverse $input_char_stream)
-	  $input_char_stream  '())
+    ;; (format t "~%~%c-tag = ~a~%input-char-stream = ~{~a~}~%" c-tag (reverse *input-char-stream*))
+    (setf (get 'vinput c-tag) (reverse *input-char-stream*)
+	  *input-char-stream*  '())
     (coerce (get 'vinput c-tag) 'string)))
-
 
 ;; patches to lurkmathml
 ;; `mfenced' is an unsupported mathml element
