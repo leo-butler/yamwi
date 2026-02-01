@@ -37,9 +37,20 @@ pre{
   font-weight:    bold;}
 .output{
   background-color: lightgray;
+  align-items:    center;
+  justify-content:center;
   color:          blue;
   font-weight:    bold;
   font-size:      100%;}
+pre.enhanced-ascii-art, pre.ascii-art, pre.ascii {
+    background-color:    lightgray;
+    height:              100%;
+    margin-top:          4px;
+    margin-bottom:       4px;}
+pre.verbatim, pre.interpreted{
+    height:              100%;
+    margin-top:          0px;
+    margin-bottom:       4px;}
 .print{
   font-size:      75%;
   font-style:     italic;}

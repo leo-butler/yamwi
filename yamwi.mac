@@ -163,7 +163,7 @@ yamwi_tex(sx) := if atom(sx) or not(member(op(sx),{":=","::="})) then tex(sx)
 /* alt-display */
 load("alt-display.mac") $
 define_alt_display(yamwi_display2d(x),
-  block([?\*display\-labels\-p\*:false, nodisplay:" style='display:none;'",inputlabel:?makelabel(inchar),err],
+  block([?\*display\-labels\-p\*:false, nodisplay:" style='display:none;'",inputlabel:?makelabel(inchar),err, leftjust:true],
     err:get(inputlabel,system_error),
     if is(err#false) then
     printf(true,"<tr class='output system-error'><td><span class='output-label'>~a~a</span></td><td class='error'><span class='error-message'>System error message: ~a</span></td></tr>~%",outchar,linenum,err),
