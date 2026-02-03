@@ -49,7 +49,8 @@ draw_multiple_plots(drawer,fname,term,lst,[opts]) := block([file,files,n:length(
     i:i+1,file:printf(false,"~a~8,'0d",fname,i),
     files:append(files,[file]),
     optsf:append(opts,[terminal=term,file_name=file,gnuplot_file_name=gplt_fn(),data_file_name=data_fn()]),
-    apply(drawer,[p,optsf])),
+    apply('set_draw_defaults,optsf),
+    apply(drawer,[p])),
   map(lambda([x],concat(x,".",term)),files)),
 /* see https://trac.ffmpeg.org/wiki/Slideshow */
 Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,output_file,linel:linel,ifr,ofr,inputlabel:?makelabel(inchar)],
