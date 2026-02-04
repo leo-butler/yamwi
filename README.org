@@ -162,13 +162,15 @@ License). For more information, read file LICENSE.
 The *Yamwi* development team is pleased to announced a new release (v. 2026-02-03).
 
 *Yamwi* ([[https://github.com/leo-butler/yamwi/][Yet Another Maxima Web Interface]]) is a web interface, based
-on Linux+Apache+Php, to the computer algebra system [[https://maxima.sourceforge.io/][Maxima]].
+on Linux+Apache+Php, to the computer algebra system [[https://maxima.sourceforge.io/][Maxima]]. Originally
+developed by Mario Rodríguez Riotorto and hosted on Sourceforge, the
+project is being continued by a new team of developers on Github.
 
 Maxima is the free version (GPL) of the Macsyma system developed in
 Lisp at MIT beginning in the late nineteen sixties; other similar
 programs (Mathematica, Maple) got inspired by it in the
 eighties. Since 2000 Maxima is part of Sourceforge and maintained by
-an international team of programers.
+an international team of programmers.
 
 *** Changes to the User-interface
 Some of the recent changes in the UI include:
@@ -214,8 +216,22 @@ Some of the recent changes in the UI include:
  monitor it. This software comes without any warranty (see the LICENSE
  file for more details).
 
+*** Lisps supported
+Maxima runs on a variety of Common Lisp implementations. As of this
+release, using a Debian 13 server installed on a virtual machine, the
+following implementations are supported:
+
+- SBCL, ECL :: fully supported.
+- Clisp :: unsupported. There are a few issues to be overcome, although Clisp works when Yamwi is run on ~localhost~.
+  1. There are filesystem-access issues when run as part of Apache. Patches are invited.
+  2. Clisp's implementation of ~run-program~ is broken, without good work-arounds.
+- GCL :: unsupported. There are multiple issues preventing the use of GCL:
+  1. Recent versions of Maxima cannot be built with GCL.
+  2. The Debian GCL-based Maxima package cannot compile and load the ~draw~ package.
+  3. GCL's implementation of ~run-program~ (~si:run-process~) is also faulty.
+
 *** Download
-Download the tar.gz release file from the project webpage: [[https://github.com/leo-butler/yamwi]].
+Download the tar.gz release file from the project webpage: [[https://github.com/leo-butler/yamwi/releases/]].
 
 * Contact
 
