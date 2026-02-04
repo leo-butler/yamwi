@@ -181,7 +181,7 @@ I got the latest debian image, the =sha512= sums, and then did a check:
 The =qemu= system must be installed. I installed the =qemu-system= package from Debian testing.
 I have a script lying around:
 
-#+begin_src sh :tangle ./yamwi-vm.sh :exports code :eval no-export
+#+begin_src shell :tangle ./yamwi-vm.sh :exports code :eval no-export
   #!/bin/bash
   set -aex
 
@@ -193,6 +193,7 @@ I have a script lying around:
   	    -device e1000,netdev=net0 -netdev user,id=net0,hostfwd=tcp::6555-:22,\
   	    hostfwd=tcp::5913-:5913,hostfwd=tcp::9580-:80,hostfwd=tcp::9943-:443 \
   	    -monitor none -vnc 127.0.0.1:11,password=off \
+  	    -echr 0x02 \
               -virtfs local,path=/etc,mount_tag=host0,security_model=passthrough,id=host0,readonly \
   	    #-runas qemu
 #+end_src
