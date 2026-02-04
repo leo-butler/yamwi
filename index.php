@@ -95,8 +95,9 @@
 <option value="draw3d(nticks=200,parametric((2-0.5*cos(t))*sin(t/4),(2-0.5*cos(t))*cos(t/4),0.5*sin(t),t,0,8*%pi)); ">3D parametric curve</option>
 <option value="draw2d(grid=true,xrange=[-10,10],yrange=[-5,10],point_type=7,points([[-3,1],[2,5]]));">Plot points</option>
 <option value="draw2d(xrange=[-10,10],yrange=[-5,10],point_type=5,points_joined = true,points([[-3,1],[2,5],[5,-2],[-3,1]]));">Plot lines</option>
-<option value="draw_movie(lambda([c,options],
-  draw2d(options, explicit(sin(x)+c,x,-%pi,%pi),yrange=[-2,2])),makelist(c/30,c,-30,30));">Animation</option>
+<option value="draw_movie(lambda([param],
+        draw2d(explicit(sin(x)+param,x,-%pi,%pi),yrange=[-2,2])),
+        makelist(param/30,param,-30,30));">Animation</option>
 </select>
 
 <select id="menu-matrix" class="cmd-menu">
