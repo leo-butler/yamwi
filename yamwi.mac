@@ -164,7 +164,11 @@ yamwi_tex(sx) := if atom(sx) or not(member(op(sx),{":=","::="})) then tex(sx)
 /* alt-display */
 load("alt-display.mac") $
 define_alt_display(yamwi_display2d(x),
-  block([?\*display\-labels\-p\*:false, nodisplay:" style='display:none;'",inputlabel:?makelabel(inchar),err, leftjust:true],
+  block([?\*display\-labels\-p\*:false, nodisplay:" style='display:none;'",inputlabel:?makelabel(inchar),err, leftjust:true, error_output:get_output_stream_string(?\*error\-output\*)],
+    if slength(error_output)>0 then (
+      printf(true,"<tr><td><span class='input-label'>~a</span></td>",inputlabel),
+      printf(true,"<td class='inputcode error'><pre class='verbatim'>~a</pre></td></tr>~%",literal_input(x)),
+      printf(true,"<tr class='output error'><td>Maxima Error:</td><td><pre class='maxima-error'>~a</pre></td></tr>~%",error_output)),
     err:get(inputlabel,system_error),
     if is(err#false) then
     printf(true,"<tr class='output system-error'><td><span class='output-label'>~a~a</span></td><td class='error'><span class='error-message'>System error message: ~a</span></td></tr>~%",outchar,linenum,err),

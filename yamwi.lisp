@@ -1,3 +1,6 @@
+;; Make a string-stream for *ERROR-OUTPUT*, so that we can inspect it.
+(setf *error-output* (make-string-output-stream))
+
 ;; RETRIEVE is the function used to ask questions of the user.
 ;; We redefine it here to return print the question and then throw to the tag macsyma-quit.
 ;; This halts further batch-ing of the script, but allows previously computed results to be printed
