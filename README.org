@@ -235,8 +235,8 @@ Download the tar.gz release file from the project webpage: [[https://github.com/
 
 * Contact
 
-For bug reports, suggestions or collaboration, feel free to contact me at
-[[https://github.com/leo-butler/yamwi/issues]].
+For bug reports, suggestions or collaboration, feel free to contact
+the project at [[https://github.com/leo-butler/yamwi/issues]].
 
 * Installing on a VM                                               :noexport:
 Let's set up a virtual machine (VM) to run =yamwi= in. I chose Debian,
