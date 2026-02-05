@@ -32,17 +32,26 @@
 	   (setq *parse-tyi* (cdr tem))
 	   (car tem)))))
 (defvar *input-char-stream* '())
+(defvar *collect-input* t "If T, then PARSE-TYI collects input; otherwise, not.")
 (defun parse-tyi ()
   (let ((x (parse-tyi0)))
-    (if x (push x *input-char-stream*))
+    (and *collect-input* x (push x *input-char-stream*))
     x))
 (defun $literal_input (x)
   (declare (special *input-char-stream*))
   (let ((c-tag (cadr x)))
-    ;; (format t "~%~%c-tag = ~a~%input-char-stream = ~{~a~}~%" c-tag (reverse *input-char-stream*))
-    (setf (get 'vinput c-tag) (reverse *input-char-stream*)
+    ;;(format t "~%~%c-tag = ~a~%input-char-stream = ~{~a~}~%" c-tag (reverse *input-char-stream*))
+    (setf (get 'vinput c-tag) (format nil "~{~a~}" (reverse *input-char-stream*))
 	  *input-char-stream*  '())
-    (coerce (get 'vinput c-tag) 'string)))
+    (get 'vinput c-tag)))
+
+;; We need to turn off the collection of input characters inside of BATCHLOAD-STREAM
+;; Thanks to Jinsong Zhao, https://sourceforge.net/p/maxima/mailman/message/59292578/
+(defvar *batchload-stream-fun* (symbol-function 'batchload-stream))
+(defun batchload-stream (in-stream &key autoloading-p)
+  (declare (special *collect-input* *batchload-stream-fun*))
+  (let (*collect-input*)
+    (funcall *batchload-stream-fun* in-stream :autoloading-p autoloading-p)))
 
 ;; patches to lurkmathml
 ;; `mfenced' is an unsupported mathml element
