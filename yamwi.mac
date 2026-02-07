@@ -6,7 +6,13 @@
 linel : slength(concat(maxima_tempdir,"/",%codigo_usuario%,".mac")) + 10;
 
 /* texput */
-texput(matrix,lambda([expr], printf(false,"\\begin{bmatrix}~%~{~{~a~^&~}~^\\cr~}~%\\end{bmatrix}",map(lambda([row],map(tex1,row)),args(expr)))));
+(
+  nrows(x) := length(args(x)),
+  ncols(x) := length(first(x)),
+  texmatrix(x) := block([r:nrows(x),c:ncols(x)],
+    if r>c then concat(texmatrix(transpose(x)),"^T")
+    else printf(false,"\\begin{bmatrix}~%~{~{~a~^&~}~^\\cr{}~}~%\\end{bmatrix}",map(lambda([row],map(tex1,row)),args(x)))),
+  texput(matrix,texmatrix));
 texput(?rat,lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
 texput("/",lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
 texput(nounify(diff), lambda([expr],block([Y,X,n], [Y,X,n] : args(expr), if n=1 then printf(false,"\\dfrac{d\\,}{d{~a}}{~a}",tex1(X),tex1(Y)) else printf(false,"\\dfrac{d^{~a}\\,}{d{~a}^{~a}}{~a}",n,tex1(X),n,tex1(Y))))) ;
