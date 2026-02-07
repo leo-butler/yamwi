@@ -21,8 +21,8 @@ tex_exp(expr) := block([b,e],
   [b,e] : args(expr),
   if e=-1 then printf(false,"\\dfrac{1}{~a} ",tex1(b))
   else if atom(b) then printf(false,"{~a}^{~a}",tex1(b),tex1(e))
-  else printf(false,"\\left(~a\\right)^{~a}",tex1(b),tex1(e))) ,
-texput("^",tex_exp) ,
+  else printf(false,"\\left(~a\\right)^{~a}",tex1(b),tex1(e))) $
+texput("^",tex_exp) $
 
 /* add paths to package folder */
 
