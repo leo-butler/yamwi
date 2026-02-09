@@ -160,3 +160,19 @@
 	 ;; (merror "system is not implemented for this Lisp.")
 	 ))
   '$done)
+
+;; Epilog: yamwi.php looks for <!--END--> tag in output
+(setq *maxima-epilog*   (format nil "</table></div>~%<!--END-->~%"))
+
+;; Wrapper around `batch'
+;; yamwi.php looks for <!--START--> tag in output
+(defun $yamwi_batch(filename)
+  (let ((*maxima-quiet* t)
+	(*read-base* 10.)
+	(*maxima-prolog* (format nil "<!--START-->~%<div id=\"maxima-div\"><table id=\"maxima-output\" class=\"maxima-output\">~%<tr id='maxima-banner'><td></td><td><pre>~%")))
+    (maxima-banner)
+    (format t "</pre></td></tr>~%")
+    (mfuncall '$batch filename)
+    'end_of_file
+    ))
+
