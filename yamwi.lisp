@@ -42,7 +42,7 @@
     x))
 (defun $literal_input (x)
   (declare (special *input-char-stream*))
-  (let ((c-tag (cadr x)))
+  (let ((c-tag (if (atom x) x (cadr x))))
     ;;(format t "~%~%c-tag = ~a~%input-char-stream = ~{~a~}~%" c-tag (reverse *input-char-stream*))
     (setf (get 'vinput c-tag) (format nil "~{~a~}" (reverse *input-char-stream*))
 	  *input-char-stream*  '())
