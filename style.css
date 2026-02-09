@@ -81,6 +81,11 @@ span.retrieve{
     margin:		25px;
     font-weight:	bold;
     font-style:		oblique;}
+#maxima-banner{
+    color: black;
+    font-family: monospace;
+    display: block;
+    background-color: #fd8;
 
 /* CORRECTION : Séparer les règles */
 .menu-row {
