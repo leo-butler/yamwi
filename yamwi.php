@@ -352,7 +352,7 @@ function calculate () {
   fclose($fich);
 
   // call Maxima in batch mode
-  $maxima_command = $maxima_binary . ' ' . $maxima_args . ' --init-mac ' . $yamwi_setup_mac . ' --batch-string='."'".'yamwi_batch("'.$yamwi_mac.'");'."'";
+  $maxima_command = $maxima_binary . ' --very-quiet ' . $maxima_args . ' --init-mac ' . $yamwi_setup_mac . ' --batch-string='."'".'yamwi_batch("'.$yamwi_mac.'");'."'";
   if ($show_info) {echo '<u>Maxima command</u>: <pre>' . $maxima_command . '</pre><br/>';}
   // timelimit
   if (preg_match('/timelimit/',$timelimit_binary) == 1) {
