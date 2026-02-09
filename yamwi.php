@@ -316,7 +316,7 @@ function  re_process ($str) {
 
 // run Maxima and output results
 function calculate () {
-  global $key, $nproc, $input, $max_process_time, $message_time_process, $show_info,
+  global $key, $nproc, $input, $max_process_time, $message_time_process, $message_prog_error, $show_info,
       $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $gnuplot_binary, $gnuplot_args, $mode, $movie_muxer, $movie_is_embedded, $ffmpeg_binary, $base64_cmd;
   $nproc = $nproc + 1;
   check_maxima();
@@ -338,15 +338,21 @@ function calculate () {
       'load("'.$yamwi_path.'/yamwi.mac"),' .
       'load("'.$yamwi_path.'/yamwi.lisp"),' .
       '%output_mode%:' . $mode . ')$' . "\n" .
-      '(linenum:0,kill(labels),%%%)$' . "\n" . pre_process($input);
+      '(linenum:0,kill(labels),%%%)$';
 
-  // create batch file
-  $fich = fopen($yamwi_path.'/tmp/'.$key.'.mac', 'w');
+  $yamwi_setup_mac = $yamwi_path.'/tmp/'.$key.'-setup.mac';
+  $fich = fopen($yamwi_setup_mac, 'w');
   fwrite($fich, $val);
   fclose($fich);
 
+  // create batch file
+  $yamwi_mac = $yamwi_path.'/tmp/'.$key.'.mac';
+  $fich = fopen($yamwi_mac, 'w');
+  fwrite($fich, pre_process($input));
+  fclose($fich);
+
   // call Maxima in batch mode
-  $maxima_command = $maxima_binary . ' ' . $maxima_args . ' -b "'.$yamwi_path.'/tmp/'.$key.'.mac"';
+  $maxima_command = $maxima_binary . ' ' . $maxima_args . ' --init-mac ' . $yamwi_setup_mac . ' --batch-string='."'".'yamwi_batch("'.$yamwi_mac.'");'."'";
   if ($show_info) {echo '<u>Maxima command</u>: <pre>' . $maxima_command . '</pre><br/>';}
   // timelimit
   if (preg_match('/timelimit/',$timelimit_binary) == 1) {
@@ -365,32 +371,35 @@ function calculate () {
   // contains the path to the Maxima script; if not, it
   // means that the process has been interrupted by timelimit.
   // Note: this check is only valid if linel is large enough to avoid splitting the string.
-  $end_needle='"'.$yamwi_path . '/tmp/' . $key . '.mac"';
+  $end_needle='<!--END-->';
   $end=strrpos(trim($out),$end_needle,0);
+  $an_error = false;
   if (! $end === false) {
     $out = substr($out,0,$end);
     if ($show_info) {
-        echo '<u>end:</u>: '.$end.'<br/>';}
-    // The markers are dependent on output produced by yamwi_display*d
-    $end = strrpos($out,'<tr><td class=');
-    if (! $end === false) { $out=substr($out,0,$end); };
-    $start_needle='%%%)$</pre></td></tr>';
-    $out = substr($out,strrpos($out,$start_needle)+strlen($start_needle));
-
-    // write results
-    $an_error = error_detected($out);
-    if (! $an_error === false) {
+        echo '<u>end:</u> '.$end.'<br/>';}
+    $start_needle='<!--START-->';
+    $start=strrpos($out,$start_needle);
+    if ($show_info) {
+        echo '<u>start:</u> '.$start.'<br/>';}
+    if (! $start === false) {
+        $out = substr($out,$start+strlen($start_needle));
+        // write results
+        $an_error = error_detected($out);
+    }
+  };
+  if ($end === false || $start === false) {
       write_form();
-      alert ($an_error);}
-    else
-      prepare_output($out);
-
-    // cleaning old files
-    remove_old_files ();}
-
+      alert($message_prog_error);}
   else {
-    write_form();
-    alert($message_time_process); }}
+      if (! $an_error === false) {
+          write_form();
+          alert ($an_error);}
+      else
+          prepare_output($out);
+  }
+  // cleaning old files
+  remove_old_files ();}
 
 
 
