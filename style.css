@@ -55,6 +55,7 @@ pre.verbatim, pre.interpreted{
   font-size:      75%;
   font-style:     italic;}
 td{
+  max-width:      1000px;
   text-align:     left;
   vertical-align: top;}
 textarea{
