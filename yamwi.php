@@ -335,8 +335,6 @@ function calculate () {
       '%movie_is_embedded%: '.$movie_is_embedded.','.
       '%ffmpeg_binary%: "'.$ffmpeg_binary.'",'.
       '%base64_cmd%: "'.$base64_cmd.'",'.
-      'load("'.$yamwi_path.'/yamwi.mac"),' .
-      'load("'.$yamwi_path.'/yamwi.lisp"),' .
       '%output_mode%:' . $mode . ')$' . "\n" .
       '(linenum:0,kill(labels),%%%)$';
 
@@ -352,7 +350,7 @@ function calculate () {
   fclose($fich);
 
   // call Maxima in batch mode
-  $maxima_command = $maxima_binary . ' --very-quiet ' . $maxima_args . ' --init-mac ' . $yamwi_setup_mac . ' --batch-string='."'".'yamwi_batch("'.$yamwi_mac.'");'."'";
+  $maxima_command = $maxima_binary . ' --very-quiet ' . $maxima_args . ' -p ' . $yamwi_path . '/yamwi.mac -p ' . $yamwi_path . '/yamwi.lisp' . ' -p ' . $yamwi_setup_mac . ' --batch-string='."'".'yamwi_batch("'.$yamwi_mac.'");'."'";
   if ($show_info) {echo '<u>Maxima command</u>: <pre>' . $maxima_command . '</pre><br/>';}
   // timelimit
   if (preg_match('/timelimit/',$timelimit_binary) == 1) {
