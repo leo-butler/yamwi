@@ -63,7 +63,7 @@ Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,out
   [ifr,ofr]:subst(ffmpeg_options,'[ifr,ofr]),
   ifr:if numberp(ifr) and ifr>0 then ifr else 30,
   ofr:if numberp(ofr) and ofr>0 then ofr else 30,
-  ffmpeg_options:[printf(false,"-vf framerate=fps=~a:interp_start=64:interp_end=192:scene=100",ofr)],
+  ffmpeg_options:[printf(false,"-vf framerate=fps=~a:interp_start=64:interp_end=192:scene=100",ofr), "-movflags faststart", "-crf 20"],
   drawer:subst([Draw2d=draw2d,Draw3d=draw3d,Draw=draw],drawer),
   term:'png,
   /* in yamwi.php, maxima_tempdir is hard-coded to be ./tmp */
@@ -74,7 +74,7 @@ Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,out
   cmd:if %movie_is_embedded%=1 then printf(false,"/bin/sh -c ~a -y -framerate ~a -f image2 -i ~a%08d.~a ~{~a ~} -f ~a - | ~a",%ffmpeg_binary%,ifr,fname,term,ffmpeg_options,%movie_muxer%,%base64_cmd%)
     else printf(false,"~a -y -framerate ~a -f image2 -i ~a%08d.~a ~{~a ~} ~a",%ffmpeg_binary%,ifr,fname,term,ffmpeg_options,output_file),
   if %movie_is_embedded%=1 then (
-    printf(true,"</pre></td></tr><tr><td></td><td><video controls autoplay width=\"100%\" loop=true><source type=\"video/~a\" src=\"data:video/~:*~a;charset=us-ascii;base64,",%movie_muxer%),
+    printf(true,"</pre></td></tr><tr><td></td><td><video controls autoplay=\"autoplay\" width=\"100%\" loop=\"true\" muted=\"true\" playsInline=\"true\"><source type=\"video/~a\" src=\"data:video/~:*~a;charset=us-ascii;base64,",%movie_muxer%),
     system(cmd),
     printf(true,"~a",get(inputlabel,'system_output)),
     printf(true,"\"/>Your browser does not support HTML video.</video></td></tr>"))
