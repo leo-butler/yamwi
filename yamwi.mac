@@ -92,8 +92,6 @@ Supported terminal types:
 png pngcairo gif animated_gif jpg svg (default: svg)
 */
 
-output2stdout : user_preamble = printf(false,"base64out='|~a';~%if (GPVAL_OUTPUT ne base64out) {~%unset output;~%set output '|~a';~%};",%base64_cmd%,%base64_cmd%);
-
 mwdrawxd(func, descgraf, mutate):=
 block([formato, formatohtml, result, unsafe_options, inputlabel:?makelabel(inchar)],
     if not get('draw,'version) then load("draw"),
@@ -133,7 +131,7 @@ block([term_cmd:"set term svg size 600,500", cleandescgraf:[], result, unsafe_op
     cleandescgraf: append(cleandescgraf,
                           [[gnuplot_script_file, gplt_fn()],
                           [gnuplot_default_term_command,term_cmd],
-                          [gnuplot_postamble, concat(term_cmd,"; ",rhs(output2stdout))]]), /* output is printed to STDOUT */
+                          [gnuplot_postamble, concat(term_cmd,"; set out '|",%base64_cmd%,"';")]]), /* output is printed to STDOUT */
     printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,","svg+xml"),
     result : apply(func,cleandescgraf),
     printf(true,"~a",get(inputlabel,'system_output)),
