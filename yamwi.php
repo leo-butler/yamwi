@@ -121,7 +121,7 @@ $dangerous_words =
    'make_string_input_stream','make_string_output_stream','get_output_stream_string',
    // Prevent access to functions/variables in yamwi.mac
    'file_search_maxima','file_search_lisp','%num_sentence%','%num_grafico%','mwdrawxd','Draw2d','Draw3d','Draw','mwplotxd','Plot2d','Plot3d','Scatterplot','Histogram','Barsplot','Piechart','Boxplot','Starplot','Drawdf','translate_into_tex','translate_into_print','yamwi_display','oned_display','twod_display','mathml','set_alt_display','set_prompt','reset_displays',
-   'maxima_tempdir', 'maxima_userdir', '%num_proceso%', '%codigo_usuario%', '%dir_sources%', '%movie_muxer%', '%movie_is_embedded%', '%ffmpeg_binary%', '%base64_cmd%', '%output_mode%',
+   'maxima_tempdir', 'maxima_userdir', '%num_proceso%', '%codigo_usuario%', '%dir_sources%', '%movie_muxer%', '%movie_is_embedded%', '%ffmpeg_binary%', '%base64_cmd%', '%output_mode%', '%gcl%',
    // Prevent access to gnuplot-related variables/settings
    'gnuplot_',
    // not available
@@ -297,7 +297,11 @@ function pre_process ($str) {
    $tmp = str_replace("drawdf"      , "Drawdf", $tmp);
    return $tmp;}
 function  re_process ($str) {
-   $tmp = str_replace("\\\\","\\", $str);
+   // GCL ignores --very-quiet flag:
+   $tmp = preg_replace('/read and interpret.+/','',$str);
+   // GCL's si:run-process prints a funny message and we can't seem to re-direct it.
+   $tmp = preg_replace('/\*+ Spawning process.+/','',$tmp);
+   $tmp = str_replace("\\\\","\\", $tmp);
    $tmp = str_replace("Draw3d","draw3d",  $tmp);
    $tmp = str_replace("Draw2d","draw2d",  $tmp);
    $tmp = str_replace("Draw",  "draw",    $tmp);
@@ -327,12 +331,13 @@ function calculate () {
   // maxima_tempdir is hard-coded to be ./tmp
   // Set-up code is written to a different file, so snoopers cannot access it via _
   $val = '(maxima_tempdir: "'.$yamwi_path.'/tmp",' .
+      'maxima_userdir: "'.$yamwi_path.'",'.
       'gnuplot_command: "'.$gnuplot_binary.($gnuplot_args=="" ? "" : ' '.$gnuplot_args).'",'.
       '%codigo_usuario%: "'.$key.'",' .
       '%num_proceso%: "'.$nproc.'",' .
       '%dir_sources%: "'.$yamwi_path.'/packages",' .
       '%movie_muxer%: "'.$movie_muxer.'",'.
-      '%movie_is_embedded%: '.$movie_is_embedded.','.
+      '%movie_is_embedded%: if %gcl%=true then 0 else '.$movie_is_embedded.','.
       '%ffmpeg_binary%: "'.$ffmpeg_binary.'",'.
       '%base64_cmd%: "'.$base64_cmd.'",'.
       '%output_mode%:' . $mode . ')$' . "\n" .

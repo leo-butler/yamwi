@@ -120,7 +120,7 @@
      (return mexplabel)))
 
 ;; asdf
-(require 'asdf      #+clisp #P"/usr/lib/clisp-2.49.95+/asdf/asdf.lisp")
+#-gcl(require 'asdf      #+clisp #P"/usr/lib/clisp-2.49.95+/asdf/asdf.lisp")
 ;; cl-base64
 ;; (require 'cl-base64 #+clisp #p"/usr/share/common-lisp/source/cl-base64/cl-base64.asd")
 ;; (asdf:oos 'asdf:compile-op '#:cl-base64)
@@ -131,17 +131,31 @@
 
 (defvar *system-fun* (symbol-function 'system-impl))
 
+#+gcl(progn
+       (defvar $%gcl% t)
+       (defun gcl-run-program (args &key output error-output)
+       (declare (ignore input output))
+       ;;(format t "~%~{~a ~} output=~a error-output=~a" args output error-output)
+       (let* ((*standard-output* (make-string-output-stream))
+	      (*error-output*    (make-string-output-stream))
+	      (exit-code         1)
+	      (output (ignore-errors (si:run-process (car args) (cdr args)))))
+	 (when (not (null output))
+	   ;;(format t "~%<!--start-->~%")
+	   (setq exit-code 0)
+	   (loop for c = (read-line output nil)
+		 while c do
+		   (format t "~%~a" c)))
+	 (values (get-output-stream-string *standard-output*)
+		 (get-output-stream-string *error-output*   )
+		 exit-code))))
+
 (defmfun $system (&rest args)
   (cond ((> (length args) 1)
          ;;(apply *system-fun* args))
          ($system (format nil "~{~a ~}" args)))
         (t
-         #+gcl
-	 (let ((output (si::fp-output-stream (si:run-process (first args) (rest args)))))
-           (loop for c = (read-char-no-hang output nil)
-                 while c do
-		   (format t "~c" c)))
-         #+(or clisp ecl sbcl)
+         #+(or clisp ecl sbcl gcl)
 	 (let ((args (remove-if #'(lambda(s) (or (string= s "-persist") (string= s ""))) (cdr ($split ($sremove "\"" (car args))))))
 	       (inlabel (makelabel $inchar)))
 	   ;; (unless (member (aref (car args) 0) '(#\/ #\.))
@@ -151,7 +165,8 @@
            (with-open-file (f #p"./tmp/run.log" :direction :output :if-exists :append :if-does-not-exist :create)
              (format f "system: args = ~{'~a' ~}~%" args))
 	   (multiple-value-bind (output error code)
-	     (uiop/run-program:run-program args :output :string :error-output :string)
+	       (#+(or clisp ecl sbcl) uiop/run-program:run-program #+gcl gcl-run-program
+		  args :output :string :error-output :string)
 	     ($put inlabel output                           '$system_output)
 	     ($put inlabel (if (> (length error) 0) error)  '$system_error )
 	     ($put inlabel code                             '$system_code  )
