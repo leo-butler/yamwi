@@ -330,7 +330,7 @@ function calculate () {
   // maxima_tempdir is hard-coded to be ./tmp
   // Set-up code is written to a different file, so snoopers cannot access it via _
   $val = '(maxima_tempdir: "'.$yamwi_path.'/tmp",' .
-      'maxima_userdir: "'.$yamwi_path.'",'.
+      'maxima_userdir: "'.$yamwi_path.'/.maxima",'.
       'gnuplot_command: "'.$gnuplot_binary.($gnuplot_args=="" ? "" : ' '.$gnuplot_args).'",'.
       '%codigo_usuario%: "'.$key.'",' .
       '%num_proceso%: "'.$nproc.'",' .
