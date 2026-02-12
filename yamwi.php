@@ -261,8 +261,7 @@ function prepare_output($out) {
   $subout = re_process(trim($out));
   // write html code
   write_form();
-  $result = '<table id="maxima-output" class="maxima-output">' . "\n" . $subout . "</table>\n\n";
-  write_results($result); }
+  write_results($subout); }
 
 
 // returns an alert message if something was wrong
