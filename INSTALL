@@ -9,6 +9,13 @@ mkdir -p yamwi/tmp
 echo "  Step 1b. Make user folder..."
 mkdir yamwi/.maxima
 
+if ! test -r yamwi/site-conf.php; then
+    echo "  Step 1c. Set up site-conf.php."
+    sed -e '1{}; 2{d}; 3,${s/^\([^\n/]\)/# \1/g;}; ${s/# //}; /file_exists/{d};' yamwi/yamwi-conf.php > yamwi/site-conf.php
+else
+    echo "  Step 1c. A site-conf.php file has been found. Skipping."
+fi
+
 echo "  Step 2. Make www-data as yamwi owner..."
 chown -R www-data:www-data yamwi
 
