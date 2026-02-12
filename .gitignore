@@ -1,3 +1,5 @@
 *~
 *.patch
 /tmp/
+/.maxima/
+/site-conf.php
