@@ -1,4 +1,5 @@
-#!/bin/sh # -*- mode: shell-script -*-
+#!/bin/sh
+# -*- mode: shell-script -*-
 release=$(date '+%F')
 
 # Make directories
@@ -21,7 +22,10 @@ cp packages/*.lisp yamwi/packages
 cp favicon.ico yamwi
 
 # Packaging
-tar -czvf yamwi-${release}.tar.gz yamwi
+tar -czf yamwi-${release}.tar.gz yamwi
 
 # Remove folder
 rm -r yamwi
+
+# Name of tar.gz file
+echo yamwi-${release}.tar.gz
