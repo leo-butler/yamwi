@@ -79,7 +79,7 @@ $key = $_GET["c"] ?? "" ;
 $nproc = $_GET["n"] ?? null;
 $input = trim(($_POST["max"] ?? atou($_GET["max"] ?? "")) ?? "");
 $mode = $_GET["mode"] ?? $mode;
-if ($mode < 0 || $mode > 4) { $mode = 4; }
+if ($mode < 0 || $mode > 5) { $mode = 4; }
 $apache_user_name = shell_exec('whoami');
 $yamwi_path = getcwd();
 $dangerous_words =
@@ -238,11 +238,13 @@ function write_form() {
        '   <option value=2 '. ($mode == 2 ? "selected=\"selected\"" : "") . ">2 - Enhanced ASCII-Art output</option>\n".   # enhanced-ascii-art
        '   <option value=3 '. ($mode == 3 ? "selected=\"selected\"" : "") . ">3 - MathML</option>\n".                      # mathml
        '   <option value=4 '. ($mode == 4 ? "selected=\"selected\"" : "") . ">4 - Remote TeX + MathJax</option>\n".        # tex-mathjax
+       '   <option value=5 '. ($mode == 5 ? "selected=\"selected\"" : "") . ">5 - Lisp Sexp</option>\n".                   # lisp
        "</select>\n".
        "<select name=\"inmodeselect\" id=\"inmodeselect\" class=\"modeselect\" onchange=\"show_input(document.getElementById('inmodeselect').value); return true;\">\n".
        '   <option value="" disabled>Select Input Mode</option>'.
        '   <option value=0>                    0 - Interpreted input</option>'.
        '   <option value=1 selected="selected">1 - Verbatim input</option>'.
+       '   <option value=2>                    2 - Lisp Sexp</option>'.
        "</select>\n".
        "</form>\n".
        "<hr>\n\n" ; }

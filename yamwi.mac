@@ -165,14 +165,20 @@ if gnuplot_command = "0" then (
   mwplotxd([rst]) := printf(false,"plot is disabled.")) $
 
 /* sanitize */
-sanitize(s) := block([st],
-  st:ssearch("incorrect syntax",s),
-  if numberp(st) then s:substring(s,st),
+sanitize(s) := block([st,rep],
+  st:ssearch("incorrect syntax",s), if numberp(st) then s:substring(s,st),
+  s:ssubst("",printf(false," -- an error. To debug this try: debugmode(true);~%"),s),
   s) $
 
 /* defun and defmacro are tex-ed in `verbatim' environment, which is not understood by MathJaX */
 yamwi_tex(sx) := if atom(sx) or not(member(op(sx),{":=","::="})) then tex(sx)
   else printf(true,"$$~a ~a ~a$$",tex1(lhs(sx)),tex1(op(sx)),tex1(rhs(sx))) $
+yamwi_displa_lisp(x,[strm]) := block([s],
+  strm:if strm=[] then true else first(strm),
+  s:%yamwi_filter_lisp(x,false),
+  s:ssubst("","MAXIMA::",s),
+  s:ssubst("","MAXIMA:",s),
+  printf(strm,"~a",s))$
 
 /* alt-display */
 load("alt-display.mac") $
@@ -202,13 +208,18 @@ define_alt_display(yamwi_display2d(x),
     printf(true,"</span></td>~%"),
     printf(true,"<td class='output tex-mathjax'~a><span class='tex-mathjax'>~%",if %output_mode%=4 then "" else nodisplay),
     yamwi_tex(second(x)),
-    printf(true,"</span></td></tr>~%")
+    printf(true,"</span></td>~%"),
+    printf(true,"<td class='output lisp'~a><pre class='lisp'>",if %output_mode%=5 then "" else nodisplay),
+    yamwi_displa_lisp(x),
+    printf(true,"</pre></td></tr>~%")
     )))$
 define_alt_display(yamwi_display1d(x),
   if is(yamwi_startup_is_finished=true) and length(x) >= 2 then (
-    printf(true,"<tr>~% <td><span class='input-label'>~a~a</span></td>~%",inchar,linenum),
-    printf(true,"<td class='inputcode interpreted'><pre class='interpreted'>~a</pre></td>~%",second(x)),
-    printf(true,"<td class='inputcode verbatim'><pre class='verbatim'>~a</pre></td>~%</tr>~%",literal_input(x)))
+    printf(true,"<tr>~% <td><span class='input-label'>~a~a</span></td>~% ",inchar,linenum),
+    printf(true,"<td class='inputcode interpreted'><pre class='interpreted'>~a</pre></td>~% ",second(x)),
+    printf(true,"<td class='inputcode verbatim'><pre class='verbatim'>~a</pre></td>~% ",literal_input(x)),
+    printf(true,"<td class='inputcode lisp'><pre class='lisp'>~a</pre></td>~%</tr>~%",yamwi_displa_lisp(x,false))
+    )
   else (
     literal_input(x),
     if linenum>=1 then (yamwi_startup_is_finished:true, linenum:linenum-1)))$

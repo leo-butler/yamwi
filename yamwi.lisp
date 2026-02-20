@@ -191,3 +191,28 @@
     'end_of_file
     ))
 
+;; Printer for Lisp Sexps
+;; We have little protection against loops in x
+(defun $%yamwi_filter_lisp(x &optional (strm t))
+  (labels ((circular-p (x)                 ; Adapted from CLtL1
+	     (do ((n 0 (1+ n))
+		  (fast x (cddr fast))     ;Fast pointer: leaps by 2
+		  (slow x (cdr slow)))     ;Slow pointer: leaps by 1
+		 (nil)
+	       ;; If fast pointer hits the end, list is not circular
+	       (when (or (endp fast) (endp (cdr fast))) (return nil))
+	       ;; If fast = slow, x is circular
+	       (when (and (eq fast slow) (> n 0)) (return t))))
+	   (yamwi-filter (l &optional (a 'src))
+	     (cond ((null l) l)
+		   ((atom l) l)
+		   ((and (listp l) (not (circular-p l)))
+		    (let ((l (remove-if (lambda(x) (and (listp x) (not (circular-p x)) (some (lambda(e) (eq e a)) x))) l)))
+		      (mapcar (lambda(i) (yamwi-filter i a)) l)))
+		   (t
+		    l))))
+    (cond ((and (listp x) (listp (car x)) (eq (caar x) 'mlabel))
+	   ($%yamwi_filter_lisp (caddr x) strm))
+	  (t
+	   (let ((*print-circle* t))
+	     (format strm "~a" (yamwi-filter x)))))))

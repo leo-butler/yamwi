@@ -99,7 +99,7 @@ function show_in_output(n,types,inout) {
 };
 
 // see yawmi_display2d in yamwi.mac
-function show_output(n) {show_in_output(n,["ascii", "ascii-art", "enhanced-ascii-art", "mathml", "tex-mathjax"],"output ");};
+function show_output(n) {show_in_output(n,["ascii", "ascii-art", "enhanced-ascii-art", "mathml", "tex-mathjax", "lisp"],"output ");};
 // see yawmi_display1d in yamwi.mac
-function show_input(n) {show_in_output(n,["interpreted", "verbatim"],"inputcode ");};
+function show_input(n) {show_in_output(n,["interpreted", "verbatim", "lisp"],"inputcode ");};
 document.addEventListener('DOMContentLoaded', (event) => {show_input(1);});

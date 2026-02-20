@@ -35,6 +35,9 @@ pre{
   color:          darkgreen;
   font-size:      100%;
   font-weight:    bold;}
+.inputcode .lisp{
+    background-color: #eee;
+}
 .output{
   background-color: lightgray;
   align-items:    center;
@@ -75,7 +78,7 @@ textarea{
 tr.retrieve{
     background-color: lightpink;
     color:            black;}
-span.retrieve{
+pre.lisp, span.retrieve{
     white-space:	pre;
     font-family:	monospace;
     display:		block;
