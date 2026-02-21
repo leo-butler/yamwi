@@ -97,14 +97,18 @@ Assuming that ~php~ is installed, the following launches Yamwi:
 #+end_src
 
 * Configuration
-The file =yamwi-conf.php= contains much of the configuration options for Yamwi.
+There are two configuration files for Yamwi.
 
-- ~mode~ ::  Can be one of 0, 1, 2, 3 or 4. These options are:
+** Package configuration
+The file =yamwi-conf.php= contains the significant configuration options for Yamwi and sets defaults for those.
+
+- ~mode~ ::  Can be one of 0, 1, 2, 3, 4 or 5. These options are:
   0. [@0] When 0, output is returned as a syntactical Maxima expression (in command-line ~maxima~, this is called ~1d~ output);
   1. when 1, Yamwi output is rendered in ASCII-Art style without any additional processing (in command-line ~maxima~, this is called ~2d~ output);
   2. when 2, results are rendered in enhanced ASCII-Art style, with syntax highlighting and other features that make it easier to read than mode 0 (in command-line ~maxima~, this is ~2d~ output);
   3. when 3, results are rendered using Maxima's =MathML= processor;
-  4. when 4, results are based on the nice-looking MathJax (http://www.mathjax.org) system.
+  4. when 4, results are based on the nice-looking MathJax (http://www.mathjax.org) system;
+  5. when 5, results are printed as Lisp S-expressions (sexps).
   Defaults to 2. The user may select the mode.
 
 - ~max_file_time~ ::  Yamwi creates some files which are stored in
