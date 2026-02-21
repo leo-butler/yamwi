@@ -142,26 +142,61 @@ The file =yamwi-conf.php= contains the significant configuration options for Yam
 
 - ~$base64_cmd~ :: The command used to encode images and videos to base-64 encoding. Defaults to ~/usr/bin/base64 -w 0~.
 
+** Site configuration
+The file =site-conf.php= contains site-specific configuration options. While =yamwi-conf.php= is updated by the =INSTALL= script, this file will not be changed.
+Site administrators should put all local configuration options in this file. By default, the file is created as an almost complete copy of =yamwi-conf.php=, with the settings commented out.
+
 * User Packages
-Yamwi gives access to all standard Maxima packages. Custom packages can be placed in the =packages=. The file extension should be =.mac= if the package is written in Maxima code, or =.lisp= if it is written in Common Lisp. Yamwi user can =load=
-these packages. See the help file =help_en.html=.
+Yamwi gives access to all standard Maxima packages. Custom packages can be placed in the =packages= sub-directory. The file extension should be =.mac= if the package is written in Maxima code, or =.lisp= if it is written in Common Lisp. A Yamwi user can =load= these packages. See the help file =help_en.html=.
 
 * Security
-Take care when using this program. To prevent server damages, some
-barriers have been designed:
+Take care when using this program. To mitigate the possibility of a successful attack on a Yamwi server, some barriers have been implemented:
 
-- There is a list of so called *dangerous words*, which prevents the execution of user code when one of these terms is detected in the input. See the global variable =$dangerous_words=.
+- There is a list of so-called *dangerous words*, which prevents the execution of user code when one of these terms is detected in the input. See the global variable =$dangerous_words= in =yamwi.php=.
 - The number of running Maxima processes can be limited. See the configuration variable =$max_num_processes=.
 - The execution time of Maxima processes can be limited. See the configuration variable =$max_process_time=.
 
-Even with these filters, Yamwi does not guarantee 100% server
-security.
+Even with these filters, operating Yamwi in a server environment does entail risk.
 
 * License
 This project is distributed under the terms of the GPL (General Public
-License). For more information, read file LICENSE.
+License). For more information, read the LICENSE file.
 
 * Release Notes
+** Pending: Release 2026-MM-DD
+*** Changes to the User-Interface
+1. Input and output may now be displayed as Lisp S-expressions (Sexps). Users who are curious about how Maxima represents mathematical objects can use these display options.
+2. Improve the handling of verbatim input (see [[https://github.com/leo-butler/yamwi/issues/5][Issue #5]]).
+3. Improve the handling of error messages from Maxima and Gnuplot (SBCL, ECL; not GCL or CLISP).
+4. Correct the TeX code for matrices (see [[https://github.com/leo-butler/yamwi/issues/6][Issue #6]]).
+5. Print the Maxima banner as a header for the output, similar to other front-ends.
+
+*** Security
+*** Status
+*** Lisps supported
+Maxima runs on a variety of Common Lisp implementations. As of this
+release, using a Debian 13 server installed on a virtual machine, the
+following implementations are supported:
+
+- SBCL, ECL :: fully supported.
+- GCL :: partially supported, not recommended. There are multiple issues that hobble the use of GCL on a server:
+  1. [X] Runs with Yamwi served on localhost.
+  2. [ ] Recent versions of Maxima cannot be built with GCL.
+  3. [ ] The Debian GCL-based Maxima package has majour problems compiling and loading the ~draw~ package.
+  4. [ ] GCL's does not correctly re-bind the ~*error-output*~ stream. This limits error reporting compared to SBCL and ECL and necessitates a customized ~run-program~ (built on ~si:run-process~).
+- Clisp :: unsupported. There are a few issues to be overcome.
+  1. [X] Runs with Yamwi served on localhost.
+  2. [ ] There are filesystem-access issues when run as part of Apache. Patches are invited.
+  3. [ ] Clisp's implementation of ~run-program~ is broken (neither ~*standard-output*~ nor ~*error-output*~ can be correctly ~let~ bound in order to redirect these output streams). No good work-arounds are known to us.
+
+*** Download
+Download the tar.gz release file from the project webpage: [[https://github.com/leo-butler/yamwi/releases/]].
+
+*** Reference implementation
+A pair of live Yamwi servers are maintained by the project:
+1. [[https://net124.reltub.ca/yamwi/]] serves the latest release of Yamwi.
+2. [[https://net124.reltub.ca/yamwi-dev/]] serves the latest version of Yamwi from the =master= branch of the Github repository (it may take up to 24 hours to synchronize with HEAD).
+
 ** Release 2026-02-03
 The *Yamwi* development team is pleased to announced a new release (v. 2026-02-03).
 
