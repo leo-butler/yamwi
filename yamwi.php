@@ -76,6 +76,7 @@ function atou($str) {return base64_decode(atob64($str));}
 
 
 $key = $_GET["c"] ?? "" ;
+if (!($key === $magic_key)) { create_key(); }
 $nproc = is_numeric($_GET["n"]) ? $_GET["n"] :  0;
 $input = trim(($_POST["max"] ?? atou($_GET["max"] ?? "")) ?? "");
 $mode = is_numeric($_GET["mode"]) ? $_GET["mode"] : $mode;
@@ -136,7 +137,7 @@ $dangerous_words =
 ////////////////
 
 
-$show_info = ($key == $magic_key);
+$show_info = ($key === $magic_key);
 if ($show_info)
   echo '<u>Input: </u><pre>'.$input.'</pre><br/>'.
        '<u>Maximum time for files in tmp folder (min)</u>:<pre>'.$max_file_time.'</pre><br/>'.
