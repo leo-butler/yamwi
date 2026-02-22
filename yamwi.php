@@ -76,9 +76,9 @@ function atou($str) {return base64_decode(atob64($str));}
 
 
 $key = $_GET["c"] ?? "" ;
-$nproc = $_GET["n"] ?? null;
+$nproc = is_numeric($_GET["n"]) ? $_GET["n"] :  0;
 $input = trim(($_POST["max"] ?? atou($_GET["max"] ?? "")) ?? "");
-$mode = $_GET["mode"] ?? $mode;
+$mode = is_numeric($_GET["mode"]) ? $_GET["mode"] : $mode;
 if ($mode < 0 || $mode > 5) { $mode = 4; }
 $apache_user_name = shell_exec('whoami');
 $yamwi_path = getcwd();
