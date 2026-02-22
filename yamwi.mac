@@ -70,7 +70,7 @@ Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,out
   drawer:subst([Draw2d=draw2d,Draw3d=draw3d,Draw=draw],drawer),
   term:'png,
   /* in yamwi.php, maxima_tempdir is hard-coded to be ./tmp */
-  fname:concat("tmp/movie-still-",%codigo_usuario%,"-",%num_proceso%,"-",%num_movie%,"-"),
+  fname:concat("tmp/movie-still-",%codigo_usuario%,"-",%num_proceso%,"-",%num_movie%:%num_movie%+1,"-"),
   output_file:concat(fname,"0.",%movie_muxer%),
   files:draw_multiple_plots(drawer,fname,%movie_term%,paramlist),
   /* ffmpeg hangs if STDIN != /dev/null */
