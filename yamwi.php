@@ -76,11 +76,13 @@ function atou($str) {return base64_decode(atob64($str));}
 
 
 $key = $_GET["c"] ?? "" ;
-if (!($key === $magic_key)) { create_key(); }
-$nproc = is_numeric($_GET["n"]) ? $_GET["n"] :  0;
+if (!($key === $magic_key || $key === "")) { create_key(); }
+$nproc = $_GET["n"] ?? 0;
+$nproc = is_numeric($nproc) ? $nproc :  0;
 $input = trim(($_POST["max"] ?? atou($_GET["max"] ?? "")) ?? "");
-$mode = is_numeric($_GET["mode"]) ? $_GET["mode"] : $mode;
-if ($mode < 0 || $mode > 5) { $mode = 4; }
+$mode = $_GET["mode"] ?? $default_mode;
+$mode = is_numeric($mode) ? $mode : $default_mode;
+if ($mode < 0 || $mode > 5) { $mode = $default_mode; }
 $apache_user_name = shell_exec('whoami');
 $yamwi_path = getcwd();
 $dangerous_words =
