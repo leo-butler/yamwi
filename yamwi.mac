@@ -41,7 +41,6 @@ file_search_lisp:
 
 %num_sentence%: 0$
 %num_movie%: 0$
-%movie_term%: 'pngcairo$
 
 /* Movie making */
 gplt_fn_seed:random(10^8);
