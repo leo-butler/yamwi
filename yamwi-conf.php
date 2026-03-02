@@ -34,6 +34,8 @@ $ffmpeg_binary = '/usr/bin/ffmpeg';
 
 $base64_cmd = '/usr/bin/base64 -w 0';
 
+$cat_cmd = '/usr/bin/cat';
+
 if(file_exists("site-conf.php")) {include "site-conf.php";}
 
 //////////////

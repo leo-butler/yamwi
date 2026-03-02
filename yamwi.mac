@@ -114,11 +114,13 @@ block([formato, formatohtml, result, unsafe_options, inputlabel:?makelabel(incha
     if member(formato,'[png,gif,jpg]) then formatohtml:formato
     else if formato = 'animated_gif then formato:formatohtml:'gif
     else if formato = 'pngcairo then formato:formatohtml:'png
-    else (formato : 'svg, formatohtml:"svg+xml", descgraf : endcons(terminal = 'svg, descgraf)),
-    printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,",formatohtml),
+    else (formato : 'svg, formatohtml:"svg+xml", descgraf : append(descgraf,[terminal = formato, file_name = concat("| ",%cat_cmd%," '#")])),
+    if formato = 'svg then printf(true,"</span></td></tr><tr><td></td><td><span class='svg'>")
+    else printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,",formatohtml),
     result : apply(func,descgraf),
     printf(true,"~a",get(inputlabel,'system_output)),
-    print("\">"),
+    if formato = 'svg then printf(false,"</span></td></tr>")
+    else printf(true,"\">"),
     result)$
 
 Draw2d([descgraf]):= mwdrawxd('draw2d, descgraf, false) $
@@ -134,11 +136,11 @@ block([term_cmd:"set term svg size 600,500", cleandescgraf:[], result, unsafe_op
     cleandescgraf: append(cleandescgraf,
                           [[gnuplot_script_file, gplt_fn()],
                           [gnuplot_default_term_command,term_cmd],
-                          [gnuplot_postamble, concat(term_cmd,"; set out '|",%base64_cmd%,"';")]]), /* output is printed to STDOUT */
-    printf(true,"</span></td></tr><tr><td></td><td><span><img src=\"data:image/~a;charset=us-ascii;base64,","svg+xml"),
+                          [gnuplot_postamble, concat(term_cmd,"; set out '|",%cat_cmd%,"';")]]), /* output is printed to STDOUT */
+    printf(true,"</span></td></tr><tr><td></td><td><span class='svg'>"),
     result : apply(func,cleandescgraf),
     printf(true,"~a",get(inputlabel,'system_output)),
-    print("\">"),
+    printf(false,"</span></td></tr>"),
     result) $
 
 Plot2d([descgraf]):= (mwplotxd('plot2d, descgraf), 'plot2d) $

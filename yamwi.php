@@ -325,7 +325,7 @@ function  re_process ($str) {
 // run Maxima and output results
 function calculate () {
   global $key, $nproc, $input, $max_process_time, $message_time_process, $message_prog_error, $show_info,
-      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $gnuplot_binary, $gnuplot_args, $mode, $movie_muxer, $movie_is_embedded, $ffmpeg_binary, $base64_cmd;
+      $mode, $yamwi_path, $timelimit_binary, $maxima_args, $maxima_binary, $gnuplot_binary, $gnuplot_args, $mode, $movie_muxer, $movie_term, $movie_is_embedded, $ffmpeg_binary, $base64_cmd, $cat_cmd;
   $nproc = $nproc + 1;
   check_maxima();
   check_ffmpeg();
@@ -344,6 +344,8 @@ function calculate () {
       '%movie_is_embedded%: if %gcl%=true then 0 else '.$movie_is_embedded.','.
       '%ffmpeg_binary%: "'.$ffmpeg_binary.'",'.
       '%base64_cmd%: "'.$base64_cmd.'",'.
+      '%cat_cmd%: "'.$cat_cmd.'",'.
+      '%movie_term%: "'.$movie_term.'",'.
       '%output_mode%:' . $mode . ')$' . "\n" .
       '(linenum:0,kill(labels),%%%)$';
 
