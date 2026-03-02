@@ -61,27 +61,34 @@ draw_multiple_plots(drawer,fname,term,lst,[opts]) := block([file,files,n:length(
     apply(drawer,[p])),
   map(lambda([x],concat(x,".",term)),files)),
 /* see https://trac.ffmpeg.org/wiki/Slideshow */
-Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,output_file,linel:linel,ifr,ofr,inputlabel:?makelabel(inchar)],
+Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,output_file,linel:linel,ifr,ofr,inputlabel:?makelabel(inchar),terml,movie_term_as_symbol,muxer],
   [ifr,ofr]:subst(ffmpeg_options,'[ifr,ofr]),
   ifr:if numberp(ifr) and ifr>0 then ifr else 30,
   ofr:if numberp(ofr) and ofr>0 then ofr else 30,
-  ffmpeg_options:[printf(false,"-vf framerate=fps=~a:interp_start=64:interp_end=192:scene=100",ofr), "-movflags faststart", "-crf 20"],
+  muxer:subst(ffmpeg_options,'video_format),
+  if muxer='video_format then muxer:%movie_muxer%
+  else if not(member(muxer,{'mp4,'webm})) then (
+    printf(true,"<tr class='warning'><td class='warning'>Warning:</td><td><pre>Video format '~a' not one of 'mp4' or 'webm'. Setting video format to '~a'.</pre></td></tr>~%",muxer,%movie_muxer%),
+    muxer:%movie_muxer%),
+  ffmpeg_options:[printf(false,"-vf framerate=fps=~a:interp_start=64:interp_end=192:scene=100",ofr), "-movflags frag_keyframe+empty_moov", "-crf 20"],
   drawer:subst([Draw2d=draw2d,Draw3d=draw3d,Draw=draw],drawer),
-  term:'png,
+  terml:sexplode(%movie_term%),
+  term:printf(false,"~{~a~}",makelist(terml[k],k,1,3)),
   /* in yamwi.php, maxima_tempdir is hard-coded to be ./tmp */
   fname:concat("tmp/movie-still-",%codigo_usuario%,"-",%num_proceso%,"-",%num_movie%:%num_movie%+1,"-"),
-  output_file:concat(fname,"0.",%movie_muxer%),
-  files:draw_multiple_plots(drawer,fname,%movie_term%,paramlist),
-  /* ffmpeg hangs if STDIN != /dev/null */
-  cmd:if %movie_is_embedded%=1 then printf(false,"/bin/sh -c ~a -y -framerate ~a -f image2 -i ~a%08d.~a ~{~a ~} -f ~a - | ~a",%ffmpeg_binary%,ifr,fname,term,ffmpeg_options,%movie_muxer%,%base64_cmd%)
+  output_file:concat(fname,"0.",muxer),
+  movie_term_as_symbol:eval_string(term),
+  files:draw_multiple_plots(drawer,fname,movie_term_as_symbol,paramlist),
+  cmd:if %movie_is_embedded%=1 then printf(false,"/bin/sh -c ~a -y -framerate ~a -f image2 -i ~a%08d.~a ~{~a ~} -f ~a - | ~a",%ffmpeg_binary%,ifr,fname,term,ffmpeg_options,muxer,%base64_cmd%)
     else printf(false,"~a -y -framerate ~a -f image2 -i ~a%08d.~a ~{~a ~} ~a",%ffmpeg_binary%,ifr,fname,term,ffmpeg_options,output_file),
+  printf(true,"<tr class='ffmpeg' style='display:none;'><td></td><td><pre>~%~a~%</pre></td></tr>~%",cmd),
   if %movie_is_embedded%=1 then (
-    printf(true,"</pre></td></tr><tr><td></td><td><video controls autoplay=\"autoplay\" width=\"100%\" loop=\"true\" muted=\"true\" playsInline=\"true\"><source type=\"video/~a\" src=\"data:video/~:*~a;charset=us-ascii;base64,",%movie_muxer%),
+    printf(true,"</pre></td></tr><tr><td></td><td><video poster=\"~a\" controls=true autoplay=\"autoplay\" loop=\"true\" muted=\"true\" playsInline=\"true\"><source type=\"video/~a\" src=\"data:video/~:*~a;charset=us-ascii;base64,",files[1],muxer),
     system(cmd),
     printf(true,"~a",get(inputlabel,'system_output)),
     printf(true,"\"/>Your browser does not support HTML video.</video></td></tr>"))
   else (
-    printf(true,"</pre></td></tr><tr><td></td><td><video controls autoplay width=\"100%\" loop=true><source type=\"video/~a\" src=\"~a\"/>",%movie_muxer%,output_file),
+    printf(true,"</pre></td></tr><tr><td></td><td><video poster=\"~a\" controls=true autoplay=\"autoplay\" loop=\"true\" muted=\"true\" playsInline=\"true\"><source type=\"video/~a\" src=\"~a\"/>",files[1],muxer,output_file),
     system(cmd),
     printf(true,"Your browser does not support HTML video.</video></tr></td>")),
   [op(__)]));
