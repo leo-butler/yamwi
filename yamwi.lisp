@@ -222,3 +222,32 @@
 	  (t
 	   (let ((*print-circle* t))
 	     (format strm "~a" (yamwi-filter x)))))))
+;;
+(defmvar *print* (symbol-function 'print-impl))
+(defun $print (&rest l)
+  (let (($display2d t) ($linel 1000.)
+	 (form `((mlabel simp) nil ((yamwiprint simp) ,@l))))
+    (displa form)))
+
+;; Define printers for the YAMWIPRINT
+(defprop yamwiprint tex-yamwiprint tex)
+(defprop yamwiprint (("\\left. ")" \\right. ") texsym)
+(defun tex-yamwiprint (x l r)
+  (setq l (append l (car (texsym (caar x))))
+	;; car of texsym of a matchfix operator is the lead op
+	r (append (list (nth 1 (texsym (caar x)))) r)
+	;; cdr is the trailing op
+	x (tex-list (cdr x) nil r (or (nth 2 (texsym (caar x))) "")))
+  (append l x))
+
+(defprop yamwiprint mathml-yamwiprint mathml)
+(defprop yamwiprint (("<mo>[</mo>")"<mo>]</mo> ") mathmlsym)
+(defun mathml-yamwiprint (x l r)
+  (setq l (append l (car (mathmlsym (caar x))))
+	;; car of mathmlsym of a matchfix operator is the lead op
+	r (append (list (nth 1 (mathmlsym (caar x)))) r)
+	;; cdr is the trailing op
+	x (mathml-list (cdr x) nil r (or (nth 2 (mathmlsym (caar x))) (format nil "<mspace width=~s/>" (get-mathml-mathspace 'thickmathspace)))))
+  (append l x))
+
+(displa-def yamwiprint  dimension-match "" "")
