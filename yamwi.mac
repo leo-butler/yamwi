@@ -18,8 +18,19 @@ replace_del(x) := subst(del = lambda([t], concat('d,t)), x) $
   texput(matrix,texmatrix));
 texput(?rat,lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
 texput("/",lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
-texput(nounify(diff), lambda([expr],block([Y,X,n], [Y,X,n] : args(expr), if n=1 then printf(false,"\\dfrac{d\\,}{d{~a}}{~a}",tex1(X),tex1(Y)) else printf(false,"\\dfrac{d^{~a}\\,}{d{~a}^{~a}}{~a}",n,tex1(X),n,tex1(Y))))) ;
-texput('diff, lambda([expr],block([Y,X,n], [Y,X,n] : args(expr), if n=1 then printf(false,"\\dfrac{d\\,}{d{~a}}{~a}",tex1(X),tex1(Y)) else printf(false,"\\dfrac{d^{~a}\\,}{d{~a}^{~a}}{~a}",n,tex1(X),n,tex1(Y))))) ;
+tex_diff : lambda([expr],block([Y,X,n,eargs:args(expr),degs,vars],
+    if length(eargs)=1 then printf(false,"{~a\\,}\\left({~a}\\right)",tex1(del),tex1(Y))
+    else if length(eargs)>3 then (Y : first(eargs),
+      X : rest(eargs),
+      degs : makelist(part(X,2*k),k,1,floor(length(X)/2)), n : lreduce("+",degs,0),
+      vars : makelist(part(X,2*k-1),k,1,floor(length(X)/2)),
+      dvars : map(lambda([x,n], printf(false,"∂{~a}~a",tex1(x),if n=1 then "" else concat("^{",tex1(n),"}"))),vars,degs),
+      printf(false,"\\dfrac{∂^{~d}\\,}{~{~a~^\\, ~}}{~a}",n,dvars,if atom(Y) then tex1(Y) else concat("\\left(",tex1(Y),"\\right)")))
+    else (if length(eargs)=2 then (n : 1, [Y,X] : eargs)
+      else /* length(eargs)=3 */ [Y,X,n] : eargs,
+      if n=1 then printf(false,"\\dfrac{∂\\,}{∂{~a}}{~a}",tex1(X),tex1(Y)) else printf(false,"\\dfrac{∂^{~a}\\,}{∂{~a}^{~a}}{~a}",n,tex1(X),n,tex1(Y))))) ;
+texput(nounify(diff), tex_diff);
+texput('diff, tex_diff);
 tex_exp(expr) := block([b,e],
   [b,e] : args(expr),
   if e=-1 then printf(false,"\\dfrac{1}{~a} ",tex1(b))
@@ -179,8 +190,18 @@ sanitize(s) := block([st,rep],
   s) $
 
 /* defun and defmacro are tex-ed in `verbatim' environment, which is not understood by MathJaX */
-yamwi_tex(sx) := if atom(sx) or not(member(op(sx),{":=","::="})) then tex(sx)
-  else printf(true,"$$~a ~a ~a$$",tex1(lhs(sx)),tex1(op(sx)),tex1(rhs(sx))) $
+/* A simple solution: re-define the environment *//*
+set_tex_environment(?mdefine,"<pre>","</pre>");
+set_tex_environment(?mdefmacro,"<pre>","</pre>");
+yamwi_tex(sx) := tex(sx);
+*/
+yamwi_tex(sx) := block([try],
+  try:errcatch(if atom(sx) or not(member(op(sx),{":=","::="})) then tex(sx)
+    else printf(true,"$$~a ~a ~a$$",tex1(lhs(sx)),tex1(op(sx)),tex1(rhs(sx))), 'done),
+  if try=[] then (
+    printf(true,"<pre class='warning'>An error occurred in LaTeX generation.</pre>"),
+    printf(true,"<pre class='warning'>~a</pre>",error)));
+
 yamwi_displa_lisp(x,[strm]) := block([s],
   strm:if strm=[] then true else first(strm),
   s:%yamwi_filter_lisp(x,false),
