@@ -212,7 +212,7 @@ yamwi_displa_lisp(x,[strm]) := block([s],
 /* alt-display */
 load("alt-display.mac") $
 define_alt_display(yamwi_display2d(x),
-  block([?\*display\-labels\-p\*:false, nodisplay:" style='display:none;'",inputlabel:?makelabel(inchar),err, leftjust:true, error_output:get_output_stream_string(?\*error\-output\*)],
+  block([nodisplay:" style='display:none;'",inputlabel:?makelabel(inchar),err, leftjust:true, error_output:get_output_stream_string(?\*error\-output\*)],
     err:get(inputlabel,system_error),
     if is(err#false) then
     printf(true,"<tr class='output system-error'>~% <td><span class='output-label'>~a~a</span></td><td class='error'><span class='error-message'>System error message: ~a</span></td>~%</tr>~%",outchar,linenum,err),
