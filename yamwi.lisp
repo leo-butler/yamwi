@@ -80,36 +80,19 @@
 (defun mathml-paren (x l r)
   (mathml x (append l '("<mrow>")) (cons "</mrow> " r) 'mparen 'mparen))
 
-(defun mathml1 (mexplabel &optional filename ) ;; mexplabel, and optional filename
-  (prog (mexp  texport $gcprint ccol x y)
+(defun mathml1 (mexplabel )
+  (prog (mexp texport $gcprint)
      ;; $gcprint = nil turns gc messages off
-     (setq ccol 1)
      (cond ((null mexplabel)
 	    (displa " No eqn given to MathML")
 	    (return nil)))
-     ;; collect the file-name, if any, and open a port if needed
-     (setq texport (cond((null filename) *standard-output* ); t= output to terminal
-			(t
-			 (open (string (stripdollar filename))
-			       :direction :output
-			       :if-exists :append
-			       :if-does-not-exist :create))))
+     (setq texport *standard-output*)
      ;; go back and analyze the first arg more thoroughly now.
      ;; do a normal evaluation of the expression in macsyma
      (setq mexp (meval mexplabel))
      (cond ((member mexplabel $labels :test #'eq); leave it if it is a label
-	    (setq mexplabel (intern (format nil "(~a)" (stripdollar mexplabel)))))
+	    (setq mexplabel (aformat nil "(~a)" (stripdollar mexplabel))))
 	   (t (setq mexplabel nil)));flush it otherwise
-
-     ;; maybe it is a function?
-     (cond((symbolp (setq x mexp)) ;;exclude strings, numbers
-	   (setq x ($verbify x))
-	   (cond ((setq y (mget x 'mexpr))
-		  (setq mexp (list '(mdefine) (cons (list x) (cdadr y)) (caddr y))))
-		 ((setq y (mget x 'mmacro))
-		  (setq mexp (list '(mdefmacro) (cons (list x) (cdadr y)) (caddr y))))
-		 ((setq y (mget x 'aexpr))
-		  (setq mexp (list '(mdefine) (cons (list x 'array) (cdadr y)) (caddr y)))))))
 
      ;; display the expression for MathML now:
      (myprinc "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"> " texport)
@@ -121,8 +104,6 @@
      (cond (mexplabel
 	    (format texport "<mspace width=\"verythickmathspace\"/> <mtext>~a</mtext> " mexplabel)))
      (format texport "</math>")
-     (cond(filename(terpri texport); and drain port if not terminal
-		   (close texport)))
      (return mexplabel)))
 
 ;; asdf
