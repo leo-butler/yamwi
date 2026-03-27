@@ -94,6 +94,12 @@ pre.lisp, span.retrieve{
     display: block;
     background-color: #fd8;}
 
+.warning{
+    color:		 darkred;
+    background-color:	 lightgray;
+    font-size:           small;
+    font-weight:	 bold;}
+
 /* CORRECTION : Séparer les règles */
 .menu-row {
     display:	flex;
