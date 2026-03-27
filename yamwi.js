@@ -70,6 +70,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
     make_menu_action("menu-matrix");
 });
 
+function hide_show_element(n) {
+    var e = document.getElementById('unst'+n);
+    var a = document.getElementById('unstclicka'+n);
+    if (e.style.display == "") {
+	e.style.display="none";
+	a.innerText = "show it";
+    }
+    else {
+	e.style.display="";
+	a.innerText = "hide it";
+    }
+}
+
 //////////////////////////////////////////////////////////////////////
 // Automatically resize the input textarea                          //
 //////////////////////////////////////////////////////////////////////
