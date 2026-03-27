@@ -45,6 +45,9 @@ pre{
   color:          blue;
   font-weight:    bold;
   font-size:      100%;}
+.unstructured{
+    background-color: #F0F0A0;
+}
 pre.enhanced-ascii-art, pre.ascii-art, pre.ascii {
     background-color:    lightgray;
     height:              100%;
