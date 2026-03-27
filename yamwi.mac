@@ -48,6 +48,10 @@ file_search_lisp:
    append (file_search_lisp,
            [concat(%dir_sources%, "/###.lisp")])$
 
+/* A specialized block environment that binds *standard-output*, etc */
+wmblock(varlist,[body]) ::= buildq([varlist:append(varlist,'[?\*standard\-output\*:original_standard_output]), body:body],
+  block(varlist, splice(body))) ;
+
 /* Global variables */
 
 %num_sentence%: 0$
@@ -59,10 +63,10 @@ gplt_fn() := (gplt_fn_seed:random(10^8), printf(false,"~a-maxout-~8,'0d.gnuplot"
 data_fn() := printf(false,"~a-data-~8,'0d.gnuplot",%codigo_usuario%,gplt_fn_seed);
 
 if %ffmpeg_binary% = "0" or gnuplot_command = "0" then (
-  draw_multiple_plots(drawer,fname,term,lst,[opts]) := printf(false,"<pre class='warning'>draw_multiple_plots is disabled.</pre>"),
-  Draw_movie(drawer,paramlist,[ffmpeg_options]) := printf(false,"<pre class='warning'>draw_movie is disabled.</pre>"))
+  draw_multiple_plots(drawer,fname,term,lst,[opts]) := wmblock([],printf(false,"<pre class='warning'>draw_multiple_plots is disabled.</pre>")),
+  Draw_movie(drawer,paramlist,[ffmpeg_options]) := wmblock([],printf(false,"<pre class='warning'>draw_movie is disabled.</pre>")))
 else (
-draw_multiple_plots(drawer,fname,term,lst,[opts]) := block([file,files,n:length(lst),i:0,optsf],
+draw_multiple_plots(drawer,fname,term,lst,[opts]) := wmblock([file,files,n:length(lst),i:0,optsf],
   files:[],
   for p in lst do (
     i:i+1,file:printf(false,"~a~8,'0d",fname,i),
@@ -72,7 +76,7 @@ draw_multiple_plots(drawer,fname,term,lst,[opts]) := block([file,files,n:length(
     apply(drawer,[p])),
   map(lambda([x],concat(x,".",term)),files)),
 /* see https://trac.ffmpeg.org/wiki/Slideshow */
-Draw_movie(drawer,paramlist,[ffmpeg_options]) := block([cmd,files,fname,term,output_file,linel:linel,ifr,ofr,inputlabel:?makelabel(inchar),terml,movie_term_as_symbol,muxer],
+Draw_movie(drawer,paramlist,[ffmpeg_options]) := wmblock([cmd,files,fname,term,output_file,linel:linel,ifr,ofr,inputlabel:?makelabel(inchar),terml,movie_term_as_symbol,muxer],
   [ifr,ofr]:subst(ffmpeg_options,'[ifr,ofr]),
   ifr:if numberp(ifr) and ifr>0 then ifr else 30,
   ofr:if numberp(ofr) and ofr>0 then ofr else 30,
@@ -113,7 +117,7 @@ png pngcairo gif animated_gif jpg svg (default: svg)
 */
 
 mwdrawxd(func, descgraf, mutate):=
-block([formato, formatohtml, result, unsafe_options, inputlabel:?makelabel(inchar)],
+wmblock([formato, formatohtml, result, unsafe_options, inputlabel:?makelabel(inchar)],
     if not get('draw,'version) then load("draw"),
     /* each unsafe option gives an attacker an opportunity to gain free access to gnuplot--hence a shell--via a trick like that below, so filter them out */
     unsafe_options: '[user_preamble,gnuplot_file_name,data_file_name],
@@ -146,7 +150,7 @@ Draw([descgraf])  := mwdrawxd('draw, descgraf, true) $
 
 /* Code for plot */
 mwplotxd(func, descgraf):=
-block([term_cmd:"set term svg size 600,500", cleandescgraf:[], result, unsafe_options, inputlabel:?makelabel(inchar)],
+wmblock([term_cmd:"set term svg size 600,500", cleandescgraf:[], result, unsafe_options, inputlabel:?makelabel(inchar)],
     /* each unsafe option gives an attacker an opportunity to gain free access to gnuplot--hence a shell--via a trick like that below, so filter them out */
     unsafe_options: '[png_file, svg_file, pdf_file, ps_file, gnuplot_term, gnuplot_out_file, run_viewer, gnuplot_preamble, gnuplot_postamble],
     cleandescgraf:sublist(descgraf,lambda([x], not(is(not(atom(x)) and op(x)="[" and member(first(x),unsafe_options))))),
@@ -178,10 +182,10 @@ Drawdf([params]) := Draw(apply('df_graphics, params))$
 
 /* Sanity */
 if gnuplot_command = "0" then (
-  mwdrawxd([rst]) := printf(false,"Draw is disabled."),
-  Plot2d([rst]) :=  printf(false,"plot is disabled."),
-  Plot3d([rst]) :=  printf(false,"plot is disabled."),
-  mwplotxd([rst]) := printf(false,"plot is disabled.")) $
+  mwdrawxd([rst]) := wmblock([],printf(false,"Draw is disabled.")),
+  Plot2d([rst]) := wmblock([], printf(false,"plot is disabled.")),
+  Plot3d([rst]) := wmblock([], printf(false,"plot is disabled.")),
+  mwplotxd([rst]) := wmblock([],printf(false,"plot is disabled."))) $
 
 /* sanitize */
 sanitize(s) := block([st,rep],
@@ -209,10 +213,17 @@ yamwi_displa_lisp(x,[strm]) := block([s],
   s:ssubst("","MAXIMA:",s),
   printf(strm,"~a",s))$
 
+/* $standard_output is defined is yamwi.lisp; it is the output stream that *standard-output* is bound to, by default, in `yamwi_batch' */
+yamwi_maybe_print_unstructured_text() := wmblock([stdout:get_output_stream_string(standard_output),label:random(10^9)],
+  if stringp(stdout) and slength(stdout)>0 then (
+    printf(true,"<tr id='unstclick~d' class='output unstructured'><td><span class='output-label'>Extra output</span></td><td><a id='unstclicka~d' href='#unstclick~d' onclick='hide_show_element(\"~d\");'>hide it</a></td></tr>~%",label,label,label,label,label),
+    printf(true,"<tr id='unst~d'      class='output unstructured'><td></td><td><pre>~a</pre></td></tr>~%",label,stdout))) ;
+
 /* alt-display */
 load("alt-display.mac") $
 define_alt_display(yamwi_display2d(x),
-  block([nodisplay:" style='display:none;'",inputlabel:?makelabel(inchar),err, leftjust:true, error_output:get_output_stream_string(?\*error\-output\*)],
+  wmblock([nodisplay:" style='display:none;'",inputlabel:?makelabel(inchar),err, leftjust:true, error_output:get_output_stream_string(?\*error\-output\*)],
+    yamwi_maybe_print_unstructured_text(),
     err:get(inputlabel,system_error),
     if is(err#false) then
     printf(true,"<tr class='output system-error'>~% <td><span class='output-label'>~a~a</span></td><td class='error'><span class='error-message'>System error message: ~a</span></td>~%</tr>~%",outchar,linenum,err),
@@ -243,14 +254,16 @@ define_alt_display(yamwi_display2d(x),
     printf(true,"</pre></td></tr>~%")
     )))$
 define_alt_display(yamwi_display1d(x),
-  if is(yamwi_startup_is_finished=true) and length(x) >= 2 then (
-    printf(true,"<tr>~% <td><span class='input-label'>~a~a</span></td>~% ",inchar,linenum),
-    printf(true,"<td class='inputcode interpreted'><pre class='interpreted'>~a</pre></td>~% ",second(x)),
-    printf(true,"<td class='inputcode verbatim'><pre class='verbatim'>~a</pre></td>~% ",literal_input(x)),
-    printf(true,"<td class='inputcode lisp'><pre class='lisp'>~a</pre></td>~%</tr>~%",yamwi_displa_lisp(x,false))
-    )
-  else (
-    literal_input(x),
-    if linenum>=1 then (yamwi_startup_is_finished:true, linenum:linenum-1)))$
+  wmblock([],
+    if is(yamwi_startup_is_finished=true) and length(x) >= 2 then (
+      yamwi_maybe_print_unstructured_text(),
+      printf(true,"<tr>~% <td><span class='input-label'>~a~a</span></td>~% ",inchar,linenum),
+      printf(true,"<td class='inputcode interpreted'><pre class='interpreted'>~a</pre></td>~% ",second(x)),
+      printf(true,"<td class='inputcode verbatim'><pre class='verbatim'>~a</pre></td>~% ",literal_input(x)),
+      printf(true,"<td class='inputcode lisp'><pre class='lisp'>~a</pre></td>~%</tr>~%",yamwi_displa_lisp(x,false))
+      )
+    else (
+      literal_input(x),
+      if linenum>=1 then (yamwi_startup_is_finished:true, linenum:linenum-1))))$
 set_alt_display(2,yamwi_display2d)$
 set_alt_display(1,yamwi_display1d)$

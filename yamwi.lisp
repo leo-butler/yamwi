@@ -168,13 +168,16 @@
 
 ;; Wrapper around `batch'
 ;; yamwi.php looks for <!--START--> tag in output
+(defvar $original_standard_output *standard-output*)
+(defvar $standard_output (make-string-output-stream))
 (defun $yamwi_batch(filename)
   (let ((*maxima-quiet* t)
 	(*read-base* 10.)
 	(*maxima-prolog* (format nil "<!--START-->~%<div id=\"maxima-div\"><table id=\"maxima-output\" class=\"maxima-output\">~%<tr id='maxima-banner'><td></td><td><pre>~%")))
     (maxima-banner)
     (format t "</pre></td></tr>~%")
-    (mfuncall '$batch filename)
+    (let ((*standard-output* $standard_output))
+      (mfuncall '$batch filename))
     'end_of_file
     ))
 
