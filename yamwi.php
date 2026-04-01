@@ -128,7 +128,7 @@ $dangerous_words =
    // Prevent access to gnuplot-related variables/settings
    'gnuplot_',
    // not available
-   'plotdf', 'showtime', 'julia', 'mandelbrot'
+   'plotdf', 'julia', 'mandelbrot'
    );
 
 
