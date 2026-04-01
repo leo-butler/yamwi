@@ -173,6 +173,7 @@
 (defun $yamwi_batch(filename &optional unique-id)
   (let* ((*maxima-quiet* t)
 	 (*read-base* 10.)
+	 ($values '((mlist))) ($arrays '((mlist))) ($aliases '((mlist))) ($rules '((mlist))) ($props '((mlist))) ($let_rule_packages '((mlist))) ($functions '((mlist))) ($macros '((mlist))) ($gradefs '((mlist))) ($dependencies '((mlist))) ($structures '((mlist))) ($labels '((mlist)))
 	 (id (format nil "-~x" (random most-positive-fixnum)))
 	 (*maxima-prolog* (format nil "<!--START-->~%<div id=\"maxima-div~a\" class=\"maxima-div\"><table id=\"maxima-output~:*~a\" class=\"maxima-output\">~%<tr id='maxima-banner~:*~a' class='maxima-banner'><td></td><td><pre>~%" (if unique-id id ""))))
     (maxima-banner)
