@@ -109,7 +109,7 @@ $dangerous_words =
    'pathname_type','printfile','save',
    'stringout','with_stdout','writefile',
    // Prevent snooping
-   'run_testsuite','bug_report','build_info','room','status','demo',
+   'run_testsuite','bug_report','build_info','room','status',
    'filename_merge','file_search','file_type','directory',
    'pathname_directory','pathname_name','pathname_type',
    // Prevent package loading

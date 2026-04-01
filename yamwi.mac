@@ -193,6 +193,9 @@ sanitize(s) := block([st,rep],
   s:ssubst("",printf(false," -- an error. To debug this try: debugmode(true);~%"),s),
   s) $
 
+/* demo */
+demo(file) := batch(file) $
+
 /* defun and defmacro are tex-ed in `verbatim' environment, which is not understood by MathJaX */
 /* A simple solution: re-define the environment *//*
 set_tex_environment(?mdefine,"<pre>","</pre>");
