@@ -170,47 +170,46 @@
 ;; yamwi.php looks for <!--START--> tag in output
 (defvar $original_standard_output *standard-output*)
 (defvar $standard_output (make-string-output-stream))
-(defun $yamwi_batch(filename)
-  (let ((*maxima-quiet* t)
-	(*read-base* 10.)
-	(*maxima-prolog* (format nil "<!--START-->~%<div id=\"maxima-div\"><table id=\"maxima-output\" class=\"maxima-output\">~%<tr id='maxima-banner'><td></td><td><pre>~%")))
+(defun $yamwi_batch(filename &optional unique-id)
+  (let* ((*maxima-quiet* t)
+	 (*read-base* 10.)
+	 (id (format nil "-~x" (random most-positive-fixnum)))
+	 (*maxima-prolog* (format nil "<!--START-->~%<div id=\"maxima-div~a\" class=\"maxima-div\"><table id=\"maxima-output~:*~a\" class=\"maxima-output\">~%<tr id='maxima-banner~:*~a' class='maxima-banner'><td></td><td><pre>~%" (if unique-id id ""))))
     (maxima-banner)
     (format t "</pre></td></tr>~%")
     (let ((*standard-output* $standard_output))
       (mfuncall '$batch filename))
+    (setq $showtime nil) ;; don't print time taken by $YAMWI_BATCH, it messes up output
     'end_of_file
     ))
+(defun $yamwi_batch_uid (filename) ($yamwi_batch filename t))
 
 ;; Printer for Lisp Sexps
 ;; We have little protection against loops in x
 (defun $%yamwi_filter_lisp(x &optional (strm t))
-  (labels ((circular-p (x)                 ; Adapted from CLtL1
-	     (do ((n 0 (1+ n))
-		  (fast x (cddr fast))     ;Fast pointer: leaps by 2
-		  (slow x (cdr slow)))     ;Slow pointer: leaps by 1
-		 (nil)
-	       ;; If fast pointer hits the end, list is not circular
-	       (when (or (endp fast) (endp (cdr fast))) (return nil))
-	       ;; If fast = slow, x is circular
-	       (when (and (eq fast slow) (> n 0)) (return t))))
-	   (yamwi-filter (l &optional (a 'src))
+  (labels ((yamwi-filter-from-car (l &optional (a 'src))
 	     (cond ((null l) l)
 		   ((atom l) l)
-		   ((and (listp l) (not (circular-p l)))
-		    (let ((l (remove-if (lambda(x) (and (listp x) (not (circular-p x)) (some (lambda(e) (eq e a)) x))) l)))
-		      (mapcar (lambda(i) (yamwi-filter i a)) l)))
+		   ((and (listp l) (listp (car l)))
+		    (let* ((car-l (remove-if #'(lambda(i)
+						 (and (listp i)
+						      (some #'(lambda(e) (eq e a)) i)))
+					     (car l))))
+		      (append (list car-l) (mapcar #'yamwi-filter-from-car (rest l)))))
+		   ((listp l)
+		    (mapcar #'yamwi-filter-from-car l))
 		   (t
 		    l))))
     (cond ((and (listp x) (listp (car x)) (eq (caar x) 'mlabel))
 	   ($%yamwi_filter_lisp (caddr x) strm))
 	  (t
 	   (let ((*print-circle* t))
-	     (format strm "~a" (yamwi-filter x)))))))
+	     (format strm "~w" (yamwi-filter-from-car x)))))))
 ;;
 (defmvar *print* (symbol-function 'print-impl))
 (defun $print (&rest l)
   (let (($display2d t) ($linel 1000.)
-	 (form `((mlabel simp) nil ((yamwiprint simp) ,@l))))
+	(form `((mlabel simp) nil ((yamwiprint simp) ,@l))))
     (displa form)))
 
 ;; Define printers for the YAMWIPRINT
