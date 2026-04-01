@@ -233,7 +233,7 @@ function write_form() {
             "\" onClick=\"this.form.action=this.form.action.replace(/&max=[^&]*/,'&max='+utoa(this.form.max.value)); location.href=this.form.action;\">\n".
        "<input type=\"button\" value=\"".
             $clear_button.
-            "\" onClick=\"this.form.max.value=''; return false\">\n".
+            "\" onClick=\"this.form.max.value=''; return false;\">\n".
        "<select name=\"modeselect\" id=\"modeselect\" class=\"modeselect\" onchange=\"this.form.action=this.form.action.replace(/&mode=[0-9]/,'&mode='+document.getElementById('modeselect').value); show_output(document.getElementById('modeselect').value); return true;\">\n".
        '   <option value="" disabled>Select Print Mode</option>'.
        '   <option value=0 '. ($mode == 0 ? "selected=\"selected\"" : "") . ">0 - Syntactic output</option>\n".            # ascii
