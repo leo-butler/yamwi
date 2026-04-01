@@ -16,6 +16,7 @@ replace_del(x) := subst(del = lambda([t], concat('d,t)), x) $
     if r>c then concat(texmatrix(transpose(x)),"^T")
     else printf(false,"\\begin{bmatrix}~%~{~{~a~^&~}~^\\cr{}~}~%\\end{bmatrix}",map(lambda([row],map(tex1,row)),args(x)))),
   texput(matrix,texmatrix));
+texput(?mquote,"{}^{\\prime}");
 texput(?rat,lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
 texput("/",lambda([expr],printf(false,"\\dfrac{~a}{~a}",tex1(num(expr)),tex1(denom(expr)))));
 tex_diff : lambda([expr],block([Y,X,n,eargs:args(expr),degs,vars],
