@@ -249,6 +249,7 @@ function write_form() {
        '   <option value=1 selected="selected">1 - Verbatim input</option>'.
        '   <option value=2>                    2 - Lisp Sexp</option>'.
        "</select>\n".
+       "<input type=\"button\" value=\"Hide Extra Output\" id=\"hideshowunst\" class=\"modeselect\" onclick=\"hide_show_unstructured_text(document.getElementById('hideshowunst').value); return true;\">\n".
        "</form>\n".
        "<hr>\n\n" ; }
 

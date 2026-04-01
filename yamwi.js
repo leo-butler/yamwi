@@ -70,6 +70,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     make_menu_action("menu-matrix");
 });
 
+// Unstructured output from Maxima:
+// Hide/Show piece-by-piece:
 function hide_show_element(n) {
     var e = document.getElementById('unst'+n);
     var a = document.getElementById('unstclicka'+n);
@@ -82,6 +84,23 @@ function hide_show_element(n) {
 	a.innerText = "hide it";
     }
 }
+// Hide/Show the entirety
+function hide_show_unstructured_text(value) {
+    var u = document.getElementsByClassName('unstructured');
+    if(u.length>0) {
+	var m = document.getElementById('hideshowunst');
+	var hs = value.match(/Hide/);
+	if (hs===null) {// unstructured is currently hidden
+	    Array.from(u).forEach(function(item){ item.style.display="";});
+	    m.value="Hide Extra Output";
+	} else {
+	    Array.from(u).forEach(function(item){ item.style.display="none";});
+	    m.value="Show Extra Output";}}}
+// If document contains no unstructured content, then hide the button
+document.addEventListener('DOMContentLoaded',(event) => {
+    var u = document.getElementsByClassName('unstructured');
+    if (u.length==0)
+	document.getElementById('hideshowunst').style.display="none";});
 
 //////////////////////////////////////////////////////////////////////
 // Automatically resize the input textarea                          //
