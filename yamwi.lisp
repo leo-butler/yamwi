@@ -234,3 +234,20 @@
   (append l x))
 
 (displa-def yamwiprint  dimension-match "" "")
+
+;; KILL
+(defmspec $kill (l)
+  (let* ((prohibited `($all $values $arrays $aliases $rules $props
+		       $let_rule_packages $functions $macros $gradefs $dependencies $structures
+		       $labels $inlabels $inchar $outlabels $outchar $linelabels $linechar
+		       $file_search_maxima $file_search_lisp $file_search_demo ,@$labels))
+	 bad
+	 (x (remove-if #'(lambda(y) (if (member y prohibited) (push y bad))) (cdr l))))
+    (when bad
+      (mwarning (format nil "the symbol~P ~{`~a'~^,~} ~[is~:;are~] <b style='font-weight: bold; font-size: large;'>immortal</b>! ~%Yamwi declines your `kill' request." (length bad) (mapcar #'print-invert-case (mapcar #'stripdollar bad)) (1- (length bad)))))
+    ;; (format t "KILL: x=~{~a~^,~}~%l=~{~a~^,~}" x l)
+    (cond ((some #'(lambda(y) (and (listp y) (eq (caar y) '$allbut))) x)
+	   (mwarning "kill(allbut(...)) is not allowed in Yamwi."))
+	  (t
+	   (mapc #'kill1 x)
+	   `((%killed_list) ,@x)))))
