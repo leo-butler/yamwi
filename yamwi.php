@@ -346,8 +346,7 @@ function calculate () {
       '%base64_cmd%: "'.$base64_cmd.'",'.
       '%cat_cmd%: "'.$cat_cmd.'",'.
       '%movie_term%: "'.$movie_term.'",'.
-      '%output_mode%:' . $mode . ')$' . "\n" .
-      '(linenum:0,kill(labels),%%%)$';
+      '%output_mode%:' . $mode . ')$';
 
   $yamwi_setup_mac = $yamwi_path.'/tmp/'.$key.'-setup.mac';
   $fich = fopen($yamwi_setup_mac, 'w');
