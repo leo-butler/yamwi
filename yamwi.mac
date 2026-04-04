@@ -219,9 +219,11 @@ yamwi_displa_lisp(x,[strm]) := block([s],
 
 /* $standard_output is defined is yamwi.lisp; it is the output stream that *standard-output* is bound to, by default, in `yamwi_batch' */
 yamwi_maybe_print_unstructured_text() := wmblock([stdout:get_output_stream_string(standard_output),label:random(10^9)],
-  if stringp(stdout) and slength(stdout)>0 then (
-    printf(true,"<tr id='unstclick~d' class='output unstructured'><td><span class='output-label'>Extra output</span></td><td><a id='unstclicka~d' href='#unstclick~d' onclick='hide_show_element(\"~d\");'>hide it</a></td></tr>~%",label,label,label,label,label),
-    printf(true,"<tr id='unst~d'      class='output unstructured'><td></td><td><pre>~a</pre></td></tr>~%",label,stdout))) ;
+  if stringp(stdout) then (
+    stdout:strim(printf(false," 	~%"),stdout),
+    if slength(stdout)>0 then (
+      printf(true,"<tr id='unstclick~d' class='output unstructured'><td><span class='output-label'>Extra output</span></td><td><a id='unstclicka~d' href='#unstclick~d' onclick='hide_show_element(\"~d\");'>hide it</a></td></tr>~%",label,label,label,label,label),
+      printf(true,"<tr id='unst~d'      class='output unstructured'><td></td><td><pre>~a</pre></td></tr>~%",label,stdout))));
 
 /* alt-display */
 load("alt-display.mac") $
