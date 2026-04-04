@@ -7,19 +7,20 @@
 ;; along with the question.
 (defvar *retrieve-fun* (symbol-function 'retrieve))
 (defun retrieve (form &rest optional)
-  (let ((msg (with-output-to-string (s)
-	       (let ($display2d *alt-display1d* (*standard-output* s) *display-labels-p*)
-		 (format t "<tr class='retrieve'><td></td><td><span class='retrieve'>Maxima asked: <u>")
-		 (displa form)
-		 (format t "</u></span></td></tr><tr class='retrieve'><td></td><td><span class='retrieve'>Questions can be answered by using <a href='https://maxima.sourceforge.io/docs/manual/Maxima_0027s-Database.html#index-assume'>assume</a> or typing `y;', `n;', `p;', `z;', `nz;' as appropriate.")))))
-    (let ((result (catch 'macsyma-quit
-		    (let ((*error-output* (make-string-output-stream)))
-		      (apply *retrieve-fun* `(,form ,@optional))))))
-      (cond ((eq result 'maxima-error)
-	     (displa (list '(mtext) (list '(mtext) msg)))
-	     (throw 'macsyma-quit nil))
-	    (t
-	     result)))))
+  (declare (special $standard_output $original_standard_output))
+  (let* (($linel most-positive-fixnum)
+	 (prefix   "<tr class='retrieve'><td></td><td><span class='retrieve'>Maxima asked: <u>")
+	 (suffix   "</u></span></td></tr>")
+	 (error-prefix "<tr class='retrieve'><td></td><td><span class='retrieve'>")
+	 (error-suffix "</span></td></tr>")
+	 (epilogue "<tr class='retrieve'><td></td><td><span class='retrieve'>Questions can be answered by using <a href='https://maxima.sourceforge.io/docs/manual/Maxima_0027s-Database.html#index-assume'>assume</a> or typing `y;', `n;', `p;', `z;', `nz;' as appropriate.</span></td></tr>")
+	 (result (catch 'macsyma-quit
+		   (apply *retrieve-fun* `(,form ,@optional)))))
+    (cond ((eq result 'maxima-error)
+	   (mformat $original_standard_output "~M" `((mtext) ,prefix ,form ,suffix ,error-prefix ,(get-output-stream-string $standard_output) ,error-suffix ,epilogue))
+	   (throw 'macsyma-quit 'maxima-error))
+	  (t
+	   result))))
 
 ;; to avoid problems with Internet browsers when reading strict ordering symbols
 ;; in inequalities (<, >) in LaTeX mode (mainly for MathJax), we need them
