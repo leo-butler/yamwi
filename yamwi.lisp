@@ -71,30 +71,13 @@
 (defprop mabs (("<mo>|</mo>")"<mo>|</mo> ") mathmlsym)
 (defprop mprogn (("<mo>(</mo>") "<mo>)</mo> ") mathmlsym)
 
-(defun mathml-matrix(x l r) ;;matrix looks like ((mmatrix)((mlist) a b) ...)
-  (append l `("<mrow><mo>(</mo><mtable>")
-	  (mapcan #'(lambda(y)
-		      (mathml-list (cdr y) (list "<mtr><mtd>") (list "</mtd></mtr> ") "</mtd><mtd>"))
-		  (cdr x))
-	  '("</mtable><mo>)</mo></mrow> ") r))
-
-(defun mathml-paren (x l r)
-  (mathml x (append l '("<mrow>")) (cons "</mrow> " r) 'mparen 'mparen))
-
-(defun mathml1 (mexplabel )
-  (prog (mexp texport $gcprint)
-     ;; $gcprint = nil turns gc messages off
+(defun mathml1 (mexplabel)
+  (prog ((mexp (and mexplabel (meval mexplabel)))
+	 (texport *standard-output*)
+	 $gcprint) ;; $gcprint = nil turns gc messages off
      (cond ((null mexplabel)
 	    (displa " No eqn given to MathML")
 	    (return nil)))
-     (setq texport *standard-output*)
-     ;; go back and analyze the first arg more thoroughly now.
-     ;; do a normal evaluation of the expression in macsyma
-     (setq mexp (meval mexplabel))
-     (cond ((member mexplabel $labels :test #'eq); leave it if it is a label
-	    (setq mexplabel (aformat nil "(~a)" (stripdollar mexplabel))))
-	   (t (setq mexplabel nil)));flush it otherwise
-
      ;; display the expression for MathML now:
      (myprinc "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"> " texport)
      (mapc #'(lambda (x) (myprinc x texport))
@@ -102,9 +85,8 @@
 	   ;; empty lists, and there are implicit parens
 	   ;; around the whole expression
 	   (mathml mexp nil nil 'mparen 'mparen))
-     (cond (mexplabel
-	    (format texport "<mspace width=\"verythickmathspace\"/> <mtext>~a</mtext> " mexplabel)))
      (format texport "</math>")
+     (fresh-line)
      (return mexplabel)))
 
 ;; asdf
