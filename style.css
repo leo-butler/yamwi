@@ -72,8 +72,22 @@ textarea{
     align-items:	center;
     margin:		auto;}
 .mathml{
-    font-size: large;
+    font-size: small;
     color:     black;}
+math{
+    display: block;
+}
+mi{
+    font-weight: bold;
+    color: blue;
+}
+mn{
+    font-weight: bold;
+    color: red;
+}
+.trace {
+    color: darkgreen;
+}
 .output-label::before, .input-label::before{
     content:"[";}
 .output-label::after, .input-label::after{
