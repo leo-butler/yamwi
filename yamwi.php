@@ -94,7 +94,7 @@ $dangerous_words =
    // Prevent calls to a shell
    'system',
    // Prevent strings from being evaluated
-   'eval_string',
+   'eval_string', 'eval_lisp_string',
    // Prevent writing to filesystem
    'compfile','compile','compile_file','translate','translate_file',
    'opena','openr','openw','write_data',
