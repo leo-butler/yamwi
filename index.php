@@ -21,8 +21,7 @@
 
 <body>
 
-<h1><a href="index.php" class="homepage"><i>Maxima Online</i></a></h1>
-
+<h1><a id='index' href="index.php" class="homepage"><i>Maxima Online</i></a></h1>
 <p class="small-right">Help: 
 <a href="help/help_es.html" target="_blank">Español</a>, 
 <a href="help/help_en.html" target="_blank">English</a>
@@ -229,7 +228,12 @@ document.getElementById("saveBatchBtn").addEventListener("click", function() {
 
 <button onclick="window.scrollTo({top: 0, behavior: 'smooth'});">Back to top</button>
 
-<p class="small-left"><a href="https://github.com/leo-butler/yamwi/" target = "_blank">Yamwi Source</a></p>
+<p class="small-left"><a href="https://github.com/leo-butler/yamwi/" target = "_blank">Yamwi Source</a>
+<?php
+if ($git_info === '') { $git_info=`git rev-parse HEAD`; };
+echo '<br/><span id="yamwi-version">Yamwi version: <a href=https://github.com/leo-butler/yamwi/commits/'.$git_info.'>'.$git_info.'</a></span>';
+?>
+</p>
 
 
 </body>

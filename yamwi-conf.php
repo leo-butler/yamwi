@@ -36,6 +36,8 @@ $base64_cmd = '/usr/bin/base64 -w 0';
 
 $cat_cmd = '/usr/bin/cat';
 
+$git_info = ''; // put release information in site-conf.php, to over-ride the auto-generated tag.
+
 if(file_exists("site-conf.php")) {include "site-conf.php";}
 
 //////////////
