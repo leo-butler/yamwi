@@ -235,3 +235,83 @@
 	  (t
 	   (mapc #'kill1 x)
 	   `((%killed_list) ,@x)))))
+
+;; Secure MEVAL
+(defvar *prohibited-symbols*
+  '(;; Prevent access to LISP variables/functions from Maxima
+    $to_lisp
+    ;; Prevent calls to a shell
+    $system
+    ;; Prevent strings from being evaluated
+    $eval_string $eval_lisp_string
+    ;; Prevent writing to filesystem
+    $compfile $compile $compile_file $translate $translate_file
+    $opena $openr $openw $write_data
+    ;; Filter IO commands (from section 13.2 of Maxima manual)
+    $appendfile
+    $closefile $file_output_append $filename_merge
+    $file_search $file_search_maxima $file_search_lisp
+    $file_search_demo $file_search_usage $file_search_tests
+    $file_type $file_type_lisp $file_type_maxima
+    $load_pathname $loadfile
+    $loadprint $pathname_directory $pathname_name
+    $pathname_type $printfile $save
+    $stringout $with_stdout $writefile
+    ;; Prevent snooping
+    $run_testsuite
+    $filename_merge $file_search $file_type $directory
+    $pathname_directory $pathname_name $pathname_type
+    ;; Prevent package loading
+    $loadfile $setup_autoload
+    ;; Prevent reading files
+    $read_matrix $read_lisp_array $read_maxima_array $read_hashed_array
+    $read_nested_list $read_list $entermatrix
+    ;; Prevent misc. graphics operations
+    $openplot_curves $xgraph_curves $plot2d_ps $psdraw_curve $pscom
+    ;; Prevent string/symbol creation
+    $readbyte $readchar $readline $writebyte
+    $make_string_input_stream $make_string_output_stream $get_output_stream_string
+    ;; Prevent access to functions/variables in yamwi.mac
+    $yamwi_display1d $yamwi_display2d $oned_display $twod_display $mathml $set_alt_display $set_prompt $reset_displays
+    ;; not available
+    $plotdf $julia $mandelbrot
+    ))
+(defun mheader (op)
+  (let* ((ret  (add-lineinfo (or (safe-get op 'mheader) (ncons op))))
+	 (file (cadadr ret)))
+    (cond ((and (and (stringp file) ($ssearch "/tmp/" file))
+		(member op *prohibited-symbols*))
+	   (merror "</pre><div class='prohibited'>MHEADER: Use of the symbol <u class='prohibited'>~a</u> is prohibited in Yamwi.</div><pre class='maxima-error'>" (stripdollar op)))
+	  ((null file)
+	   ret)
+	  (t
+	   (reverse (cons 'untrusted (reverse ret)))))))
+
+(defvar *meval-fun* (symbol-function 'meval))
+(defvar *trusted-calculation* nil)
+(defun meval-secure (form)
+  (let (prohibited-sym)
+    (flet ((prohibited-result (x)
+	     ;; either x is a prohibited symbol
+	     ;; or x is a form ((msetq) * **) and * is a prohibited symbol
+	     ;; [if ** is a prohibited symbol, it will get trapped by the first clause
+	     (cond ((and (not *trusted-calculation*)
+			 (atom x)
+			 (member x *prohibited-symbols*))
+		    (setq prohibited-sym x))
+		   ((and (not *trusted-calculation*)
+			 (listp x) (listp (car x))
+			 (member (caar x) '(msetq mset))
+			 (member (cadr x) *prohibited-symbols*))
+		    (setq prohibited-sym (cadr x)))
+		   (t nil)))
+	   (bad-news ()
+	     (merror "</pre><div class='prohibited'>MEVAL: Use of the symbol <u class='prohibited'>~a</u> is prohibited in Yamwi.</div><pre class='maxima-error'>" (stripdollar prohibited-sym))))
+      (cond ((not (prohibited-result form))
+	     (let ((result (funcall *meval-fun* form)))
+	       (if (prohibited-result result)
+		   (bad-news)
+		   result)))
+	    (t
+	     (bad-news))))))
+(defun meval (form) (meval-secure form))
