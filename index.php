@@ -134,23 +134,12 @@ start($default_code);
 <hr>
 
 <button id="btn-pdf">Save as PDF</button>
-
 <script>
 document.getElementById('btn-pdf').addEventListener('click', function () {
-    // On capture tout le body (ou une zone spécifique si besoin)
-    const element = document.body;
-
-    const opt = {
-        margin:       10,
-        filename:     'resultats-maxima.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    html2pdf().set(opt).from(element).save();
+    window.print();
 });
 </script>
+  
 
 <button id="saveBtn">Save commands (.mac)</button>
 <script>
