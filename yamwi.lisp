@@ -153,9 +153,15 @@
 ;; yamwi.php looks for <!--START--> tag in output
 (defvar $original_standard_output *standard-output*)
 (defvar $standard_output (make-string-output-stream))
+(defvar *trusted-calculation* t
+  "If T, then `MEVAL-SECURE' evaluates without checking the trusted
+status of the form. If NIL, then `MEVAL-SECURE' checks the trusted
+status and throws an error if the form is untrusted and contains a
+prohibited symbol.")
 (defun $yamwi_batch(filename &optional unique-id)
   (let* ((*maxima-quiet* t)
 	 (*read-base* 10.)
+	 (*trusted-calculation* nil)
 	 ($values '((mlist))) ($arrays '((mlist))) ($aliases '((mlist))) ($rules '((mlist))) ($props '((mlist))) ($let_rule_packages '((mlist))) ($functions '((mlist))) ($macros '((mlist))) ($gradefs '((mlist))) ($dependencies '((mlist))) ($structures '((mlist))) ($labels '((mlist)))
 	 (id (format nil "-~x" (random most-positive-fixnum)))
 	 (*maxima-prolog* (format nil "<!--START-->~%<div id=\"maxima-div~a\" class=\"maxima-div\"><table id=\"maxima-output~:*~a\" class=\"maxima-output\">~%<tr id='maxima-banner~:*~a' class='maxima-banner'><td></td><td><pre>~%" (if unique-id id ""))))
@@ -244,7 +250,23 @@
 	   (mapc #'kill1 x)
 	   `((%killed_list) ,@x)))))
 
-;; Secure MEVAL
+;;;; Secure MEVAL
+;;
+;; To secure Maxima's evaluator, MEVAL, we define a list
+;; *PROHIBITED-SYMBOLS* and a state *TRUSTED-CALCULATION*. When
+;; *TRUSTED-CALCULATION* is T, MEVAL evaluates a form without further
+;; inspection. When it is NIL, MEVAL checks if the form's CAR contains
+;; the symbol UNTRUSTED. If it does, then check if the CAAR is an
+;; untrusted symbol or if the CAAR is an MFEXPR* or if the CAR
+;; contains ARRAY. In the former case, emit an error message; in the
+;; latter two cases, check if the form contains an untrusted symbol
+;; and emit an error message if so.
+;;
+;;;;
+(defun yerror (fmt-string &rest l)
+  (apply #'format (append (list *error-output* fmt-string) (mapcar #'(lambda(s) (print-invert-case (stripdollar s))) l)))
+  (throw 'macsyma-quit nil))
+
 (defvar *prohibited-symbols*
   '(;; Prevent access to LISP variables/functions from Maxima
     $to_lisp
@@ -281,45 +303,73 @@
     $make_string_input_stream $make_string_output_stream $get_output_stream_string
     ;; Prevent access to functions/variables in yamwi.mac
     $yamwi_display1d $yamwi_display2d $oned_display $twod_display $mathml $set_alt_display $set_prompt $reset_displays
+    $%num_sentence% $%num_grafico% $mwdrawxd $Draw2d $Draw3d $Draw $mwplotxd $Plot2d $Plot3d $Scatterplot $Histogram $Barsplot $Piechart $Boxplot $Starplot $Drawdf
+    $maxima_tempdir $maxima_userdir $%num_proceso% $%codigo_usuario% $%dir_sources% $%movie_muxer% $%movie_is_embedded% $%ffmpeg_binary% $%base64_cmd% $%output_mode% $%gcl%
+    ;;$standard_output $original_standard_output
     ;; not available
     $plotdf $julia $mandelbrot
     ))
 (defun mheader (op)
+  (declare (special $%codigo_usuario%))
   (let* ((ret  (add-lineinfo (or (safe-get op 'mheader) (ncons op))))
 	 (file (cadadr ret)))
-    (cond ((and (and (stringp file) ($ssearch "/tmp/" file))
+    (cond ((and (not *trusted-calculation*)
+		(and (stringp file) ($ssearch ($sconcat "/tmp/" $%codigo_usuario% ".mac") file))
 		(member op *prohibited-symbols*))
-	   (merror "</pre><div class='prohibited'>MHEADER: Use of the symbol <u class='prohibited'>~a</u> is prohibited in Yamwi.</div><pre class='maxima-error'>" (stripdollar op)))
-	  ((null file)
+	   (yerror "</pre><div class='prohibited'>MHEADER: Use of the symbol <u class='prohibited'>~a</u> is prohibited in Yamwi.</div><pre class='maxima-error'>" op))
+	  ((or *trusted-calculation* (null file))
 	   ret)
 	  (t
 	   (reverse (cons 'untrusted (reverse ret)))))))
 
 (defvar *meval-fun* (symbol-function 'meval))
-(defvar *trusted-calculation* nil)
 (defun meval-secure (form)
-  (let (prohibited-sym)
-    (flet ((prohibited-result (x)
-	     ;; either x is a prohibited symbol
-	     ;; or x is a form ((msetq) * **) and * is a prohibited symbol
-	     ;; [if ** is a prohibited symbol, it will get trapped by the first clause
-	     (cond ((and (not *trusted-calculation*)
-			 (atom x)
-			 (member x *prohibited-symbols*))
-		    (setq prohibited-sym x))
-		   ((and (not *trusted-calculation*)
-			 (listp x) (listp (car x))
-			 (member (caar x) '(msetq mset))
-			 (member (cadr x) *prohibited-symbols*))
-		    (setq prohibited-sym (cadr x)))
+  (labels ((find-prohibited (x)
+	     ;; Recursively search the form `x' for a prohibited symbol.
+	     ;; If one is found, then it is returned, otherwise NIL.
+	     (cond (*trusted-calculation* nil)
+		   ((and (atom x)
+			 (member x *prohibited-symbols*)
+			 x))
+		   ((consp x)
+		    (or (and (car x) (find-prohibited (car x)))
+			(and (cdr x) (find-prohibited (cdr x)))))
 		   (t nil)))
-	   (bad-news ()
-	     (merror "</pre><div class='prohibited'>MEVAL: Use of the symbol <u class='prohibited'>~a</u> is prohibited in Yamwi.</div><pre class='maxima-error'>" (stripdollar prohibited-sym))))
-      (cond ((not (prohibited-result form))
-	     (let ((result (funcall *meval-fun* form)))
-	       (if (prohibited-result result)
-		   (bad-news)
-		   result)))
-	    (t
-	     (bad-news))))))
+	   (prohibited-result (x)
+	     ;; either x is a prohibited symbol or x is a form ((OP
+	     ;; ...) * **) where OP=MSETQ MSET or $MAKELIST and *
+	     ;; contains a prohibited symbol [if ** contains a
+	     ;; prohibited symbol, it will get trapped by the first
+	     ;; clause, eventually].
+	     (when (not *trusted-calculation*)
+	       (cond ((or (eq x t) (null x)) nil)
+		     ((and (atom x)
+			   (member x *prohibited-symbols*))
+		      x)
+		     ((and (listp x) (listp (car x)))
+		      (cond ((member 'untrusted (car x))
+			     (or
+			      (car (member (caar x) *prohibited-symbols*))
+			      (and (get    (caar x) 'mfexpr*)
+				   ;; According to src/mtrace.lisp, lines
+				   ;; 111-136, the only functions that do not
+				   ;; evaluate their argument are MFEXPR*. In
+				   ;; that case, we must directly scan X to find
+				   ;; any prohibited symbols, rather than
+				   ;; relying on recursive calls to MEVAL.
+				   (find-prohibited x))))
+			    ;; An ARRAY is not processed by MHEADER,
+			    ;; so treat them as untrusted.
+			    ((member 'array (car x))
+			     (car (member (caar x) *prohibited-symbols*)))
+			    (t nil)))
+		     (t
+		      nil))))
+	   (bad-news (sym)
+	     (when sym
+	       (yerror "</pre><div class='prohibited'>MEVAL: Use of the symbol <u class='prohibited'>~a</u> is prohibited in Yamwi.</div><pre class='maxima-error'>" sym))))
+  (unless (bad-news (prohibited-result form))
+    (let ((result (funcall *meval-fun* form)))
+      (unless (bad-news (prohibited-result result))
+	result)))))
 (defun meval (form) (meval-secure form))
