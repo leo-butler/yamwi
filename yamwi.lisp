@@ -168,6 +168,12 @@
     ))
 (defun $yamwi_batch_uid (filename) ($yamwi_batch filename t))
 
+;; Sanitize output
+(defmspec $yamwi_with_sanitized_output (l)
+  (let* ((body (cadr l))          ;; BODY must print output to *STANDARD-OUTPUT*
+	 (strm (null (caddr l)))) ;; STRM is T by default (no arg), otherwise NIL
+    (format strm "~a" ($xml_sanitize (with-output-to-string (*standard-output*) (meval body))))))
+
 ;; Printer for Lisp Sexps
 ;; We have little protection against loops in x
 (defun $%yamwi_filter_lisp(x &optional (strm t))
