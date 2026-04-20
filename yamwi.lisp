@@ -62,6 +62,12 @@
   (declare (special *collect-input* *batchload-stream-fun*))
   (let (*collect-input*)
     (funcall *batchload-stream-fun* in-stream :autoloading-p autoloading-p)))
+;; $LOAD is a DEFMFUN, which means that LOAD-IMPL does all the work
+(defvar *load-impl-fun* (symbol-function 'load-impl))
+(defun load-impl (filename)
+  (let ((*trusted-calculation* t))
+    (declare (special *trusted-calculation*))
+    (funcall *load-impl-fun* filename)))
 
 ;; patches to lurkmathml
 ;; `mfenced' is an unsupported mathml element
