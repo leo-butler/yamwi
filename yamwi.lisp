@@ -281,7 +281,7 @@ prohibited symbol.")
     ;; Prevent strings from being evaluated
     $eval_string $eval_lisp_string
     ;; Prevent writing to filesystem
-    $compfile $compile $compile_file $translate $translate_file
+    $compfile $compile_file $translate_file
     $opena $openr $openw $write_data
     ;; Filter IO commands (from section 13.2 of Maxima manual)
     $appendfile
@@ -301,7 +301,7 @@ prohibited symbol.")
     $loadfile $setup_autoload
     ;; Prevent reading files
     $read_matrix $read_lisp_array $read_maxima_array $read_hashed_array
-    $read_nested_list $read_list $entermatrix
+    $read_nested_list $read_list
     ;; Prevent misc. graphics operations
     $openplot_curves $xgraph_curves $plot2d_ps $psdraw_curve $pscom
     ;; Prevent string/symbol creation
