@@ -50,8 +50,9 @@ file_search_lisp:
            [concat(%dir_sources%, "/###.lisp")])$
 
 /* A specialized block environment that binds *standard-output*, etc */
-wmblock(varlist,[body]) ::= buildq([varlist:append(varlist,'[?\*standard\-output\*:original_standard_output]), body:body],
-  block(varlist, splice(body))) ;
+wmblock(varlist,[body]) ::= buildq([varlist:append('[?\*standard\-output\*:original_standard_output],varlist), body:body],
+  block([?\*trusted\-calculation\*:true],
+    block(varlist, splice(body)))) ;
 
 /* Global variables */
 
