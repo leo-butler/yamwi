@@ -88,47 +88,15 @@ $yamwi_path = getcwd();
 $dangerous_words =
    array(
    // Prevent LISP code from being executed
-   ':lisp',':lisp-quiet','to_lisp','to-maxima',
+   ':lisp',':lisp-quiet','to-maxima',
    // Prevent access to LISP variables/functions from Maxima
    '?',
-   // Prevent calls to a shell
-   'system',
-   // Prevent strings from being evaluated
-   'eval_string', 'eval_lisp_string',
-   // Prevent writing to filesystem
-   'compfile','compile','compile_file','translate','translate_file',
-   'opena','openr','openw','write_data',
-   // Filter IO commands (from section 13.2 of Maxima manual)
-   'appendfile','batch','batchload',
-   'closefile','file_output_append','filename_merge',
-   'file_search','file_search_maxima','file_search_lisp',
-   'file_search_demo','file_search_usage','file_search_tests',
-   'file_type','file_type_lisp','file_type_maxima',
-   'load_pathname','loadfile',
-   'loadprint','pathname_directory','pathname_name',
-   'pathname_type','printfile','save',
-   'stringout','with_stdout','writefile',
-   // Prevent snooping
-   'run_testsuite','bug_report','build_info','room','status',
-   'filename_merge','file_search','file_type','directory',
-   'pathname_directory','pathname_name','pathname_type',
-   // Prevent package loading
-   'batch','batchload','loadfile','setup_autoload',
-   // Prevent reading files
-   'read_matrix','read_lisp_array','read_maxima_array','read_hashed_array',
-   'read_nested_list','read_list','entermatrix',
-   // Prevent misc. graphics operations
-   'openplot_curves','xgraph_curves','plot2d_ps','psdraw_curve','pscom',
-   // Prevent string/symbol creation
-   'concat','sconcat','printf','string','readbyte','readchar','readline','writebyte',
-   'make_string_input_stream','make_string_output_stream','get_output_stream_string',
-   // Prevent access to functions/variables in yamwi.mac
-   'file_search_maxima','file_search_lisp','%num_sentence%','%num_grafico%','mwdrawxd','Draw2d','Draw3d','Draw','mwplotxd','Plot2d','Plot3d','Scatterplot','Histogram','Barsplot','Piechart','Boxplot','Starplot','Drawdf','translate_into_tex','translate_into_print','yamwi_display','oned_display','twod_display','mathml','set_alt_display','set_prompt','reset_displays',
-   'maxima_tempdir', 'maxima_userdir', '%num_proceso%', '%codigo_usuario%', '%dir_sources%', '%movie_muxer%', '%movie_is_embedded%', '%ffmpeg_binary%', '%base64_cmd%', '%output_mode%', '%gcl%',
+   // Prevent access to Yamwi internals
+   'yamwi_',
+   // wmblock binds *trusted-calculation* to t
+   'wmblock',
    // Prevent access to gnuplot-related variables/settings
-   'gnuplot_',
-   // not available
-   'plotdf', 'julia', 'mandelbrot'
+   'gnuplot_'
    );
 
 
