@@ -153,7 +153,7 @@
   '$done)
 
 ;; Epilog: yamwi.php looks for <!--END--> tag in output
-(setq *maxima-epilog*   (format nil "</table></div>~%<!--END-->~%"))
+(setq *maxima-epilog*   (format nil "</tbody></table></div>~%<!--END-->~%"))
 
 ;; Wrapper around `batch'
 ;; yamwi.php looks for <!--START--> tag in output
@@ -170,9 +170,9 @@ prohibited symbol.")
 	 (*trusted-calculation* nil)
 	 ($values '((mlist))) ($arrays '((mlist))) ($aliases '((mlist))) ($rules '((mlist))) ($props '((mlist))) ($let_rule_packages '((mlist))) ($functions '((mlist))) ($macros '((mlist))) ($gradefs '((mlist))) ($dependencies '((mlist))) ($structures '((mlist))) ($labels '((mlist)))
 	 (id (format nil "-~x" (random most-positive-fixnum)))
-	 (*maxima-prolog* (format nil "<!--START-->~%<div id=\"maxima-div~a\" class=\"maxima-div\"><table id=\"maxima-output~:*~a\" class=\"maxima-output\">~%<tr id='maxima-banner~:*~a' class='maxima-banner'><td></td><td><pre>~%" (if unique-id id ""))))
+	 (*maxima-prolog* (format nil "<!--START-->~%<div id=\"maxima-div~a\" class=\"maxima-div\"><table id=\"maxima-output~:*~a\" class=\"maxima-output\">~%<tbody>~%<tr id='maxima-banner~:*~a' class='maxima-banner'><th colspan='7'><pre>~%" (if unique-id id ""))))
     (maxima-banner)
-    (format t "</pre></td></tr>~%")
+    (format t "</pre></th></tr>~%")
     (let ((*standard-output* $standard_output))
       (mfuncall '$batch filename))
     (setq $showtime nil) ;; don't print time taken by $YAMWI_BATCH, it messes up output

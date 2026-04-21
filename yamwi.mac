@@ -277,7 +277,7 @@ define_alt_display(yamwi_display1d(x),
       printf(true,"<tr>~% <td><span class='input-label'>~a~a</span></td>~% ",inchar,linenum),
       printf(true,"<td class='inputcode interpreted'><pre class='interpreted'>~a</pre></td>~% ",yamwi_with_sanitized_output(oned_display(x),'string)),
       printf(true,"<td class='inputcode verbatim'><pre class='verbatim'>~a</pre></td>~% ",xml_sanitize(literal_input(x))),
-      printf(true,"<td class='inputcode lisp'><pre class='lisp'>~a</pre></td>~%</tr>~%",yamwi_with_sanitized_output(yamwi_displa_lisp(x,true),'string))
+      printf(true,"<td class='inputcode lisp'><pre class='lisp'>~a</pre></td><td></td><td></td><td></td>~%</tr>~%",yamwi_with_sanitized_output(yamwi_displa_lisp(x,true),'string))
       )
     else (
       literal_input(x),
