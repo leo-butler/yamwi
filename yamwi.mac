@@ -211,6 +211,13 @@ yamwi_tex(sx) := block([try],
     printf(true,"<pre class='warning'>An error occurred in LaTeX generation.</pre>"),
     printf(true,"<pre class='warning'>~a</pre>",error)));
 
+/* Sanitize strings in the expression x by applying the rule `sanitize_strings */
+yamwi_mathml_open_quote:"&#x201c;"; /* “ */
+yamwi_mathml_close_quote:"&#x201d"; /* ” */
+matchdeclare(yamwi_SSS,stringp);
+defrule(sanitize_strings,yamwi_SSS,sconcat(yamwi_mathml_open_quote,xml_sanitize(yamwi_SSS),yamwi_mathml_close_quote));
+yamwi_mathml(x) := mathml(applyb1(x,sanitize_strings));
+
 yamwi_displa_lisp(x,[strm]) := block([s],
   strm:if strm=[] then true else first(strm),
   s:%yamwi_filter_lisp(x,false),
@@ -223,6 +230,7 @@ yamwi_maybe_print_unstructured_text() := wmblock([stdout:get_output_stream_strin
   if stringp(stdout) then (
     stdout:strim(printf(false," 	~%"),stdout),
     if slength(stdout)>0 then (
+      stdout:xml_sanitize(stdout),
       printf(true,"<tr id='unstclick~d' class='output unstructured'><td><span class='output-label'>Extra output</span></td><td><a id='unstclicka~d' href='#unstclick~d' onclick='hide_show_element(\"~d\");'>hide it</a></td></tr>~%",label,label,label,label,label),
       printf(true,"<tr id='unst~d'      class='output unstructured'><td></td><td><pre>~a</pre></td></tr>~%",label,stdout))));
 
@@ -232,8 +240,8 @@ define_alt_display(yamwi_display2d(x),
   wmblock([nodisplay:" style='display:none;'",inputlabel:?makelabel(inchar),err, leftjust:true, error_output:get_output_stream_string(?\*error\-output\*)],
     yamwi_maybe_print_unstructured_text(),
     err:get(inputlabel,system_error),
-    if is(err#false) then
-    printf(true,"<tr class='output system-error'>~% <td><span class='output-label'>~a~a</span></td><td class='error'><span class='error-message'>System error message: ~a</span></td>~%</tr>~%",outchar,linenum,err),
+    if is(err#false) then (err:xml_sanitize(err),
+    printf(true,"<tr class='output system-error'>~% <td><span class='output-label'>~a~a</span></td><td class='error'><span class='error-message'>System error message: ~a</span></td>~%</tr>~%",outchar,linenum,err)),
     if slength(error_output)>0 then block([input:literal_input(inputlabel)],
       if stringp(input) and slength(input)>0 then (
         printf(true,"<tr><td><span class='input-label'>~a~a</span></td>",inchar,linenum-1),
@@ -244,22 +252,22 @@ define_alt_display(yamwi_display2d(x),
     else if second(x)#'?end_of_file then (
     printf(true,"<tr>~% <td class='output'><span class='output-label'>~a</span></td>~%",if first(x)=false then "" else first(x)),
     printf(true,"<td class='output ascii'~a><pre class='ascii'>",if %output_mode%=0 then "" else nodisplay),
-    oned_display(x),
+    yamwi_with_sanitized_output(oned_display(x)),
     printf(true,"</pre></td>~%"),
     printf(true,"<td class='output ascii-art'~a><pre class='ascii-art'>",if %output_mode%=1 then "" else nodisplay),
-    twod_display(x),
+    yamwi_with_sanitized_output(twod_display(x)),
     printf(true,"</pre></td>~%"),
     printf(true,"<td class='output enhanced-ascii-art'~a><pre class='enhanced-ascii-art'>~%",if %output_mode%=2 then "" else nodisplay),
-    twod_display(x),
+    yamwi_with_sanitized_output(twod_display(x)),
     printf(true,"</pre></td>~%"),
     printf(true,"<td class='output mathml'~a><span class='mathml'>",if %output_mode%=3 then "" else nodisplay),
-    mathml(second(x)),
+    yamwi_mathml(second(x)),
     printf(true,"</span></td>~%"),
     printf(true,"<td class='output tex-mathjax'~a><span class='tex-mathjax'>~%",if %output_mode%=4 then "" else nodisplay),
-    yamwi_tex(second(x)),
+    yamwi_with_sanitized_output(yamwi_tex(second(x))),
     printf(true,"</span></td>~%"),
     printf(true,"<td class='output lisp'~a><pre class='lisp'>",if %output_mode%=5 then "" else nodisplay),
-    yamwi_displa_lisp(x),
+    yamwi_with_sanitized_output(yamwi_displa_lisp(x)),
     printf(true,"</pre></td></tr>~%")
     )))$
 define_alt_display(yamwi_display1d(x),
@@ -267,9 +275,9 @@ define_alt_display(yamwi_display1d(x),
     if is(yamwi_startup_is_finished=true) and length(x) >= 2 then (
       yamwi_maybe_print_unstructured_text(),
       printf(true,"<tr>~% <td><span class='input-label'>~a~a</span></td>~% ",inchar,linenum),
-      printf(true,"<td class='inputcode interpreted'><pre class='interpreted'>~a</pre></td>~% ",second(x)),
-      printf(true,"<td class='inputcode verbatim'><pre class='verbatim'>~a</pre></td>~% ",literal_input(x)),
-      printf(true,"<td class='inputcode lisp'><pre class='lisp'>~a</pre></td>~%</tr>~%",yamwi_displa_lisp(x,false))
+      printf(true,"<td class='inputcode interpreted'><pre class='interpreted'>~a</pre></td>~% ",yamwi_with_sanitized_output(oned_display(x),'string)),
+      printf(true,"<td class='inputcode verbatim'><pre class='verbatim'>~a</pre></td>~% ",xml_sanitize(literal_input(x))),
+      printf(true,"<td class='inputcode lisp'><pre class='lisp'>~a</pre></td>~%</tr>~%",yamwi_with_sanitized_output(yamwi_displa_lisp(x,true),'string))
       )
     else (
       literal_input(x),
