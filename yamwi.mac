@@ -78,7 +78,7 @@ draw_multiple_plots(drawer,fname,term,lst,[opts]) := wmblock([file,files,n:lengt
     apply(drawer,[p])),
   map(lambda([x],concat(x,".",term)),files)),
 /* see https://trac.ffmpeg.org/wiki/Slideshow */
-Draw_movie(drawer,paramlist,[ffmpeg_options]) := wmblock([cmd,files,fname,term,output_file,linel:linel,ifr,ofr,inputlabel:?makelabel(inchar),terml,movie_term_as_symbol,muxer],
+Draw_movie(drawer,paramlist,[ffmpeg_options]) := wmblock([cmd,files,fname,term,output_file,linel:linel,ifr,ofr,inputlabel:?makelabel(inchar),terml,movie_term_as_symbol,muxer,rnd:random(10^9)],
   [ifr,ofr]:subst(ffmpeg_options,'[ifr,ofr]),
   ifr:if numberp(ifr) and ifr>0 then ifr else 30,
   ofr:if numberp(ofr) and ofr>0 then ofr else 30,
@@ -92,7 +92,7 @@ Draw_movie(drawer,paramlist,[ffmpeg_options]) := wmblock([cmd,files,fname,term,o
   terml:sexplode(%movie_term%),
   term:printf(false,"~{~a~}",makelist(terml[k],k,1,3)),
   /* in yamwi.php, maxima_tempdir is hard-coded to be ./tmp */
-  fname:concat("tmp/movie-still-",%codigo_usuario%,"-",%num_proceso%,"-",%num_movie%:%num_movie%+1,"-"),
+  fname:concat("tmp/movie-still-",%codigo_usuario%,"-",rnd,"-",%num_proceso%,"-",%num_movie%:%num_movie%+1,"-"),
   output_file:concat(fname,"0.",muxer),
   movie_term_as_symbol:eval_string(term),
   files:draw_multiple_plots(drawer,fname,movie_term_as_symbol,paramlist),
