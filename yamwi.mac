@@ -94,7 +94,7 @@ Draw_movie(drawer,paramlist,[ffmpeg_options]) := wmblock([cmd,files,fname,term,o
   /* in yamwi.php, maxima_tempdir is hard-coded to be ./tmp */
   fname:concat("tmp/movie-still-",%codigo_usuario%,"-",rnd,"-",%num_proceso%,"-",%num_movie%:%num_movie%+1,"-"),
   output_file:concat(fname,"0.",muxer),
-  movie_term_as_symbol:eval_string(term),
+  movie_term_as_symbol:yamwi_eval_string(term),
   files:draw_multiple_plots(drawer,fname,movie_term_as_symbol,paramlist),
   cmd:if %movie_is_embedded%=1 then printf(false,"/bin/sh -c ~a -y -framerate ~a -f image2 -i ~a%08d.~a ~{~a ~} -f ~a - | ~a",%ffmpeg_binary%,ifr,fname,term,ffmpeg_options,muxer,%base64_cmd%)
     else printf(false,"~a -y -framerate ~a -f image2 -i ~a%08d.~a ~{~a ~} ~a",%ffmpeg_binary%,ifr,fname,term,ffmpeg_options,output_file),

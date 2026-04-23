@@ -54,6 +54,10 @@
     (setf (get 'vinput c-tag) (format nil "~{~a~}" (reverse *input-char-stream*))
 	  *input-char-stream*  '())
     (get 'vinput c-tag)))
+(defun $yamwi_eval_string (s)
+  (let (*collect-input*)
+    (declare (special *collect-input*))
+    ($eval_string s)))
 
 ;; We need to turn off the collection of input characters inside of BATCHLOAD-STREAM
 ;; Thanks to Jinsong Zhao, https://sourceforge.net/p/maxima/mailman/message/59292578/
