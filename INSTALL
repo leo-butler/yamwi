@@ -19,8 +19,8 @@ fi
 echo "  Step 2. Make www-data as yamwi owner..."
 chown -R www-data:www-data yamwi
 
-echo "  Step 3. Give read and executable permissions to owner, and nobody else..."
-chmod -R u=rx,go= yamwi
+echo "  Step 3. Give read and executable permissions to owner and group, and nobody else..."
+chmod -R gu=rx,o= yamwi
 
 echo -n "  Step 4. Give also write permission in temporary folder..."
 chmod u+w yamwi/tmp
