@@ -10,6 +10,14 @@ p{
   font-size:      100%;
   text-align:     justify;
   color:          #000000; }
+div.prohibited {
+    color: black;
+    font-size: 150%;
+}
+u.prohibited {
+    color: red;
+    font-size: 200%;
+}
 .error{
   font-size:      130%;
   color:          red;
@@ -79,7 +87,7 @@ math{
     margin-top: 1em;
     margin-bottom: 1em;
 }
-mi{
+mi, mo{
     font-weight: bold;
     color: blue;
 }
@@ -104,7 +112,7 @@ pre.lisp, span.retrieve{
     margin:		25px;
     font-weight:	bold;
     font-style:		oblique;}
-.maxima-banner{
+.maxima-banner, .maxima-banner pre{
     color: black;
     font-family: monospace;
     display: block;
