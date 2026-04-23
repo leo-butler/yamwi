@@ -113,10 +113,10 @@ pre.lisp, span.retrieve{
     font-weight:	bold;
     font-style:		oblique;}
 .maxima-banner, .maxima-banner pre{
-    color: black;
-    font-family: monospace;
-    display: block;
-    background-color: #fd8;}
+    color:		black;
+    font-family:	monospace;
+    display:		grid;
+    background-color:	#fd8;}
 
 .warning{
     color:		 darkred;
