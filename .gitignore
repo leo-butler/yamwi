@@ -3,3 +3,7 @@
 /tmp/
 /.maxima/
 /site-conf.php
+*tar.gz
+/hunch.lisp
+*.pdf
+/README.org_archive
