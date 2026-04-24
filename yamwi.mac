@@ -206,7 +206,8 @@ sanitize(s) := block([st,rep],
   s) $
 
 /* demo */
-demo(file) := batch(file) $
+demo(file) := if symbolp(file) or (stringp(file) and ssearch(".dem",file)=false) then batch(printf(false,"~a.dem",file))
+else batch(file) $
 
 /* defun and defmacro are tex-ed in `verbatim' environment, which is not understood by MathJaX */
 /* A simple solution: re-define the environment *//*
