@@ -171,46 +171,163 @@ pre.lisp, span.retrieve{
     margin-top: -40px !important;
 }
 
-/* Styles pour l'impression PDF */
+/* =========================
+   STYLES D'IMPRESSION PDF - testing new parameters
+   ========================= */
+
 @media print {
-    /* Cache les boutons et éléments inutiles */
-    #btn-pdf, .no-print, button {
-        display: none !important;
-    }
-    
-    /* Évite de couper les graphiques et images */
-    img, canvas, svg, .graphique, .maxima-output {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        display: block;
-        max-width: 100% !important;
-        height: auto !important;
-        margin: 10px 0;
-    }
-    
-    /* Évite de couper les blocs de résultats */
-    .result-block, .plot-container, pre, code {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-    }
-    
-    /* Marges de page */
-    @page {
-        margin: 2cm;
-        size: A4 portrait;
-    }
-    
-    /* Garde les titres avec leur contenu */
-    h1, h2, h3, h4 {
-        page-break-after: avoid !important;
-        break-after: avoid !important;
-        page-break-inside: avoid !important;
-    }
-    
-    /* Force le fond blanc pour l'impression */
-    body {
-        background: white !important;
-        color: black !important;
-    }
+
+  @page{
+    size:   A4 portrait;
+    margin: 12mm;
+  }
+
+  html,
+  body{
+    margin:                   0 !important;
+    padding:                  0 !important;
+    width:                    auto !important;
+    overflow:                 visible !important;
+    background:               white !important;
+    color:                    black !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust:       exact;
+  }
+
+  /* Masquer seulement l'interface */
+  #btn-pdf,
+  .no-print,
+  button,
+  .menu-row,
+  select,
+  input[type="button"]{
+    display: none !important;
+  }
+
+  /* Conteneurs */
+  body > *,
+  .maxima-div,
+  #maxima-div{
+    max-width:        100% !important;
+    overflow:         visible !important;
+    box-sizing:       border-box !important;
+  }
+
+  /* Garder la table dans la largeur imprimable */
+  table,
+  #maxima-output,
+  .maxima-output{
+    width:            100% !important;
+    max-width:        100% !important;
+    table-layout:     fixed !important;
+    border-collapse:  collapse !important;
+    margin:           0 !important;
+  }
+
+  tr{
+    page-break-inside: avoid !important;
+    break-inside:      avoid !important;
+  }
+
+  td,
+  th{
+    width:             auto !important;
+    max-width:         100% !important;
+    min-width:         0 !important;
+    vertical-align:    top !important;
+    overflow:          visible !important;
+    box-sizing:        border-box !important;
+    word-break:        break-word !important;
+    overflow-wrap:     anywhere !important;
+    padding-right:     4px !important;
+  }
+
+  td{
+    max-width:         none !important;
+  }
+
+  /* IMPORTANT :
+     on ne modifie pas display des td/tr/cellules,
+     pour respecter le format visible choisi par l'utilisateur */
+
+  /* Sorties texte longues */
+  pre,
+  code,
+  .system-error,
+  .error-message,
+  .retrieve{
+    white-space:       pre-wrap !important;
+    overflow-wrap:     anywhere !important;
+    word-break:        break-word !important;
+    max-width:         100% !important;
+    overflow:          visible !important;
+  }
+
+  pre.enhanced-ascii-art,
+  pre.ascii-art,
+  pre.ascii,
+  pre.verbatim,
+  pre.interpreted{
+    height:            auto !important;
+    max-width:         100% !important;
+  }
+
+  /* Blocs de sortie visibles */
+  .output,
+  .inputcode,
+  .mathml,
+  .tex-mathjax,
+  .MathJax,
+  .MathJax_Display,
+  .MathJaxDisplay{
+    max-width:         100% !important;
+    overflow:          visible !important;
+    box-sizing:        border-box !important;
+  }
+
+  /* Graphiques et médias */
+  img,
+  canvas,
+  svg,
+  video,
+  .graphique{
+    max-width:         100% !important;
+    height:            auto !important;
+    margin:            6px 0 !important;
+    page-break-inside: avoid !important;
+    break-inside:      avoid !important;
+  }
+
+  td svg,
+  td canvas,
+  td img,
+  td video{
+    max-width:         100% !important;
+    height:            auto !important;
+  }
+
+  /* Neutraliser les décalages écran */
+  .small-right{
+    float:             none !important;
+    display:           block !important;
+    text-align:        right !important;
+    margin-top:        0 !important;
+  }
+
+  h1, h2, h3, h4{
+    page-break-after:  avoid !important;
+    break-after:       avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  #maxima-banner,
+  pre,
+  img,
+  svg,
+  canvas,
+  video{
+    page-break-inside: avoid !important;
+    break-inside:      avoid !important;
+  }
 }
 
