@@ -136,7 +136,55 @@ start($default_code);
 <button id="btn-pdf">Save as PDF</button>
 <script>
 document.getElementById('btn-pdf').addEventListener('click', function () {
+
+    const hidden = document.querySelectorAll(
+        '#maxima-output td[style*="display:none"], ' +
+        '#maxima-output td[style*="display: none"]'
+    );
+
+    hidden.forEach(el => {
+        el.dataset.printHidden = el.style.display;
+        el.style.setProperty('display', 'none', 'important');
+    });
+
+    const visible = document.querySelectorAll(
+        '#maxima-output td[style*="display:flex"], ' +
+        '#maxima-output td[style*="display: flex"], ' +
+        '#maxima-output td[style*="display:block"], ' +
+        '#maxima-output td[style*="display: block"]'
+    );
+    visible.forEach(el => {
+        el.dataset.printOldStyle = el.getAttribute('style');
+        el.style.setProperty('width', '100%', 'important');
+        el.style.setProperty('max-width', '100%', 'important');
+        el.style.setProperty('display', 'block', 'important');
+    });
+
+    const table = document.getElementById('maxima-output');
+    if (table) {
+        table.dataset.printOldStyle = table.getAttribute('style') || '';
+        table.style.setProperty('table-layout', 'fixed', 'important');
+        table.style.setProperty('width', '100%', 'important');
+    }
+
     window.print();
+
+    setTimeout(function () {
+        hidden.forEach(el => {
+            el.style.display = el.dataset.printHidden || '';
+            delete el.dataset.printHidden;
+        });
+        visible.forEach(el => {
+            if (el.dataset.printOldStyle !== undefined) {
+                el.setAttribute('style', el.dataset.printOldStyle);
+                delete el.dataset.printOldStyle;
+            }
+        });
+        if (table && table.dataset.printOldStyle !== undefined) {
+            table.setAttribute('style', table.dataset.printOldStyle);
+            delete table.dataset.printOldStyle;
+        }
+    }, 1000);
 });
 </script>
   
