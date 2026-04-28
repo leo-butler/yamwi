@@ -172,162 +172,79 @@ pre.lisp, span.retrieve{
 }
 
 /* =========================
-   STYLES D'IMPRESSION PDF - testing new parameters
+   STYLES D'IMPRESSION PDF - (with hidden columns management)
    ========================= */
-
 @media print {
 
-  @page{
-    size:   A4 portrait;
-    margin: 12mm;
-  }
+    #btn-pdf, .no-print, button, .menu-row {
+        display: none !important;
+    }
 
-  html,
-  body{
-    margin:                   0 !important;
-    padding:                  0 !important;
-    width:                    auto !important;
-    overflow:                 visible !important;
-    background:               white !important;
-    color:                    black !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust:       exact;
-  }
+    body {
+        background: white !important;
+        color: black !important;
+    }
 
-  /* Masquer seulement l'interface */
-  #btn-pdf,
-  .no-print,
-  button,
-  .menu-row,
-  select,
-  input[type="button"]{
-    display: none !important;
-  }
+    #maxima-output {
+        table-layout: fixed !important;
+        width: 100% !important;
+    }
 
-  /* Conteneurs */
-  body > *,
-  .maxima-div,
-  #maxima-div{
-    max-width:        100% !important;
-    overflow:         visible !important;
-    box-sizing:       border-box !important;
-  }
+    #maxima-output tr {
+        display: block !important;
+        width: 100% !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
 
-  /* Garder la table dans la largeur imprimable */
-  table,
-  #maxima-output,
-  .maxima-output{
-    width:            100% !important;
-    max-width:        100% !important;
-    table-layout:     fixed !important;
-    border-collapse:  collapse !important;
-    margin:           0 !important;
-  }
+    /* *** CORRECTION CLÉ : on ne cache QUE les td avec style inline display:none ***
+       Les td sans style (contenant les images) restent visibles               */
+    #maxima-output td[style*="display:none"],
+    #maxima-output td[style*="display: none"] {
+        display: none !important;
+    }
 
-  tr{
-    page-break-inside: avoid !important;
-    break-inside:      avoid !important;
-  }
+    /* Les td actifs (flex ou block) s'affichent en pleine largeur */
+    #maxima-output td[style*="display: block"],
+    #maxima-output td[style*="display:block"],
+    #maxima-output td[style*="display: flex"],
+    #maxima-output td[style*="display:flex"] {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
 
-  td,
-  th{
-    width:             auto !important;
-    max-width:         100% !important;
-    min-width:         0 !important;
-    vertical-align:    top !important;
-    overflow:          visible !important;
-    box-sizing:        border-box !important;
-    word-break:        break-word !important;
-    overflow-wrap:     anywhere !important;
-    padding-right:     4px !important;
-  }
+    /* Les td sans style (images gnuplot) s'affichent normalement */
+    #maxima-output td:not([style]) {
+        display: block !important;
+        width: 100% !important;
+    }
 
-  td{
-    max-width:         none !important;
-  }
+    #maxima-output pre {
+        white-space: pre-wrap !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+        max-width: 100% !important;
+    }
 
-  /* IMPORTANT :
-     on ne modifie pas display des td/tr/cellules,
-     pour respecter le format visible choisi par l'utilisateur */
+    #maxima-output img,
+    #maxima-output svg,
+    #maxima-output canvas {
+        display: block !important;
+        max-width: 100% !important;
+        width: auto !important;
+        height: auto !important;
+        margin: 8px 0 !important;
+    }
 
-  /* Sorties texte longues */
-  pre,
-  code,
-  .system-error,
-  .error-message,
-  .retrieve{
-    white-space:       pre-wrap !important;
-    overflow-wrap:     anywhere !important;
-    word-break:        break-word !important;
-    max-width:         100% !important;
-    overflow:          visible !important;
-  }
+    h1, h2, h3, h4 {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+    }
 
-  pre.enhanced-ascii-art,
-  pre.ascii-art,
-  pre.ascii,
-  pre.verbatim,
-  pre.interpreted{
-    height:            auto !important;
-    max-width:         100% !important;
-  }
-
-  /* Blocs de sortie visibles */
-  .output,
-  .inputcode,
-  .mathml,
-  .tex-mathjax,
-  .MathJax,
-  .MathJax_Display,
-  .MathJaxDisplay{
-    max-width:         100% !important;
-    overflow:          visible !important;
-    box-sizing:        border-box !important;
-  }
-
-  /* Graphiques et médias */
-  img,
-  canvas,
-  svg,
-  video,
-  .graphique{
-    max-width:         100% !important;
-    height:            auto !important;
-    margin:            6px 0 !important;
-    page-break-inside: avoid !important;
-    break-inside:      avoid !important;
-  }
-
-  td svg,
-  td canvas,
-  td img,
-  td video{
-    max-width:         100% !important;
-    height:            auto !important;
-  }
-
-  /* Neutraliser les décalages écran */
-  .small-right{
-    float:             none !important;
-    display:           block !important;
-    text-align:        right !important;
-    margin-top:        0 !important;
-  }
-
-  h1, h2, h3, h4{
-    page-break-after:  avoid !important;
-    break-after:       avoid !important;
-    page-break-inside: avoid !important;
-  }
-
-  #maxima-banner,
-  pre,
-  img,
-  svg,
-  canvas,
-  video{
-    page-break-inside: avoid !important;
-    break-inside:      avoid !important;
-  }
+    @page {
+        size: A4 portrait;
+        margin: 12mm;
+    }
 }
 
