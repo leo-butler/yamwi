@@ -142,6 +142,10 @@ The file =yamwi-conf.php= contains the significant configuration options for Yam
 
 - ~$base64_cmd~ :: The command used to encode images and videos to base-64 encoding. Defaults to ~/usr/bin/base64 -w 0~.
 
+- ~$cat_cmd~ :: The pathname of the ~cat~ command. Defaults to ~/usr/bin/cat~.
+
+- ~$git_info~ :: Release or commit information. Default is set by the ~make-tar-gz~ script.
+
 ** Site configuration
 The file =site-conf.php= contains site-specific configuration options. While =yamwi-conf.php= is updated by the =INSTALL= script, this file will not be changed.
 Site administrators should put all local configuration options in this file. By default, the file is created as an almost complete copy of =yamwi-conf.php=, with the settings commented out.
