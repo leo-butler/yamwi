@@ -157,6 +157,7 @@ Yamwi gives access to all standard Maxima packages. Custom packages can be place
 Take care when using this program. To mitigate the possibility of a successful attack on a Yamwi server, some barriers have been implemented:
 
 - There is a list of so-called *dangerous words*, which prevents the execution of user code when one of these terms is detected in the input. See the global variable =$dangerous_words= in =yamwi.php=.
+- *New*: The Maxima evaluator inspects the code for any *prohibited symbols*, before evaluating it. See the variable =*prohibited-symbols*= in =yamwi.lisp=.
 - The number of running Maxima processes can be limited. See the configuration variable =$max_num_processes=.
 - The execution time of Maxima processes can be limited. See the configuration variable =$max_process_time=.
 
@@ -167,16 +168,45 @@ This project is distributed under the terms of the GPL (General Public
 License). For more information, read the LICENSE file.
 
 * Release Notes
-** Pending: Release 2026-MM-DD
-*** Changes to the User-Interface
-1. Input and output may now be displayed as Lisp S-expressions (Sexps). Users who are curious about how Maxima represents mathematical objects can use these display options.
-2. Improve the handling of verbatim input (see [[https://github.com/leo-butler/yamwi/issues/5][Issue #5]]).
-3. Improve the handling of error messages from Maxima and Gnuplot (SBCL, ECL; not GCL or CLISP).
-4. Correct the TeX code for matrices (see [[https://github.com/leo-butler/yamwi/issues/6][Issue #6]]).
-5. Print the Maxima banner as a header for the output, similar to other front-ends.
+** Release 2026-04-29
+The *Yamwi* development team is pleased to announced a new release (v. 2026-04-29).
+
+*Yamwi* ([[https://github.com/leo-butler/yamwi/][Yet Another Maxima Web Interface]]) is a web interface to the
+computer algebra system [[https://maxima.sourceforge.io/][Maxima]]. It is based on based on
+Linux+Apache+Php. Originally developed by Mario Rodríguez Riotorto and
+hosted on Sourceforge, the project is being continued by a new team of
+developers on Github.
+
+*** Important Note
+This release contains a [[*New prohibited words][critical security fix]]. Site administrators are advised to update to this release immediately.
 
 *** Security
-*** Status
+**** New prohibited words
+- ~eval_lisp_string~: this function allows execution of arbitrary code (see [[https://github.com/leo-butler/yamwi/issues/19][Issue 19]]).
+
+**** Formerly prohibited words
+- ~kill~ is no longer a prohibited word. The functionality of ~kill~ has been restricted, so ~kill(all)~ and ~kill(allbut(...))~ elicit warnings.
+  Killing variables that hold important state information for Yamwi is also prohibited (see [[https://github.com/leo-butler/yamwi/issues/16][Issue 16]] and [[https://github.com/leo-butler/yamwi/commit/daf5d7b40f3a62af03b62dd171bb5a4c3e4a57f9][Commit daf5d7b40f]]).
+- ~demo~ is no longer a prohibited word. It is now a synomym for ~batch~, since Yamwi does not allow for line-by-line interaction (see [[https://github.com/leo-butler/yamwi/issues/15][Issue 15]]).
+- ~load(drawdf);~ works as intended; ~load~ is no longer a prohibited word (see  [[https://github.com/leo-butler/yamwi/issues/1][Issue 1]]).
+- ~concat~, ~sconcat~ and ~printf~ are no longer prohibited (see [[https://github.com/leo-butler/yamwi/issues/18][Issue 18]]).
+- ~translate~ and ~compile~ are no longer prohibited.
+- ~entermatrix~ no longer prohibited (see items 6 and 8 in the next section).
+
+*** Changes to the User-Interface
+1. Input and output may now be displayed as Lisp S-expressions (Sexps). Users who are curious about how Maxima represents mathematical objects can use these display options.
+2. Improve the handling of verbatim input (see [[https://github.com/leo-butler/yamwi/issues/5][Issue 5]]).
+3. Improve the handling of error messages from Maxima and Gnuplot (SBCL, ECL; not GCL or CLISP).
+4. Correct the TeX code for matrices and ~diff~ (see [[https://github.com/leo-butler/yamwi/issues/6][Issue 6]] and [[https://github.com/leo-butler/yamwi/issues/6][Issue 11]]).
+5. Print the Maxima banner as a header for the output, similar to other front-ends.
+6. Maxima's ~trace~ command now works, subject to a patch to Maxima (see [[https://github.com/leo-butler/yamwi/issues/17][Issue 17]]).
+7. Commands like ~integrate(x^n,x);~, which require an answer to the question =Is n equal to -1?=, can now have the answer embedded in the input (see [[https://github.com/leo-butler/yamwi/issues/12][Issue 12]]).
+8. Commands line ~read("input a number:");~ now have their prompt (=input a number=) echoed correctly. The answer can be placed on the next input line and it is read correctly (see [[https://github.com/leo-butler/yamwi/issues/13][Issue 13]]).
+9. More commands are now available to the user (see the list in [[*Formerly prohibited words]].
+10. Print to PDF has been improved. Figures should no longer be cut across pages.
+11. MathML output has been improved (requires updates to Maxima).
+12. Yamwi should generate fully compliant HTML that validates with the W3C validator. If you find a page that does not validate, please report a [[https://github.com/leo-butler/yamwi/issues][bug]] and be sure to include a link to non-validating page.
+
 *** Lisps supported
 Maxima runs on a variety of Common Lisp implementations. As of this
 release, using a Debian 13 server installed on a virtual machine, the
@@ -185,9 +215,9 @@ following implementations are supported:
 - SBCL, ECL :: fully supported.
 - GCL :: partially supported, not recommended. There are multiple issues that hobble the use of GCL on a server:
   1. [X] Runs with Yamwi served on localhost.
-  2. [ ] Recent versions of Maxima cannot be built with GCL.
+  2. [X] Recent versions of Maxima cannot be built with GCL. They must be build with GCL27.
   3. [ ] The Debian GCL-based Maxima package has majour problems compiling and loading the ~draw~ package.
-  4. [ ] GCL's does not correctly re-bind the ~*error-output*~ stream. This limits error reporting compared to SBCL and ECL and necessitates a customized ~run-program~ (built on ~si:run-process~).
+  4. [ ] GCL does not correctly re-bind the ~*error-output*~ stream. This limits error reporting compared to SBCL and ECL and necessitates a customized ~run-program~ (built on ~si:run-process~).
 - Clisp :: unsupported. There are a few issues to be overcome.
   1. [X] Runs with Yamwi served on localhost.
   2. [ ] There are filesystem-access issues when run as part of Apache. Patches are invited.
