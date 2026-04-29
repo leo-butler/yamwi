@@ -172,8 +172,8 @@ wmblock([term_cmd:"set term svg size 600,500", cleandescgraf:[], result, unsafe_
                           [gnuplot_postamble, concat(term_cmd,"; set out '|",%cat_cmd%,"';")]]), /* output is printed to STDOUT */
     printf(true,"<tr><td></td><td colspan='6'><span class='svg inline'>"),
     result : apply(func,cleandescgraf),
-    printf(true,"~a",get(inputlabel,'system_output)),
-    printf(false,"</span></td></tr>"),
+    printf(true,"~a",apply('svg_sanitize,[get(inputlabel,'system_output)])),
+    printf(true,"</span></td></tr>"),
     result) $
 
 Plot2d([descgraf]):= (mwplotxd('plot2d, descgraf), 'plot2d) $
