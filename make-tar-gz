@@ -15,6 +15,7 @@ cp INSTALL yamwi
 cp LICENSE yamwi
 cp yamwi.* yamwi
 cp yamwi-conf.php yamwi
+sed -i -r "s/git_info = /git_info = \'`git tag | tail -n 1`\';#/;" yamwi/yamwi-conf.php
 cp help/*.html yamwi/help
 cp help/help.css yamwi/help
 cp packages/*.mac yamwi/packages
