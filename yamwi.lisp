@@ -314,7 +314,7 @@ prohibited symbol.")
     ;; Prevent access to functions/variables in yamwi.mac
     $yamwi_display1d $yamwi_display2d $oned_display $twod_display $mathml $set_alt_display $set_prompt $reset_displays
     $%num_sentence% $%num_grafico% $mwdrawxd $mwplotxd
-    $maxima_tempdir $maxima_userdir $%num_proceso% $%codigo_usuario% $%dir_sources% $%movie_muxer% $%movie_is_embedded% $%ffmpeg_binary% $%base64_cmd% $%output_mode% $%gcl%
+    $maxima_tempdir $maxima_userdir $%num_proceso% $%codigo_usuario% $%dir_sources% $%movie_muxer% $%movie_is_embedded% $%ffmpeg_binary% $%base64_cmd% $%output_mode% $%gcl% $%cat_cmd%
     $standard_output $original_standard_output
     ;; not available
     $plotdf $julia $mandelbrot
