@@ -259,7 +259,7 @@ define_alt_display(yamwi_display2d(x),
         printf(true,"<td class='inputcode error'><pre class='verbatim'>~a</pre></td></tr>~%",input)),
       block([serr:sanitize(error_output),class],
         if ssearch("warn",serr,sequalignore)=false then class:"error" else class:"warning",
-        printf(true,"<tr class='output ~a'><td>Maxima ~a:</td><td><pre class='maxima-~a'>~a~%~a</pre></td></tr>~%",class,class,class,serr,if class="error" then "Execution halted." else "")))
+        printf(true,"<tr class='output ~a'><td>Maxima ~a:</td><td colspan='6'><pre class='maxima-~a'>~a~%~a</pre></td></tr>~%",class,class,class,serr,if class="error" then "Execution halted." else "")))
     else if second(x)#'?end_of_file then (
     printf(true,"<tr>~% <td class='output'><span class='output-label'>~a</span></td>~%",if first(x)=false then "" else first(x)),
     printf(true,"<td class='output ascii'~a><pre class='ascii'>",if %output_mode%=0 then "" else nodisplay),
