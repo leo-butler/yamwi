@@ -211,7 +211,7 @@ document.getElementById("saveBtn").addEventListener("click", function() {
 </script>
 
 <button id="loadFileBtn">Load commands (.mac)</button>
-<input type="file" id="fileInput" accept=".mac" style="display:none" />
+<input type="file" id="fileInput" accept=".mac" style="display:none">
 
 <script>
 const loadFileBtn = document.getElementById('loadFileBtn');
@@ -268,10 +268,10 @@ document.getElementById("saveBatchBtn").addEventListener("click", function() {
 <p class="small-left"><a href="https://github.com/leo-butler/yamwi/" target = "_blank">Yamwi Source</a>
 <?php
 if ($git_info === '') { $git_info=`git rev-parse HEAD`; };
-echo '<br/><span id="yamwi-version">Yamwi version: <a href=https://github.com/leo-butler/yamwi/commits/'.$git_info.'>'.$git_info.'</a></span>';
+echo '<br><span id="yamwi-version">Yamwi version: <a href=https://github.com/leo-butler/yamwi/commits/'.$git_info.'>'.$git_info.'</a></span>';
 ?>
+<a class='validation' href='#' onclick="this.href='https://validator.w3.org/check?uri='+encodeURIComponent(location.href); return true;">Validate</a>
 </p>
-
 
 </body>
 </html>
