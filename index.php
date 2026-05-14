@@ -10,7 +10,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/maxima.min.js"></script>
   <script src="yamwi.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
   <title>Maxima on line</title>
@@ -318,6 +318,74 @@ function extractWxmCommands(text) {
     .join('\n');
 
   return result;
+}
+</script>
+
+<button id="loadWxmxBtn">Import wxmw file (.wxmx)</button>
+<input type="file" id="fileInputWxmx" accept=".wxmx" style="display:none">
+
+<script>
+const loadWxmxBtn = document.getElementById('loadWxmxBtn');
+const fileInputWxmx = document.getElementById('fileInputWxmx');
+
+loadWxmxBtn.addEventListener('click', () => {
+  fileInputWxmx.click();
+});
+
+fileInputWxmx.addEventListener('change', (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    try {
+      // Décompression du fichier wxmx (ZIP)
+      const zip = await JSZip.loadAsync(e.target.result);
+
+      // Extraction de content.xml
+      const contentFile = zip.file('content.xml');
+      if (!contentFile) {
+        alert('Fichier content.xml introuvable dans le .wxmx');
+        return;
+      }
+      const xmlText = await contentFile.async('string');
+
+      // Parse XML et extraction des commandes
+      const commands = extractWxmxCommands(xmlText);
+      textarea.value = commands;
+
+    } catch (err) {
+      alert('Erreur lors de la lecture du fichier .wxmx : ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);  // JSZip nécessite ArrayBuffer
+});
+
+function extractWxmxCommands(xmlText) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(xmlText, 'application/xml');
+
+  // Récupère toutes les balises <line> dans les blocs <input>
+  const inputBlocks = doc.querySelectorAll('cell[type="code"] input line');
+
+  const lines = [];
+  inputBlocks.forEach(lineNode => {
+    let content = lineNode.textContent;
+
+    // &#010; = \n encodé dans le XML (cellules multi-lignes comme les matrices)
+    content = content.replace(/\n/g, '\n');  // déjà converti par textContent
+
+    // Découpe en sous-lignes si la cellule contenait des \n (matrices, etc.)
+    const subLines = content.split('\n');
+    subLines.forEach(subLine => {
+      const trimmed = subLine.trimEnd();
+      if (trimmed.trim() !== '') {
+        lines.push(trimmed);
+      }
+    });
+  });
+
+  return lines.join('\n');
 }
 </script>
 
