@@ -263,6 +263,64 @@ document.getElementById("saveBatchBtn").addEventListener("click", function() {
 });
 </script>
 
+<button id="loadWxmBtn">Import wxm file (.wxm)</button>
+<input type="file" id="fileInputWxm" accept=".wxm" style="display:none">
+
+<script>
+const loadWxmBtn = document.getElementById('loadWxmBtn');
+const fileInputWxm = document.getElementById('fileInputWxm');
+
+loadWxmBtn.addEventListener('click', () => {
+  fileInputWxm.click();
+});
+
+fileInputWxm.addEventListener('change', (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const raw = e.target.result;
+      const extracted = extractWxmCommands(raw);
+      textarea.value = extracted;
+    };
+    reader.readAsText(file);
+  }
+});
+
+function extractWxmCommands(text) {
+  const lines = text.split('\n');
+  let inside = false;
+  const commandLines = [];
+
+  for (let line of lines) {
+    // Détection début de bloc input
+    if (/\/\*\s*\[wxMaxima:\s*input\s+start\s*\]/.test(line)) {
+      inside = true;
+      continue;
+    }
+    // Détection fin de bloc input
+    if (/\/\*\s*\[wxMaxima:\s*input\s+end\s*\]/.test(line)) {
+      inside = false;
+      continue;
+    }
+    // Collecte uniquement les lignes dans un bloc input
+    if (inside) {
+      commandLines.push(line);
+    }
+  }
+
+  // Reconstitue le texte, supprime les commentaires /* ... */ sur une même ligne
+  // et les lignes vides
+  let result = commandLines
+    .map(line => line.replace(/\/\*.*?\*\//g, ''))  // supprime les /* ... */ inline
+    .map(line => line.trimEnd())
+    .filter(line => line.trim() !== '')              // supprime les lignes vides
+    .join('\n');
+
+  return result;
+}
+</script>
+
 <button onclick="window.scrollTo({top: 0, behavior: 'smooth'});">Back to top</button>
 
 <p class="small-left"><a href="https://github.com/leo-butler/yamwi/" target = "_blank">Yamwi Source</a>
