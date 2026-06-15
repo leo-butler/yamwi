@@ -73,6 +73,7 @@ td{
   text-align:     left;
   vertical-align: top;}
 textarea{
+  font-family: Courier, monospace;
   width:          100%;}
 .maxima-output{
     display:		flex;
