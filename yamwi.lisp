@@ -131,18 +131,20 @@
 		 exit-code))))
 
 (defmfun $system (&rest args)
+  (declare (special $%codigo_usuario%))
   (cond ((> (length args) 1)
          ;;(apply *system-fun* args))
          ($system (format nil "~{~a ~}" args)))
         (t
          #+(or clisp ecl sbcl gcl)
 	 (let ((args (remove-if #'(lambda(s) (or (string= s "-persist") (string= s ""))) (cdr ($split ($sremove "\"" (car args))))))
-	       (inlabel (makelabel $inchar)))
+	       (inlabel (makelabel $inchar))
+	       (log-file (make-pathname :directory '(:relative "tmp") :name (format nil "log-~a" $%codigo_usuario%) :type "log")))
 	   ;; (unless (member (aref (car args) 0) '(#\/ #\.))
 	   ;;   (push "/usr/bin/env" args))
 	   (when (and (string= (car args) "/bin/sh") (string= (cadr args) "-c"))
 	     (setq args (list "/bin/sh" "-c" (format nil "~{~a~^ ~}" (cddr args)))))
-           (with-open-file (f #p"./tmp/run.log" :direction :output :if-exists :append :if-does-not-exist :create)
+           (with-open-file (f log-file :direction :output :if-exists :append :if-does-not-exist :create)
              (format f "system: args = ~{'~a' ~}~%" args))
 	   (multiple-value-bind (output error code)
 	       (#+(or clisp ecl sbcl) uiop/run-program:run-program #+gcl gcl-run-program
