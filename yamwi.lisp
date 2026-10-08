@@ -295,8 +295,8 @@ prohibited symbol.")
     $file_search $file_search_maxima $file_search_lisp
     $file_search_demo $file_search_usage $file_search_tests
     $file_type $file_type_lisp $file_type_maxima
-    $load_pathname $loadfile
-    $loadprint $pathname_directory $pathname_name
+    $load_pathname
+    $pathname_directory $pathname_name
     $pathname_type $printfile $save
     $stringout $with_stdout $writefile
     ;; Prevent snooping
